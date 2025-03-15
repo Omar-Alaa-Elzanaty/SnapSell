@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapSell.API", "SnapSell.API\SnapSell.API.csproj", "{DBE47DCE-CB2E-4E3A-80DA-76582B24E4BA}"
 EndProject
@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapSell.Presistance", "Sna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapSell.Application", "SnapSell.Application\SnapSell.Application.csproj", "{046A2B64-2289-4C6A-878E-30698FDA95E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapSell.Model", "SnapSell.Model\SnapSell.Model.csproj", "{4C28D037-6A2A-4D3E-AD27-300BAE81B5DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapSell.Domain", "SnapSell.Model\SnapSell.Domain.csproj", "{4C28D037-6A2A-4D3E-AD27-300BAE81B5DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{BFF27B05-175E-49F7-8B8B-32B86F22221F}"
 EndProject

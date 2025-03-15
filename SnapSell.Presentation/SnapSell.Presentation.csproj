@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SnapSell.Infrastructure\SnapSell.Infrastructure.csproj" />
+    <ProjectReference Include="..\SnapSell.Presistance\SnapSell.Presistance.csproj" />
+  </ItemGroup>
+
 </Project>

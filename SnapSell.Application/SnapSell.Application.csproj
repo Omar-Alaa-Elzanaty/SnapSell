@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SnapSell.Model\SnapSell.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
