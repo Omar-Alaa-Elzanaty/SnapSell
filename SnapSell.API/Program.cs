@@ -1,11 +1,23 @@
+using Serilog;
+using SnapSell.Application.Services;
+using SnapSell.Infrastructure.Services;
+using SnapSell.Presistance.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services
+       .AddApplication()
+       .AddPresistance()
+       .AddInfrastructure();
+
+builder.Host.UseSerilog((context, config) =>
+config.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -16,8 +28,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
+app.UseSerilogRequestLogging();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

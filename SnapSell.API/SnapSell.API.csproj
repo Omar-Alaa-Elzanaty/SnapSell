@@ -11,7 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SnapSell.Application\SnapSell.Application.csproj" />
+    <ProjectReference Include="..\SnapSell.Infrastructure\SnapSell.Infrastructure.csproj" />
     <ProjectReference Include="..\SnapSell.Presentation\SnapSell.Presentation.csproj" />
+    <ProjectReference Include="..\SnapSell.Presistance\SnapSell.Presistance.csproj" />
   </ItemGroup>
 
   <ItemGroup>

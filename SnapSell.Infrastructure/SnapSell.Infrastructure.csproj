@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SnapSell.Application\SnapSell.Application.csproj" />
-    <ProjectReference Include="..\SnapSell.Model\SnapSell.Model.csproj" />
   </ItemGroup>
 
 </Project>
