@@ -16,7 +16,7 @@ namespace SnapSell.Domain.Extnesions
                 }
                 else
                 {
-                    errors.Add(a.PropertyName, new List<string> { a.ErrorMessage });
+                    errors.Add(a.PropertyName, [a.ErrorMessage]);
                 }
             });
 

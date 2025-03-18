@@ -17,4 +17,8 @@
     <ProjectReference Include="..\SnapSell.Presistance\SnapSell.Presistance.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\MediaFile\" />
+  </ItemGroup>
+
 </Project>
