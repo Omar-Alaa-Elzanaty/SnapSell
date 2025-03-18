@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SnapSell.Application.Interfaces;
+using SnapSell.Application.Interfaces.Repos;
+using SnapSell.Presistance.Repos;
 
 namespace SnapSell.Presistance.Services
 {
@@ -11,6 +9,17 @@ namespace SnapSell.Presistance.Services
     {
         public static IServiceCollection AddPresistance(this IServiceCollection services)
         {
+            services
+                .AddServices();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>))
+                    .AddScoped<IUnitOfWork, UnitOfWork>();
+
             return services;
         }
     }

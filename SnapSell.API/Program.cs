@@ -1,20 +1,26 @@
 using Serilog;
+using SnapSell.API;
 using SnapSell.Application.Services;
 using SnapSell.Infrastructure.Services;
+using SnapSell.Presentation.MiddleWare;
 using SnapSell.Presistance.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new DateTimeFormatServices());
+});
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services
        .AddApplication()
        .AddPresistance()
-       .AddInfrastructure();
+       .AddInfrastructure()
+       .DepedencyInjectionService(builder.Configuration);
 
 builder.Host.UseSerilog((context, config) =>
 config.ReadFrom.Configuration(context.Configuration));
@@ -26,10 +32,18 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("DEVELOPMENT");
+}
+else
+{
+    app.UseCors("PRODUCTION");
 }
 
+app.UseRouting();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleWare>();
 
 app.UseSerilogRequestLogging();
 

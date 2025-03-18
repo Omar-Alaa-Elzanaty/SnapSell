@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FluentValidation.Results;
+using SnapSell.Domain.Extnesions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +27,17 @@ namespace SnapSell.Domain.ResultDtos
             return new();
         }
 
+        public static Result<T> Failure()
+        {
+            return new();
+        }
+
         public static Result<T> Failure(string message)
+        {
+            return new();
+        }
+
+        public static Result<T>ValidationFailure(List<ValidationFailure> errors)
         {
             return new();
         }
