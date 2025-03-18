@@ -1,7 +1,7 @@
 using Serilog;
 using SnapSell.API;
-using SnapSell.Application.Services;
-using SnapSell.Infrastructure.Services;
+using SnapSell.Application.Extensions;
+using SnapSell.Infrastructure.Extensions;
 using SnapSell.Presentation.MiddleWare;
 using SnapSell.Presistance.Services;
 
