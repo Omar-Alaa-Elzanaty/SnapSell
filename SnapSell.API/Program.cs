@@ -2,15 +2,16 @@ using Serilog;
 using SnapSell.API;
 using SnapSell.Application.Extensions;
 using SnapSell.Infrastructure.Extensions;
+using SnapSell.Infrastructure.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
-using SnapSell.Presistance.Services;
+using SnapSell.Presistance.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.Converters.Add(new DateTimeFormatServices());
+    options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
 });
 
 builder.Services.AddEndpointsApiExplorer();
