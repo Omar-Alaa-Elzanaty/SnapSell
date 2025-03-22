@@ -2,9 +2,10 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
+using SnapSell.Application.Behaviors;
 using System.Reflection;
 
-namespace SnapSell.Application.Services
+namespace SnapSell.Application.Extensions.Services
 {
     public static class ServicesCollection
     {
@@ -19,7 +20,15 @@ namespace SnapSell.Application.Services
 
         private static IServiceCollection AddMediator(this IServiceCollection services)
         {
-            return services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            //return services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+            services.AddMediatR(configuration =>
+            {
+                configuration.RegisterServicesFromAssembly(typeof(ServicesCollection).Assembly);
+                configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
+
+            return services;
         }
 
         private static IServiceCollection AddFluentValidation(this IServiceCollection services)
