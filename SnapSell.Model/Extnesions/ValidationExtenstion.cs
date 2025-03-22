@@ -2,7 +2,7 @@
 
 namespace SnapSell.Domain.Extnesions
 {
-    public static class ValidationExtenstions
+    public static class ValidationExtenstion
     {
         public static Dictionary<string, List<string>> GetErrorsDictionary(this List<ValidationFailure> validationFailures)
         {

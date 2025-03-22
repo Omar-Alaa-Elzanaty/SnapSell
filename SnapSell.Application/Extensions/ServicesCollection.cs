@@ -4,7 +4,7 @@ using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace SnapSell.Application.Services
+namespace SnapSell.Application.Extensions
 {
     public static class ServicesCollection
     {

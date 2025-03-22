@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Application.Interfaces;
-using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Presistance.Repos;
+using SnapSell.Infrastructure.MediaServices;
 
-namespace SnapSell.Presistance.Services
+namespace SnapSell.Infrastructure.Extensions
 {
     public static class ServicesCollection
     {
-        public static IServiceCollection AddPresistance(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services
                 .AddServices();
@@ -17,8 +16,8 @@ namespace SnapSell.Presistance.Services
 
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>))
-                    .AddScoped<IUnitOfWork, UnitOfWork>();
+            services
+                .AddScoped<IMediaService, LocalMediaService>();
 
             return services;
         }

@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Http;
 using SnapSell.Domain.Extnesions;
 using SnapSell.Domain.ResultDtos;
 using System.Net;
+using Serilog;
+using SnapSell.Domain.Dtos.ResultDtos;
+using System.Net;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace SnapSell.Presentation.MiddleWare
@@ -19,12 +23,9 @@ namespace SnapSell.Presentation.MiddleWare
             try
             {
                 await _next(context);
-
             }
-
             catch (Exception ex)
             {
-
                 await HandleExceptionAsync(context, ex);
             }
         }

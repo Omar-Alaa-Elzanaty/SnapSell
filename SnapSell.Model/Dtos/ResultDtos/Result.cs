@@ -3,7 +3,7 @@ using SnapSell.Domain.Extnesions;
 using System.Net;
 using System.Runtime.InteropServices;
 
-namespace SnapSell.Domain.ResultDtos
+namespace SnapSell.Domain.Dtos.ResultDtos
 {
     public class Result<T>
     {
