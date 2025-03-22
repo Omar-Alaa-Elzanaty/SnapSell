@@ -1,16 +1,22 @@
 using Serilog;
 using SnapSell.API;
+<<<<<<< HEAD
 using SnapSell.Application.Extensions.Services;
 using SnapSell.Infrastructure.Services;
+=======
+using SnapSell.Application.Extensions;
+using SnapSell.Infrastructure.Extensions;
+using SnapSell.Infrastructure.JsonSerilizeServices;
+>>>>>>> f8e9f08bb4c74f9f530b3c75e0d44ebd1ca87b37
 using SnapSell.Presentation.MiddleWare;
-using SnapSell.Presistance.Services;
+using SnapSell.Presistance.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.Converters.Add(new DateTimeFormatServices());
+    options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -21,8 +27,13 @@ builder.Services
        .AddInfrastructure()
        .DepedencyInjectionService(builder.Configuration);
 
-builder.Host.UseSerilog((context, config) =>
-config.ReadFrom.Configuration(context.Configuration));
+var logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .CreateLogger();
+
+Log.Logger = logger;
+
+builder.Host.UseSerilog(logger);
 
 var app = builder.Build();
 
