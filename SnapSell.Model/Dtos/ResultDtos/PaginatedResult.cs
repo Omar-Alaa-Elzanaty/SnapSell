@@ -2,7 +2,7 @@
 using SnapSell.Domain.Extnesions;
 using System.Net;
 
-namespace SnapSell.Domain.ResultDtos
+namespace SnapSell.Domain.Dtos.ResultDtos
 {
     public class PaginatedResult<T>:Result<List<T>>
     {

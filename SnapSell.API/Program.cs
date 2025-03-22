@@ -22,8 +22,13 @@ builder.Services
        .AddInfrastructure()
        .DepedencyInjectionService(builder.Configuration);
 
-builder.Host.UseSerilog((context, config) =>
-config.ReadFrom.Configuration(context.Configuration));
+var logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .CreateLogger();
+
+Log.Logger = logger;
+
+builder.Host.UseSerilog(logger);
 
 var app = builder.Build();
 

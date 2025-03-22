@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SnapSell.Domain.ResultDtos;
+using SnapSell.Domain.Dtos.ResultDtos;
 using System.Linq.Expressions;
 using System.Reflection;
 
