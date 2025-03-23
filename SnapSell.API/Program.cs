@@ -17,8 +17,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services
-       .AddApplication()
-       .AddPresistance()
        .AddInfrastructure()
        .DepedencyInjectionService(builder.Configuration);
 

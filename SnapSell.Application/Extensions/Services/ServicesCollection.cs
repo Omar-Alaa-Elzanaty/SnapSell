@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Application.Behaviors;
 using System.Reflection;
 
-namespace SnapSell.Application.Extensions
+namespace SnapSell.Application.Extensions.Services
 {
     public static class ServicesCollection
     {
