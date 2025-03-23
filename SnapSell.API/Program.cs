@@ -1,10 +1,8 @@
 using Serilog;
 using SnapSell.API;
-using SnapSell.Application.Extensions;
 using SnapSell.Infrastructure.Extensions;
 using SnapSell.Infrastructure.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
-using SnapSell.Presistance.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
