@@ -1,7 +1,6 @@
 ﻿using FluentValidation.Results;
 using SnapSell.Domain.Extnesions;
 using System.Net;
-using System.Runtime.InteropServices;
 
 namespace SnapSell.Domain.Dtos.ResultDtos
 {
@@ -21,7 +20,7 @@ namespace SnapSell.Domain.Dtos.ResultDtos
             };
         }
 
-        public static Result<T> Success(T data, string? message)
+        public static Result<T> Success(T data, string? message = null)
         {
             return new()
             {
@@ -31,7 +30,7 @@ namespace SnapSell.Domain.Dtos.ResultDtos
             };
         }
 
-        public static Result<T>Success(string message)
+        public static Result<T> Success(string message)
         {
             return new()
             {

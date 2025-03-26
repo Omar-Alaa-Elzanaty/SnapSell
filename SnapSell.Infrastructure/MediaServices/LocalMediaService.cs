@@ -35,7 +35,7 @@ namespace SnapSell.Infrastructure.MediaServices
             if (fileUrl.IsNullOrEmpty())
                 return null;
 
-            return _configuration["MediaServerPath"] + fileUrl;
+            return _configuration[""] + fileUrl;
         }
 
         public async Task<string?> SaveAsync(MediaFileDto media, MediaTypes mediaType)
