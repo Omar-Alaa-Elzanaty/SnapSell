@@ -6,7 +6,7 @@ namespace SnapSell.Domain.Dtos.ResultDtos
 {
     public class Result<T>
     {
-        public bool Status => (int)StatusCode >= 200 && (int)StatusCode <= 200;
+        public bool IsSuccess => (int)StatusCode >= 200 && (int)StatusCode <= 200;
         public HttpStatusCode StatusCode { get; set; }
         public T? Data { get; set; }
         public string? Message { get; set; }

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SnapSell.Domain.Dtos.PaymobDtos;
 
 namespace SnapSell.Application.Interfaces
 {
     public interface IPaymobService
     {
-        Task<string> CreatePayment();
+        Task<PaymobIntentsionResponseDto> CreatePayment(PaymobCreatePaymentRequestDto model);
+        Task Callback(PaymobCallbackRequestDto callbackResponseDto,string hmac);
+        Task SaveCard(PaymobTokenCallbackResponseDto model,string hmac);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Application.Interfaces;
-using SnapSell.Infrastructure.MediaServices;
 using SnapSell.Infrastructure.Services.ApiRequestService;
+using SnapSell.Infrastructure.Services.MediaServices;
 using SnapSell.Infrastructure.Services.PaymentGateway;
 using System.Net.Http.Headers;
 
@@ -36,6 +36,8 @@ namespace SnapSell.Infrastructure.Extensions
                 httpClient.BaseAddress = new Uri(configuration["Paymob:BaseUrl"]!.ToString());
                 httpClient.DefaultRequestHeaders
                 .Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders
+                .Add("Authorization", configuration["Paymob:SecretKey"]);
             });
 
             return services;

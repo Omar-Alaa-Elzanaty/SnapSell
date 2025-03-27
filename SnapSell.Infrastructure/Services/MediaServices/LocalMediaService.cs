@@ -5,7 +5,7 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Enums;
 
-namespace SnapSell.Infrastructure.MediaServices
+namespace SnapSell.Infrastructure.Services.MediaServices
 {
     public class LocalMediaService : IMediaService
     {
