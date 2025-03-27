@@ -7,6 +7,8 @@ namespace SnapSell.Domain.Dtos.PaymobDtos
         public double Amount { get; set; }
         [JsonPropertyName("payment_methods")]
         public List<string> PaymentMethods { get; set; }
+        [JsonPropertyName("card_tokens")]
+        public List<string>? CardTokens { get; set; }
         public string Currency { get; set; }
         [JsonPropertyName("billing_data")]
         public PaymobBillingDto BillingData { get; set; }

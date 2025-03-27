@@ -5,7 +5,7 @@ namespace SnapSell.Application.Interfaces
     public interface IPaymobService
     {
         Task<PaymobIntentsionResponseDto> CreatePayment(PaymobCreatePaymentRequestDto model);
-        Task Callback(PaymobCallbackRequestDto callbackResponseDto,string hmac);
-        Task SaveCard(PaymobTokenCallbackResponseDto model,string hmac);
+        bool IsAuthenticateCallback(PaymobCallbackRequestDto callbackResponseDto, string hmac);
+        bool IsAuthenticateSaveCard(PaymobTokenCallbackResponseDto model, string hmac);
     }
 }

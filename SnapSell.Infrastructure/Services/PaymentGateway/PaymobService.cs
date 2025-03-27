@@ -24,43 +24,35 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
             _config = config;
         }
 
-        public Task Callback(PaymobCallbackRequestDto model, string hmac)
+        public bool IsAuthenticateCallback(PaymobCallbackRequestDto model, string hmac)
         {
             var plainText = model.Obj.AmountCents.ToString()
-             + model.Obj.CreatedAt.ToString()
-             + model.Obj.Currency.ToString()
-             + model.Obj.ErrorOccured.ToString()
-             + model.Obj.HasParentTransaction.ToString()
-             + model.Obj.Id.ToString()
-             + model.Obj.IntegrationId.ToString()
-             + model.Obj.Is3DSecure.ToString()
-             + model.Obj.IsAuth.ToString()
-             + model.Obj.IsCapture.ToString()
-             + model.Obj.IsRefund.ToString()
-             + model.Obj.IsStandalonePayment.ToString();
+                          + model.Obj.CreatedAt.ToString()
+                          + model.Obj.Currency.ToString()
+                          + model.Obj.ErrorOccured.ToString()
+                          + model.Obj.HasParentTransaction.ToString()
+                          + model.Obj.Id.ToString()
+                          + model.Obj.IntegrationId.ToString()
+                          + model.Obj.Is3DSecure.ToString()
+                          + model.Obj.IsAuth.ToString()
+                          + model.Obj.IsCapture.ToString()
+                          + model.Obj.IsRefund.ToString()
+                          + model.Obj.IsStandalonePayment.ToString();
 
 
-            if (!IsAuthenticatedCallback(plainText, hmac))
-            {
-                //TODO: Log response for tracking diff.
-                throw new InvalidOperationException("Invalid callback method");
-            }
+            return IsAuthenticatedCallback(plainText, hmac);
 
-            //TODO: implement logic for payment process response comes from paymob
-
-            throw new NotImplementedException();
         }
 
-        public async Task<PaymobIntentsionResponseDto> CreatePayment(PaymobCreatePaymentRequestDto model)
+        public async Task<PaymobIntentsionResponseDto> CreatePayment(PaymobIntenstionRequestDto model)
         {
             var paymentMethods = _config["Paymob:PaymentMethods"]!;
-            var request = model.Adapt<PaymobIntenstionRequestDto>();
 
-            request.PaymentMethods = paymentMethods.Split(',').ToList();
-            request.RedirectUrl = _config["Paymob:FrontEndRedirectUrl"]!;
-            request.NotificationUrl = _config["paymob:BackendCallbackMethod"]!;
+            model.PaymentMethods = paymentMethods.Split(',').ToList();
+            model.RedirectUrl = _config["Paymob:FrontEndRedirectUrl"]!;
+            model.NotificationUrl = _config["paymob:BackendCallbackMethod"]!;
 
-            var serilizeObject = JsonSerializer.Serialize(request);
+            var serilizeObject = JsonSerializer.Serialize(model);
 
             var content = new StringContent(serilizeObject, new MediaTypeHeaderValue("application/json"));
 
@@ -71,10 +63,10 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
                 throw new OperationCanceledException("Failed to create payment process.");
             }
 
-            return response.Data;
+            return response.Data!;
         }
 
-        public Task SaveCard(PaymobTokenCallbackResponseDto model, string hmac)
+        public bool IsAuthenticateSaveCard(PaymobTokenCallbackResponseDto model, string hmac)
         {
             var plainText = model.Obj.CardSubType.ToString()
                           + model.Obj.CreatedAt.ToString()
@@ -85,14 +77,7 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
                           + model.Obj.OrderId.ToString()
                           + model.Obj.Token.ToString();
 
-            if (!IsAuthenticatedCallback(plainText, hmac))
-            {
-                //TODO: Log response for tracking diff.
-                throw new InvalidOperationException("Invalid callback method");
-            }
-            //TODO: implement logic for resposne comes from save card for user 
-
-            throw new NotImplementedException();
+            return IsAuthenticatedCallback(plainText, hmac);
         }
 
         private bool IsAuthenticatedCallback(string plainText, string key)
