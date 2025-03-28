@@ -1,13 +1,12 @@
 ﻿using FluentValidation.Results;
 using SnapSell.Domain.Extnesions;
 using System.Net;
-using System.Runtime.InteropServices;
 
 namespace SnapSell.Domain.Dtos.ResultDtos
 {
     public class Result<T>
     {
-        public bool Status => (int)StatusCode >= 200 && (int)StatusCode <= 200;
+        public bool IsSuccess => (int)StatusCode >= 200 && (int)StatusCode <= 200;
         public HttpStatusCode StatusCode { get; set; }
         public T? Data { get; set; }
         public string? Message { get; set; }
@@ -21,7 +20,7 @@ namespace SnapSell.Domain.Dtos.ResultDtos
             };
         }
 
-        public static Result<T> Success(T data, string? message)
+        public static Result<T> Success(T data, string? message = null)
         {
             return new()
             {
@@ -31,7 +30,7 @@ namespace SnapSell.Domain.Dtos.ResultDtos
             };
         }
 
-        public static Result<T>Success(string message)
+        public static Result<T> Success(string message)
         {
             return new()
             {

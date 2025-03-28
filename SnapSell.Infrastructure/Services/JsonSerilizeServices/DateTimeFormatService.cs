@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SnapSell.Infrastructure.JsonSerilizeServices
+namespace SnapSell.Infrastructure.Services.JsonSerilizeServices
 {
     public class DateTimeFormatService : JsonConverter<DateTime>
     {
