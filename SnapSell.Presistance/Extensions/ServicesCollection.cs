@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Entities;
+using SnapSell.Domain.Models;
 using SnapSell.Presistance.Context;
 using SnapSell.Presistance.Repos;
 using System.Configuration;
