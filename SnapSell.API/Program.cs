@@ -1,6 +1,5 @@
 using Serilog;
 using SnapSell.API;
-using SnapSell.Application.Extensions;
 using SnapSell.Infrastructure.Extensions;
 using SnapSell.Infrastructure.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
@@ -18,6 +17,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services
        .AddInfrastructure()
+       .DepedencyInjectionService(builder.Configuration);
+
+builder.Services
+       .AddPresistance(builder.Configuration)
        .DepedencyInjectionService(builder.Configuration);
 
 var logger = new LoggerConfiguration()
