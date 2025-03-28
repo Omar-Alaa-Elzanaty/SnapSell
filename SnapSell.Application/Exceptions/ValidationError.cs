@@ -3,9 +3,8 @@
     public sealed record ValidationError(string PropertyName,
         string ErrorMessage);
 
-    public sealed class ValidationException : Exception
+    public sealed class ValidationException : BaseException
     {
-        public ValidationException(IEnumerable<ValidationError> errors) => Errors = errors;
-        public IEnumerable<ValidationError> Errors { get; }
+        public ValidationException(IEnumerable<ValidationError> errors):base(errors) { }
     }
 }
