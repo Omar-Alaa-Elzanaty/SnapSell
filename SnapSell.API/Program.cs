@@ -3,6 +3,7 @@ using SnapSell.API;
 using SnapSell.Infrastructure.Extensions;
 using SnapSell.Infrastructure.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
+using SnapSell.Presistance.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services
        .AddInfrastructure()
+       .DepedencyInjectionService(builder.Configuration);
+
+builder.Services
+       .AddPresistance(builder.Configuration)
        .DepedencyInjectionService(builder.Configuration);
 
 var logger = new LoggerConfiguration()
