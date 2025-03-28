@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SnapSell.Domain.Interfaces;
 using SnapSell.Domain.Models;
+using SnapSell.Presistance.Extensions;
 using System.Security.Claims;
 
 namespace SnapSell.Presistance.Context
@@ -29,6 +30,8 @@ namespace SnapSell.Presistance.Context
             modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SnapSellDbContext).Assembly);
+
+            modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
