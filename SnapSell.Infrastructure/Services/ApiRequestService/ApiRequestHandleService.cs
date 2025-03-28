@@ -43,6 +43,8 @@ namespace SnapSell.Infrastructure.Services.ApiRequestService
 
             if (!response.IsSuccessStatusCode)
             {
+                //TODO: log error
+
                 return Result<T>.Failure(content);
             }
 

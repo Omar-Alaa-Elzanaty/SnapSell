@@ -1,13 +1,16 @@
-﻿using System;
+﻿using MediatR;
+using SnapSell.Domain.Dtos.PaymobDtos;
+using SnapSell.Domain.Dtos.ResultDtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace SnapSell.Domain.Dtos.PaymobDtos
+namespace SnapSell.Application.Applications.Payment.Commnad.Callback
 {
-    public class PaymobCallbackRequestDto
+    public class PaymentCallbackCommand:IRequest<Result<int>>
     {
         [JsonPropertyName("type")]
         public string Type { get; set; }
@@ -21,6 +24,7 @@ namespace SnapSell.Domain.Dtos.PaymobDtos
         [JsonPropertyName("transaction_processed_callback_responses")]
         public string TransactionProcessedCallbackResponses { get; set; }
     }
+
     public class CallbackTransactionObjDto
     {
         [JsonPropertyName("id")]
@@ -578,4 +582,6 @@ namespace SnapSell.Domain.Dtos.PaymobDtos
         [JsonPropertyName("extra_description")]
         public string ExtraDescription { get; set; }
     }
+
+
 }

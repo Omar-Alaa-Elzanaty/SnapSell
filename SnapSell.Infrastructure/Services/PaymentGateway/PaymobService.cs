@@ -1,5 +1,7 @@
 ﻿using Mapster;
 using Microsoft.Extensions.Configuration;
+using SnapSell.Application.Applications.Payment.Commnad.Callback;
+using SnapSell.Application.Applications.Payment.Commnad.Token;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.PaymobDtos;
 using System.Net.Http.Headers;
@@ -24,7 +26,7 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
             _config = config;
         }
 
-        public bool IsAuthenticateCallback(PaymobCallbackRequestDto model, string hmac)
+        public bool IsAuthenticateCallback(PaymentCallbackCommand model, string hmac)
         {
             var plainText = model.Obj.AmountCents.ToString()
                           + model.Obj.CreatedAt.ToString()
@@ -66,7 +68,29 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
             return response.Data!;
         }
 
-        public bool IsAuthenticateSaveCard(PaymobTokenCallbackResponseDto model, string hmac)
+        public async Task<PaymobSaveWithCardTokenResponseDto> PayWithSavedCardToken(string cardToken,string paymentKey)
+        {
+            var body = new
+            {
+                identifier = cardToken,
+                payment_token = paymentKey
+            };
+
+            var serlize= JsonSerializer.Serialize(body);
+
+            var content = new StringContent(serlize, new MediaTypeHeaderValue("application/json"));
+
+            var response = await _apiService.SendAsync<PaymobSaveWithCardTokenResponseDto>(_config["Paymob:AcceptancePay"]!, content);
+
+            if (!response.IsSuccess)
+            {
+                throw new OperationCanceledException("invalid operation");
+            }
+
+            return response.Data!;
+        }
+
+        public bool IsAuthenticateSaveCard(PaymentTokenCommand model, string hmac)
         {
             var plainText = model.Obj.CardSubType.ToString()
                           + model.Obj.CreatedAt.ToString()
@@ -78,6 +102,28 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
                           + model.Obj.Token.ToString();
 
             return IsAuthenticatedCallback(plainText, hmac);
+        }
+
+        public async Task<PaymobRefundResponseDto>RefundTransaction(string transactionId,string ammountInCents)
+        {
+            var body = new
+            {
+                transaction_id = transactionId,
+                amount_cents = ammountInCents
+            };
+
+            var serlize = JsonSerializer.Serialize(body);
+
+            var content = new StringContent(serlize, new MediaTypeHeaderValue("application/json"));
+
+            var response = await _apiService.SendAsync<PaymobRefundResponseDto>(_config["Paymob:Refund"]!, content);
+
+            if (!response.IsSuccess)
+            {
+                throw new OperationCanceledException("invalid operation");
+            }
+
+            return response.Data!;
         }
 
         private bool IsAuthenticatedCallback(string plainText, string key)
