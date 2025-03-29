@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnapSell.Application.Applications.Payment.Commnad.Callback
+namespace SnapSell.Application.Applications.Payments.Commnad.Callback
 {
     internal class PaymentCallbackCommandHandler : IRequestHandler<PaymentCallbackCommand, Result<int>>
     {

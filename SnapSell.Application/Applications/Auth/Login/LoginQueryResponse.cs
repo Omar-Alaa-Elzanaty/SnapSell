@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnapSell.Application.Applications.Payment.Commnad.CreatePayment
+namespace SnapSell.Application.Applications.Auth.Login
 {
-    public class CreatePaymentCommandValidator
+    public class LoginQueryResponse
     {
     }
 }

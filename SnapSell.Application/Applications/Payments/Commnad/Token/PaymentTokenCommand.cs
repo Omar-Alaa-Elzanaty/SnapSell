@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace SnapSell.Application.Applications.Payment.Commnad.Token
+namespace SnapSell.Application.Applications.Payments.Commnad.Token
 {
     public class PaymentTokenCommand:IRequest<Result<int>>
     {
