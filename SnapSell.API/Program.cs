@@ -1,9 +1,10 @@
 using Serilog;
 using SnapSell.API;
 using SnapSell.Infrastructure.Extensions;
-using SnapSell.Infrastructure.JsonSerilizeServices;
+using SnapSell.Infrastructure.Services.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
 using SnapSell.Presistance.Extensions;
+using SnapSell.Presistance.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +14,10 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
 });
 
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer(); 
 
 builder.Services
-       .AddInfrastructure()
+       .AddInfrastructure(builder.Configuration)
        .DepedencyInjectionService(builder.Configuration);
 
 builder.Services
@@ -57,5 +58,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+DataSeed.SeedDate(app.Services.CreateScope().ServiceProvider).Wait();
 
 app.Run();
