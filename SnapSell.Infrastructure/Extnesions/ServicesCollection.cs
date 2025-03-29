@@ -2,9 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Application.Interfaces;
 using SnapSell.Infrastructure.Services.ApiRequestService;
+using SnapSell.Infrastructure.Services.MailServices;
 using SnapSell.Infrastructure.Services.MediaServices;
 using SnapSell.Infrastructure.Services.PaymentGateway;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 
 namespace SnapSell.Infrastructure.Extensions
 {
@@ -14,6 +17,7 @@ namespace SnapSell.Infrastructure.Extensions
         {
             services
                 .AddServices()
+                .AddFluentEmailServices(configuration)
                 .AddPaymobService(configuration);
 
             return services;
@@ -24,6 +28,8 @@ namespace SnapSell.Infrastructure.Extensions
             services
                 .AddScoped<IMediaService, LocalMediaService>()
                 .AddScoped<IPaymobService, PaymobService>()
+                .AddScoped<IEmailSender,EmailSender>()
+                .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IApiRequestHandleService, ApiRequestHandleService>();
 
             return services;
@@ -39,6 +45,35 @@ namespace SnapSell.Infrastructure.Extensions
                 httpClient.DefaultRequestHeaders
                 .Add("Authorization", configuration["Paymob:SecretKey"]);
             });
+
+            return services;
+        }
+
+        private static IServiceCollection AddFluentEmailServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            var emailSettings = configuration.GetSection("MailSettings");
+            var defaultFromEmail = emailSettings["SenderEmail"];
+            var host = emailSettings["Server"];
+            var port = emailSettings.GetValue<int>("Port");
+            var userName = emailSettings["UserName"];
+            var password = emailSettings["Password"];
+            var enableSsl = emailSettings.GetValue<bool>("EnableSSL");
+            var useDefaultCredentials = emailSettings.GetValue<bool>("UseDefaultCredentials");
+
+            var smtpClient = new SmtpClient
+            {
+                EnableSsl = enableSsl,
+                Host = host,
+                Port = port,
+                UseDefaultCredentials = useDefaultCredentials,
+                Credentials = new NetworkCredential(userName, password),
+                Timeout = 200000
+            };
+
+            services.AddFluentEmail(defaultFromEmail)
+                    .AddRazorRenderer()
+                    .AddLiquidRenderer()
+                    .AddSmtpSender(smtpClient);
 
             return services;
         }
