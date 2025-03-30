@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace SnapSell.Presistance.Repos
 {
-    class BaseRepo<T> : IBaseRepo<T> where T : class
+    public class BaseRepo<T> : IBaseRepo<T> where T : class
     {
         private readonly SnapSellDbContext _context;
         public BaseRepo(SnapSellDbContext context) => _context = context ?? throw new ArgumentNullException(nameof(context));

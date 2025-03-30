@@ -1,5 +1,6 @@
 using Serilog;
 using SnapSell.API;
+using SnapSell.Application.Extensions.Services;
 using SnapSell.Infrastructure.Extensions;
 using SnapSell.Infrastructure.Services.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
@@ -14,14 +15,12 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
 });
 
-builder.Services.AddEndpointsApiExplorer(); 
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services
        .AddInfrastructure(builder.Configuration)
-       .DepedencyInjectionService(builder.Configuration);
-
-builder.Services
        .AddPresistance(builder.Configuration)
+       .AddApplication()
        .DepedencyInjectionService(builder.Configuration);
 
 var logger = new LoggerConfiguration()

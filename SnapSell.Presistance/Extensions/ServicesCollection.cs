@@ -30,6 +30,9 @@ namespace SnapSell.Presistance.Extensions
                  ));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddRoles<IdentityRole>()
+                .AddSignInManager<SignInManager<ApplicationUser>>()
+                .AddUserManager<UserManager<ApplicationUser>>()
                 .AddEntityFrameworkStores<SnapSellDbContext>()
                 .AddDefaultTokenProviders();
 
