@@ -31,7 +31,6 @@ namespace SnapSell.Presistance.Seeding
                 var admin = new ApplicationUser()
                 {
                     FirstName = "admin",
-                    MiddleName = "admin",
                     LastName = "admin",
                     Email = "admin@gmail.com",
                     UserName= "admin"

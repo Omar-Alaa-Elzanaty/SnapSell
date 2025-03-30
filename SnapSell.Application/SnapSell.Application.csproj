@@ -24,5 +24,7 @@
     <PackageReference Include="Serilog.Sinks.MongoDB" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.1.1" />
   </ItemGroup>
-
+	<ItemGroup>
+		<InternalsVisibleTo Include="SnapSell.Test" />
+	</ItemGroup>
 </Project>
