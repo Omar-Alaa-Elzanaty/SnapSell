@@ -13,7 +13,7 @@ namespace SnapSell.Infrastructure.Extensions
 {
     public static class ServicesCollection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services
                 .AddServices()
@@ -28,14 +28,14 @@ namespace SnapSell.Infrastructure.Extensions
             services
                 .AddScoped<IMediaService, LocalMediaService>()
                 .AddScoped<IPaymobService, PaymobService>()
-                .AddScoped<IEmailSender,EmailSender>()
+                .AddScoped<IEmailSender, EmailSender>()
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IApiRequestHandleService, ApiRequestHandleService>();
 
             return services;
         }
 
-        private static IServiceCollection AddPaymobService(this IServiceCollection services,IConfiguration configuration)
+        private static IServiceCollection AddPaymobService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpClient<IPaymobService>("PaymobService", (serviceProvider, httpClient) =>
             {
@@ -43,7 +43,7 @@ namespace SnapSell.Infrastructure.Extensions
                 httpClient.DefaultRequestHeaders
                 .Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 httpClient.DefaultRequestHeaders
-                .Add("Authorization", configuration["Paymob:SecretKey"]);
+                .Add("Authorization", "TOKEN " + configuration["Paymob:SecretKey"]);
             });
 
             return services;
@@ -59,6 +59,7 @@ namespace SnapSell.Infrastructure.Extensions
             var password = emailSettings["Password"];
             var enableSsl = emailSettings.GetValue<bool>("EnableSSL");
             var useDefaultCredentials = emailSettings.GetValue<bool>("UseDefaultCredentials");
+            var senderName = emailSettings["SenderName"];
 
             var smtpClient = new SmtpClient
             {
@@ -70,7 +71,7 @@ namespace SnapSell.Infrastructure.Extensions
                 Timeout = 200000
             };
 
-            services.AddFluentEmail(defaultFromEmail)
+            services.AddFluentEmail(defaultFromEmail, senderName)
                     .AddRazorRenderer()
                     .AddLiquidRenderer()
                     .AddSmtpSender(smtpClient);
