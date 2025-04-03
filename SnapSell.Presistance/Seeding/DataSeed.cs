@@ -16,7 +16,7 @@ namespace SnapSell.Presistance.Seeding
     {
         public static async Task SeedDate(IServiceProvider services)
         {
-            var context = services.GetRequiredService<SnapSellDbContext>();
+            var context = services.GetRequiredService<SqlDbContext>();
 
             if (context.Database.GetPendingMigrations().Any())
             {
@@ -31,6 +31,7 @@ namespace SnapSell.Presistance.Seeding
                 var admin = new ApplicationUser()
                 {
                     FirstName = "admin",
+                    MiddleName = "admin",
                     LastName = "admin",
                     Email = "admin@gmail.com",
                     UserName= "admin"

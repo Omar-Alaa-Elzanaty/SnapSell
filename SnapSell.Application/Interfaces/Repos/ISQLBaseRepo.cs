@@ -2,7 +2,7 @@
 
 namespace SnapSell.Application.Interfaces.Repos
 {
-    public interface IBaseRepo<T>
+    public interface ISQLBaseRepo<T>
     {
         Task AddAsync(T entity);
         Task AddRange(IEnumerable<T> entities);

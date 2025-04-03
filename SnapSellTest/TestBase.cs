@@ -42,9 +42,9 @@ namespace SnapSell.Test
         private void AddSQLLiteDbContext(IServiceCollection services, IConfiguration configuration, IHttpContextAccessor contextAccessor = null)
         {
             var connection = CreateDatabaseAndGetConnection(contextAccessor);
-            services.AddDbContext<SnapSellDbContext>(options =>
+            services.AddDbContext<SqlDbContext>(options =>
                           options.UseSqlite(connection,
-                              _builder => _builder.MigrationsAssembly(typeof(SnapSellDbContext).Assembly.FullName)), ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+                              _builder => _builder.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)), ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
             if (contextAccessor is not null)
             {
@@ -56,10 +56,10 @@ namespace SnapSell.Test
                     .AddRoles<IdentityRole>()
                     .AddSignInManager<SignInManager<ApplicationUser>>()
                     .AddUserManager<UserManager<ApplicationUser>>()
-                    .AddEntityFrameworkStores<SnapSellDbContext>()
+                    .AddEntityFrameworkStores<SqlDbContext>()
                     .AddDefaultTokenProviders();
 
-            services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>))
+            services.AddScoped(typeof(ISQLBaseRepo<>), typeof(BaseRepo<>))
                     .AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
@@ -69,8 +69,8 @@ namespace SnapSell.Test
             var connection = new SqliteConnection("Data Source=:memory:");
             connection.Open();
 
-            new SnapSellDbContext(
-                new DbContextOptionsBuilder<SnapSellDbContext>().UseSqlite(connection).Options,
+            new SqlDbContext(
+                new DbContextOptionsBuilder<SqlDbContext>().UseSqlite(connection).Options,
                 http).GetService<IRelationalDatabaseCreator>().CreateTables();
 
             return connection;
@@ -109,7 +109,7 @@ namespace SnapSell.Test
 
         public void Dispose()
         {
-            using var context = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<SnapSellDbContext>();
+            using var context = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<SqlDbContext>();
 
             context.Database.EnsureDeleted();
             context.Dispose();

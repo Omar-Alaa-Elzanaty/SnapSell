@@ -9,12 +9,12 @@ using System.Security.Claims;
 
 namespace SnapSell.Presistance.Context
 {
-    public class SnapSellDbContext : IdentityDbContext<ApplicationUser>
+    public class SqlDbContext : IdentityDbContext<ApplicationUser>
     {
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public SnapSellDbContext(
-            DbContextOptions<SnapSellDbContext> options,
+        public SqlDbContext(
+            DbContextOptions<SqlDbContext> options,
             IHttpContextAccessor contextAccessor) : base(options)
         {
             _contextAccessor = contextAccessor;
@@ -29,7 +29,7 @@ namespace SnapSell.Presistance.Context
             modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SnapSellDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SqlDbContext).Assembly);
 
             modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
         }
