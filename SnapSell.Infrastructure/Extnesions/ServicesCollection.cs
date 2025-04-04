@@ -1,9 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Application.Interfaces;
 using SnapSell.Infrastructure.Services.ApiRequestService;
 using SnapSell.Infrastructure.Services.MailServices;
 using SnapSell.Infrastructure.Services.MediaServices;
+using SnapSell.Infrastructure.Services.NotificationServices;
 using SnapSell.Infrastructure.Services.PaymentGateway;
 using System.Net;
 using System.Net.Http.Headers;
@@ -18,7 +22,8 @@ namespace SnapSell.Infrastructure.Extensions
             services
                 .AddServices()
                 .AddFluentEmailServices(configuration)
-                .AddPaymobService(configuration);
+                .AddPaymobService(configuration)
+                .AddNotificationService(configuration);
 
             return services;
         }
@@ -76,6 +81,23 @@ namespace SnapSell.Infrastructure.Extensions
                     .AddLiquidRenderer()
                     .AddSmtpSender(smtpClient);
 
+            return services;
+        }
+
+        private static IServiceCollection AddNotificationService(this IServiceCollection services, IConfiguration configuration)
+        {
+            
+            if (FirebaseApp.DefaultInstance == null)
+            {
+                var firebaseCredentialJson = configuration["Firebase:Credentials"];
+                FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromJson(firebaseCredentialJson)
+                });
+            }
+
+            
+            services.AddScoped<INotificationSender, NotificationSender>();
             return services;
         }
     }
