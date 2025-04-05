@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnapSell.Presentation.EndPoints
 {
-    public class TestController:ApiControllerBase
+    public class TestController : ApiControllerBase
     {
         private readonly IStringLocalizer<TestController> _localizer;
 
@@ -17,8 +12,8 @@ namespace SnapSell.Presentation.EndPoints
             _localizer = localizer;
         }
 
-        [HttpGet()]
-        public IActionResult Get()
+        [HttpGet("Test")]
+        public IActionResult GetABc()
         {
             var message = _localizer["Welcome"];
             return Ok(message.Value);
