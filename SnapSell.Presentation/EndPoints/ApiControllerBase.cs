@@ -1,10 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints
 {
     [ApiController]
     [Route("api/[controller]")]
-    class ApiControllerBase : ControllerBase
+    public class ApiControllerBase : ControllerBase
     {
+
+        public ObjectResult StatusCode(Result<object> data)
+        {
+            return StatusCode((int)data.StatusCode, data);
+        }
     }
 }

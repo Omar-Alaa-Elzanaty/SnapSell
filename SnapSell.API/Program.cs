@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Serilog;
 using SnapSell.API;
 using SnapSell.Application.Extensions.Services;
@@ -45,7 +46,11 @@ else
     app.UseCors("PRODUCTION");
 }
 
+var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(locOptions?.Value!);
+
 app.UseRouting();
+
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 

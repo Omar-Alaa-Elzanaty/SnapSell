@@ -18,34 +18,47 @@ namespace SnapSell.Presistance.Extensions
         public static IServiceCollection AddPresistance(this IServiceCollection services, IConfiguration configuration)
         {
             services
-                .AddServices(configuration);
+                .AddServices(configuration)
+                .AddSQLDbContext(configuration)
+                .AddMongDbContext(configuration);
 
             return services;
         }
 
         private static IServiceCollection AddServices(this IServiceCollection services ,IConfiguration configuration)
         {
-            services.AddDbContext<SqlDbContext>(options =>
-                 options.UseSqlServer(
-                     configuration.GetConnectionString("DbConnection"),
-                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)
-                 ));
-
-            var mongoSetting = new MongoClient(MongoClientSettings.FromConnectionString(configuration["MongoSetting:Connection"]));
-
-            services.AddDbContext<MongoDbContext>(options =>
-                    options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddRoles<IdentityRole>()
-                .AddSignInManager<SignInManager<ApplicationUser>>()
-                .AddUserManager<UserManager<ApplicationUser>>()
-                .AddEntityFrameworkStores<SqlDbContext>()
-                .AddDefaultTokenProviders();
-
             services.AddScoped(typeof(ISQLBaseRepo<>), typeof(SQLBaseRepo<>))
                     .AddScoped<IUnitOfWork, UnitOfWork>()
                     .AddScoped(typeof(IMongoBaseRepo<>),typeof(MongoBaseRepo<>));
+
+            return services;
+        }
+
+        private static IServiceCollection AddSQLDbContext(this IServiceCollection services,IConfiguration configuration)
+        {
+            services.AddDbContext<SqlDbContext>(options =>
+                options.UseSqlServer(
+                     configuration.GetConnectionString("DbConnection"),
+                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)
+                ));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddRoles<IdentityRole>()
+                    .AddSignInManager<SignInManager<ApplicationUser>>()
+                    .AddUserManager<UserManager<ApplicationUser>>()
+                    .AddEntityFrameworkStores<SqlDbContext>()
+                    .AddDefaultTokenProviders();
+
+            return services;
+        }
+        
+        private static IServiceCollection AddMongDbContext(this IServiceCollection services,IConfiguration configuration)
+        {
+
+            var mongoSetting = new MongoClient(configuration["MongoSetting:Connection"]);
+
+            services.AddDbContext<MongoDbContext>(options =>
+                    options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
 
             return services;
         }

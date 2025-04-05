@@ -3,9 +3,9 @@ using SnapSell.Application.Interfaces;
 
 
 
-namespace SnapSell.Infrastructure.Services.NotificationServices
+namespace SnapSell.Infrastructure.Services.PushNotificationServices
 {
-    public class NotificationSender : INotificationSender
+    public class PushNotificationSender : IPushNotificationSender
     {
         /// <summary>
         /// Sends a notification to a specific FCM token

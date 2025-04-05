@@ -3,7 +3,7 @@ using FirebaseAdmin.Messaging;
 
 namespace SnapSell.Application.Interfaces
 {
-    public interface INotificationSender
+    public interface IPushNotificationSender
     {
         Task<String> SendNotificationAsync(string fcmToken, string title, string body, Dictionary<string, string>? data = null);
         Task<BatchResponse> SendNotificationAsync(List<string> fcmTokens, string title, string body, Dictionary<string, string>? data = null);
