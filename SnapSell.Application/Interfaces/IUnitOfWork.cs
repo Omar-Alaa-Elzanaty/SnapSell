@@ -1,10 +1,12 @@
 ﻿using SnapSell.Application.Interfaces.Repos;
+using SnapSell.Domain.Models;
 
 namespace SnapSell.Application.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IBaseRepo<T> Repository<T>() where T : class;
+        //IBaseRepo<T> Repository<T>() where T : class;
+        IMongoBaseRepo<Product> ProductsRepo { get; }
         Task<int> SaveAsync(CancellationToken cancellationToken = default);
     }
 }

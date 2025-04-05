@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Models;
@@ -23,21 +25,27 @@ namespace SnapSell.Presistance.Extensions
 
         private static IServiceCollection AddServices(this IServiceCollection services ,IConfiguration configuration)
         {
-            services.AddDbContext<SnapSellDbContext>(options =>
+            services.AddDbContext<SqlDbContext>(options =>
                  options.UseSqlServer(
                      configuration.GetConnectionString("DbConnection"),
-                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(SnapSellDbContext).Assembly.FullName)
+                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)
                  ));
+
+            var mongoSetting = new MongoClient(MongoClientSettings.FromConnectionString(configuration["MongoSetting:Connection"]));
+
+            services.AddDbContext<MongoDbContext>(options =>
+                    options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddRoles<IdentityRole>()
                 .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddUserManager<UserManager<ApplicationUser>>()
-                .AddEntityFrameworkStores<SnapSellDbContext>()
+                .AddEntityFrameworkStores<SqlDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped(typeof(IBaseRepo<>), typeof(BaseRepo<>))
-                    .AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(ISQLBaseRepo<>), typeof(SQLBaseRepo<>))
+                    .AddScoped<IUnitOfWork, UnitOfWork>()
+                    .AddScoped(typeof(IMongoBaseRepo<>),typeof(MongoBaseRepo<>));
 
             return services;
         }
