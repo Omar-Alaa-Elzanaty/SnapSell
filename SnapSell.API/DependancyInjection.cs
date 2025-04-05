@@ -11,7 +11,7 @@ namespace SnapSell.API
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "ICPC API", Version = "v2.0" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SnapSell API", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,

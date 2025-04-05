@@ -6,7 +6,7 @@ namespace SnapSell.Presentation.EndPoints
 {
     [ApiController]
     [Route("api/[controller]")]
-    public abstract class ApiControllerBase : ControllerBase
+    public class ApiControllerBase : ControllerBase
     {
         //protected ObjectResult StatusCode(Result<object> data)
         //{

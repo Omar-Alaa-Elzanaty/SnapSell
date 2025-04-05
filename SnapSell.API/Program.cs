@@ -18,6 +18,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddSwaggerGen();
 builder.Services
        .AddInfrastructure(builder.Configuration)
        .AddPresistance(builder.Configuration)
@@ -29,7 +30,6 @@ var logger = new LoggerConfiguration()
             .CreateLogger();
 
 Log.Logger = logger;
-
 builder.Host.UseSerilog(logger);
 
 var app = builder.Build();
@@ -52,6 +52,7 @@ app.UseRequestLocalization(locOptions?.Value!);
 app.UseRouting();
 
 app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleWare>();

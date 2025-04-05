@@ -15,8 +15,8 @@ namespace SnapSell.Presentation.EndPoints
         [HttpGet("Test")]
         public IActionResult GetABc()
         {
-            var message = _localizer["Welcome"];
-            return Ok(message.Value);
+            //var message = _localizer["Welcome"];
+            return Ok("");
         }
     }
 }
