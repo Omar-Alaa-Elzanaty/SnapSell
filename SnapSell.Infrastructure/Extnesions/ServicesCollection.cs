@@ -89,10 +89,9 @@ namespace SnapSell.Infrastructure.Extensions
             
             if (FirebaseApp.DefaultInstance == null)
             {
-                var firebaseCredentialJson = configuration["Firebase:Credentials"];
                 FirebaseApp.Create(new AppOptions()
                 {
-                    Credential = GoogleCredential.FromJson(firebaseCredentialJson)
+                    Credential = GoogleCredential.FromFile("private_key.json")
                 });
             }
 
