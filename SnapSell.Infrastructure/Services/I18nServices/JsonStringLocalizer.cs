@@ -42,7 +42,7 @@ namespace SnapSell.Infrastructure.Services.I18nServices
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
         {
-            var filePath = $"MultLanguageService/Resources/{Thread.CurrentThread.CurrentCulture.Name}.json";
+            var filePath = $"Resources/{Thread.CurrentThread.CurrentCulture.Name}.json";
             using FileStream stream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using StreamReader streamReader = new(stream);
             using JsonTextReader reader = new(streamReader);
