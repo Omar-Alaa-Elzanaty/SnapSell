@@ -59,7 +59,8 @@ namespace SnapSell.Test
                     .AddEntityFrameworkStores<SqlDbContext>()
                     .AddDefaultTokenProviders();
 
-            services.AddScoped(typeof(ISQLBaseRepo<>), typeof(BaseRepo<>))
+            services.AddScoped(typeof(ISQLBaseRepo<>), typeof(SQLBaseRepo<>))
+                    .AddScoped(typeof(IMongoBaseRepo<>), typeof(MongoBaseRepo<>))
                     .AddScoped<IUnitOfWork, UnitOfWork>();
         }
 

@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace SnapSell.Presistance.Repos
 {
-    class SQLBaseRepo<T> : ISQLBaseRepo<T> where T : class
+    public class SQLBaseRepo<T> : ISQLBaseRepo<T> where T : class
     {
         private readonly SqlDbContext _context;
         public SQLBaseRepo(SqlDbContext context) => _context = context ?? throw new ArgumentNullException(nameof(context));
