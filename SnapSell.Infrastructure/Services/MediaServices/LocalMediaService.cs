@@ -86,6 +86,7 @@ namespace SnapSell.Infrastructure.Services.MediaServices
             return mediaType switch
             {
                 MediaTypes.Image => _configuration["MediaSavePath:ImagePath"]!,
+                MediaTypes.Video => _configuration["MediaSavePath:VideoPath"]!,
                 _ => "",
             };
         }

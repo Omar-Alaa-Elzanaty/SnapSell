@@ -20,7 +20,7 @@ namespace SnapSell.Presistance.Extensions
             services
                 .AddServices(configuration)
                 .AddSQLDbContext(configuration)
-                .AddMongDbContext(configuration);
+                .AddMongoDbContext(configuration);
 
             return services;
         }
@@ -52,7 +52,7 @@ namespace SnapSell.Presistance.Extensions
             return services;
         }
         
-        private static IServiceCollection AddMongDbContext(this IServiceCollection services,IConfiguration configuration)
+        private static IServiceCollection AddMongoDbContext(this IServiceCollection services,IConfiguration configuration)
         {
 
             var mongoSetting = new MongoClient(configuration["MongoSetting:Connection"]);
