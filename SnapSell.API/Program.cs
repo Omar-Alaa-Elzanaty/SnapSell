@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Serilog;
 using SnapSell.API;
 using SnapSell.Application.Extensions.Services;
@@ -17,6 +18,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddSwaggerGen();
 builder.Services
        .AddInfrastructure(builder.Configuration)
        .AddPresistance(builder.Configuration)
@@ -28,7 +30,6 @@ var logger = new LoggerConfiguration()
             .CreateLogger();
 
 Log.Logger = logger;
-
 builder.Host.UseSerilog(logger);
 
 var app = builder.Build();
@@ -45,8 +46,13 @@ else
     app.UseCors("PRODUCTION");
 }
 
+var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(locOptions?.Value!);
+
 app.UseRouting();
+
 app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleWare>();

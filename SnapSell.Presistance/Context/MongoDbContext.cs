@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.EntityFrameworkCore.Extensions;
 using SnapSell.Domain.Interfaces;
 using SnapSell.Domain.Models;
 using System.Security.Claims;
@@ -14,6 +15,12 @@ namespace SnapSell.Presistance.Context
             IHttpContextAccessor contextAccessor) : base(options)
         {
             _contextAccessor = contextAccessor;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Product>().ToCollection("Products");
         }
 
         public DbSet<Product> Products { get; set; }

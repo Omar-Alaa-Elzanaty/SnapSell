@@ -1,14 +1,18 @@
 ﻿using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using SnapSell.Application.Interfaces;
 using SnapSell.Infrastructure.Services.ApiRequestService;
+using SnapSell.Infrastructure.Services.I18nServices;
 using SnapSell.Infrastructure.Services.MailServices;
 using SnapSell.Infrastructure.Services.MediaServices;
-using SnapSell.Infrastructure.Services.NotificationServices;
 using SnapSell.Infrastructure.Services.PaymentGateway;
+using SnapSell.Infrastructure.Services.PushNotificationServices;
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Mail;
@@ -23,7 +27,8 @@ namespace SnapSell.Infrastructure.Extensions
                 .AddServices()
                 .AddFluentEmailServices(configuration)
                 .AddPaymobService(configuration)
-                .AddNotificationService(configuration);
+                .AddPushNotificationService(configuration)
+                .AddI18nService();
 
             return services;
         }
@@ -35,7 +40,9 @@ namespace SnapSell.Infrastructure.Extensions
                 .AddScoped<IPaymobService, PaymobService>()
                 .AddScoped<IEmailSender, EmailSender>()
                 .AddScoped<IEmailService, EmailService>()
-                .AddScoped<IApiRequestHandleService, ApiRequestHandleService>();
+                .AddScoped<IPushNotificationSender, PushNotificationSender>()
+                .AddScoped<IApiRequestHandleService, ApiRequestHandleService>()
+                .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
 
             return services;
         }
@@ -84,9 +91,9 @@ namespace SnapSell.Infrastructure.Extensions
             return services;
         }
 
-        private static IServiceCollection AddNotificationService(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddPushNotificationService(this IServiceCollection services, IConfiguration configuration)
         {
-            
+
             if (FirebaseApp.DefaultInstance == null)
             {
                 FirebaseApp.Create(new AppOptions()
@@ -95,8 +102,27 @@ namespace SnapSell.Infrastructure.Extensions
                 });
             }
 
-            
-            services.AddScoped<INotificationSender, NotificationSender>();
+            return services;
+        }
+
+        private static IServiceCollection AddI18nService(this IServiceCollection services)
+        {
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("ar")
+                };
+                options.DefaultRequestCulture = new RequestCulture(culture: "en", uiCulture: "en");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+                options.ApplyCurrentCultureToResponseHeaders = true;
+            });
+
             return services;
         }
     }
