@@ -1,52 +1,68 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
-using System.Text.Json.Serialization;
 
 namespace SnapSell.Application.Hubs
 {
-    public class MessageDto{
-        public string? Message { get; set; }
-        public string? Username { get; set; }
-
-    }
-    public struct VideoData
+    public class MessageDto
     {
-        //public int Index { get; }
-        public string Data { get; }
+        public string Message { get; set; } = string.Empty;
+        public string SenderUserName { get; set; } = string.Empty;
+        public string StreamerId { get; set; } = string.Empty;
 
     }
-    public class StreamingHub:Hub
+
+    //public struct VideoData
+    //{
+    //    //public int Index { get; }
+    //    public string Data { get; }
+
+    //}
+    public class StreamingHub : Hub
     {
         private readonly IWebHostEnvironment _env;
 
         public StreamingHub(IWebHostEnvironment env)
         {
             _env = env;
+
         }
 
-        public async Task SendVideoData(IAsyncEnumerable<VideoData> videoData)
+        public async Task JoinGroup(string streamerId)
         {
+            //TODO: use database to get connectionId using streamerId
+
+            var streamerConId = streamerId;
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, streamerConId);
+        }
+
+        public async Task SendVideoData(IAsyncEnumerable<string> videoData)
+        {
+            //TODO: Save live in  files
             await foreach (var d in videoData)
             {
-             
-                await Clients.Others.SendAsync("video-data", d);
+
+                await Clients.Group(Context.ConnectionId).SendAsync("video-data", d);
             }
         }
 
-        public async Task SendMessage(MessageDto input)
-        { 
+        public async Task SendMessage(MessageDto message)
+        {
 
-            await Clients.Others.SendAsync("NewMessage", input);
+            //TODO: use database to get connectionId using streamerId
+            var streamerconId = message.StreamerId;
+
+            await Clients.Group(streamerconId).SendAsync("NewMessage", message);
         }
         public override async Task OnConnectedAsync()
         {
-            
+            //TODO:add connectionId to database
             await base.OnConnectedAsync();
         }
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            
+            //TODO:remove connectionId from database
+
             await base.OnDisconnectedAsync(exception);
         }
     }
