@@ -13,12 +13,16 @@ namespace SnapSell.Presistance
 
         public IMongoBaseRepo<Product> ProductsRepo { get; private set; }
 
+        public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
+
         public UnitOfWork(
             SqlDbContext context,
-            IMongoBaseRepo<Product> productRepo)
+            IMongoBaseRepo<Product> productRepo,
+            ISQLBaseRepo<CacheCode> cacheCodesRepo)
         {
             _context = context;
             ProductsRepo = productRepo;
+            CacheCodesRepo = cacheCodesRepo;
         }
 
         public async Task<int> SaveAsync(CancellationToken cancellationToken = default) => await _context.SaveChangesAsync(cancellationToken);

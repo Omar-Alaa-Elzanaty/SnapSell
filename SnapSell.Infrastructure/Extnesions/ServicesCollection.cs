@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using SnapSell.Application.Interfaces;
 using SnapSell.Infrastructure.Services.ApiRequestService;
+using SnapSell.Infrastructure.Services.CacheServices;
 using SnapSell.Infrastructure.Services.I18nServices;
 using SnapSell.Infrastructure.Services.MailServices;
 using SnapSell.Infrastructure.Services.MediaServices;
@@ -42,6 +43,7 @@ namespace SnapSell.Infrastructure.Extensions
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IPushNotificationSender, PushNotificationSender>()
                 .AddScoped<IApiRequestHandleService, ApiRequestHandleService>()
+                .AddScoped<ICacheService, CacheService>()
                 .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
 
             return services;

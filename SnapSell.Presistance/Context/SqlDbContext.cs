@@ -74,5 +74,7 @@ namespace SnapSell.Presistance.Context
 
             return await base.SaveChangesAsync(cancellationToken);
         }
+
+        public DbSet<CacheCode> CacheCodes { get; set; }
     }
 }

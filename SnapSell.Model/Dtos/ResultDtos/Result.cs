@@ -10,6 +10,7 @@ namespace SnapSell.Domain.Dtos.ResultDtos
         public HttpStatusCode StatusCode { get; set; }
         public T? Data { get; set; }
         public string? Message { get; set; }
+        public CacheResponse? CacheCodes { get; set; }
         public Dictionary<string, List<string>>? Errors { get; set; }
 
         public static Result<T> Success()
