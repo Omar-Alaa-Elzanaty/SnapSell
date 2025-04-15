@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SnapSell.Application.Extensions
 {
-    public static class QuerableExtensions
+    public static class SqlQuerableExtensions
     {
         public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
@@ -13,7 +13,10 @@ namespace SnapSell.Application.Extensions
             pageSize = pageSize == 0 ? 10 : pageSize;
             int count = await source.CountAsync();
             pageNumber = pageNumber <= 0 ? 1 : pageNumber;
-            List<T> items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+            List<T> items = await source.Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
             return PaginatedResult<T>.Create(items, count, pageNumber, pageSize);
         }
 
@@ -68,7 +71,11 @@ namespace SnapSell.Application.Extensions
             Expression expr = arg;
             foreach (string prop in props)
             {
-                PropertyInfo pi = type.GetProperty(prop, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                PropertyInfo pi = type.GetProperty(
+                    prop, BindingFlags.Public| 
+                    BindingFlags.Instance | 
+                    BindingFlags.IgnoreCase)!;
+
                 if (pi is null)
                 {
                     throw new ArgumentException("Invalid sorting property!");
@@ -85,7 +92,7 @@ namespace SnapSell.Application.Extensions
                 && method.GetGenericArguments().Length == 2
                 && method.GetParameters().Length == 2)
                 .MakeGenericMethod(typeof(T), type)
-                .Invoke(null, [source, lambda]);
+                .Invoke(null, [source, lambda])!;
 
             return (IOrderedQueryable<T>)result;
         }

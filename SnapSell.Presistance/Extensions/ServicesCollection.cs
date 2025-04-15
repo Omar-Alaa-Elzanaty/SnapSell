@@ -2,12 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Entities;
 using SnapSell.Presistance.Context;
+using SnapSell.Presistance.Context.SnapSell.Infrastructure.Data;
 using SnapSell.Presistance.Repos;
-using System.Configuration;
 
 namespace SnapSell.Presistance.Extensions
 {
@@ -29,7 +30,22 @@ namespace SnapSell.Presistance.Extensions
                          sqlOptions => sqlOptions.MigrationsAssembly(typeof(SnapSellDbContext).Assembly.FullName)
                  ));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            // Add MongoDB configuration
+            var mongoDbSettings = configuration.GetSection("MongoDB");
+            services.AddSingleton<IMongoClient>(serviceProvider =>
+                new MongoClient(mongoDbSettings["ConnectionString"]));
+
+            services.AddScoped<MongoDbContext>(serviceProvider =>
+            {
+                var client = serviceProvider.GetRequiredService<IMongoClient>();
+                return new MongoDbContext(client, mongoDbSettings["DatabaseName"]!);
+            });
+          
+            // Optional: Create indexes on startup
+            //services.AddHostedService<MongoIndexService>();
+
+
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<SnapSellDbContext>()
                 .AddDefaultTokenProviders();
 

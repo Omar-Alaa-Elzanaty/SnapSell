@@ -5,9 +5,17 @@ using SnapSell.Domain.Entities;
 
 namespace SnapSell.Presistance.Context
 {
-    public class SnapSellDbContext: IdentityDbContext<ApplicationUser>
+    public class SnapSellDbContext: IdentityDbContext<User>
     {
         public SnapSellDbContext(DbContextOptions<SnapSellDbContext> options) : base(options) { }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

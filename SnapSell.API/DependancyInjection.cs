@@ -6,33 +6,33 @@ namespace SnapSell.API
     {
         public static IServiceCollection DepedencyInjectionService(this IServiceCollection services, IConfiguration config)
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PSolve API", Version = "v1.0" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Description = "Please enter token",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    BearerFormat = "JWT",
-                    Scheme = "bearer"
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
-                            }
-                        },
-                        new string[]{}
-                    }
-                });
-            });
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "PSolve API", Version = "v1.0" });
+            //    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            //    {
+            //        In = ParameterLocation.Header,
+            //        Description = "Please enter token",
+            //        Name = "Authorization",
+            //        Type = SecuritySchemeType.ApiKey,
+            //        BearerFormat = "JWT",
+            //        Scheme = "bearer"
+            //    });
+            //    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            //    {
+            //        {
+            //            new OpenApiSecurityScheme
+            //            {
+            //                Reference = new OpenApiReference
+            //                {
+            //                    Type=ReferenceType.SecurityScheme,
+            //                    Id="Bearer"
+            //                }
+            //            },
+            //            new string[]{}
+            //        }
+            //    });
+            //});
 
             services
                 .AddHttpContextAccessor()
