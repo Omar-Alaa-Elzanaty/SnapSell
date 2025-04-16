@@ -37,7 +37,6 @@ namespace SnapSell.Presistance.Context
             public void CreateIndexes()
             {
                 var productKeys = Builders<Product>.IndexKeys
-                    .Text(p => p.Name)
                     .Text(p => p.Description);
 
                 Products.Indexes.CreateOne(new CreateIndexModel<Product>(productKeys));
