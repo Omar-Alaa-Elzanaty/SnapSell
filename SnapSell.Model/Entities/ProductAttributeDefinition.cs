@@ -1,4 +1,6 @@
-﻿namespace SnapSell.Domain.Entities
+﻿using SnapSell.Domain.Attributes;
+
+namespace SnapSell.Domain.Entities
 { 
     [BsonCollection("product_attributes")]
     public class ProductAttributeDefinition : Document

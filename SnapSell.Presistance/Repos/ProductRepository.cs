@@ -82,16 +82,12 @@ namespace SnapSell.Presistance.Repos
             int pageSize = 20,
             string sortBy = "")
         {
-            // Create the base query
             var filter = Builders<Product>.Filter.Or(
                 Builders<Product>.Filter.Where(p => p.Name.Contains(query)),
                 Builders<Product>.Filter.Where(p => p.Description.Contains(query))
             );
 
-            // Convert sort string to SortDefinition
             var sort = sortBy.ToSortDefinition<Product>();
-
-            // Use the IMongoCollection extension method for pagination
             return await _products.ToMongoPaginatedListAsync(
                 filter,
                 sort,
@@ -134,7 +130,11 @@ namespace SnapSell.Presistance.Repos
             var product = await GetByIdAsync(productId);
             if (product?.BrandIds == null || !product.BrandIds.Any())
             {
-                return PaginatedResult<Product>.Create(new List<Product>(), 0, pageNumber, pageSize);
+                return PaginatedResult<Product>.Create(
+                    new List<Product>(),
+                    0,
+                    pageNumber,
+                    pageSize);
             }
 
             var filter = Builders<Product>.Filter.And(
@@ -171,11 +171,9 @@ namespace SnapSell.Presistance.Repos
 
         public async Task RemoveBrandAsync(string productId, string brandId)
         {
-            // Create update definition for primary brand
             var update = Builders<Product>.Update
                 .Pull(p => p.BrandIds, brandId);
 
-            // Check if we need to clear primary brand
             var product = await GetByIdAsync(productId);
             if (product?.PrimaryBrandId == brandId)
             {

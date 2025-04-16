@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using SnapSell.Domain.Attributes;
 
 namespace SnapSell.Domain.Entities
 {
@@ -10,9 +11,9 @@ namespace SnapSell.Domain.Entities
         public string LogoUrl { get; set; }
 
         [BsonElement("product_ids")]
-        public List<string> ProductIds { get; set; } = new(); // References to products
+        public List<string> ProductIds { get; set; } = new();
 
         [BsonIgnore]
-        public List<Product> Products { get; set; } // Populated during queries
+        public List<Product> Products { get; set; }
     }
 }

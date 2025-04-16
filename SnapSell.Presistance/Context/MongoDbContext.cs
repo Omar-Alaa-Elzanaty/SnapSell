@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using SnapSell.Domain.Attributes;
 using SnapSell.Domain.Entities;
 using SnapSell.Domain.Interfaces;
 using System.Reflection;

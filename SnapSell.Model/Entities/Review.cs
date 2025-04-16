@@ -3,7 +3,7 @@
     public sealed class Review
     {
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }
+        public required string UserId { get; set; }
         public required string ProductId { get; set; } //references MongoDB product
         public int Rating { get; set; } //1-5
         public required string Title { get; set; }
