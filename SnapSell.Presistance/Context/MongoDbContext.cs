@@ -17,7 +17,6 @@ namespace SnapSell.Presistance.Context
             public IMongoCollection<Product> Products => GetCollection<Product>();
             public IMongoCollection<Category> Categories => GetCollection<Category>();
             public IMongoCollection<Brand> Brands => GetCollection<Brand>();
-            public IMongoCollection<ProductAttributeDefinition> ProductAttributes => GetCollection<ProductAttributeDefinition>();
 
             //get any collection by type
             public IMongoCollection<TEntity> GetCollection<TEntity>() where TEntity : IDocument
