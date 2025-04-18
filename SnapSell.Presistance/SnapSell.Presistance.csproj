@@ -18,4 +18,8 @@
     <ProjectReference Include="..\SnapSell.Application\SnapSell.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EntityConfiguration\" />
+  </ItemGroup>
+
 </Project>

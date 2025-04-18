@@ -7,7 +7,6 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Entities;
 using SnapSell.Presistance.Context;
-using SnapSell.Presistance.Context.SnapSell.Infrastructure.Data;
 using SnapSell.Presistance.Repos;
 
 namespace SnapSell.Presistance.Extensions
@@ -35,11 +34,11 @@ namespace SnapSell.Presistance.Extensions
             services.AddSingleton<IMongoClient>(serviceProvider =>
                 new MongoClient(mongoDbSettings["ConnectionString"]));
 
-            services.AddScoped<MongoDbContext>(serviceProvider =>
-            {
-                var client = serviceProvider.GetRequiredService<IMongoClient>();
-                return new MongoDbContext(client, mongoDbSettings["DatabaseName"]!);
-            });
+            //services.AddScoped<MongoDbContext>(serviceProvider =>
+            //{
+            //    var client = serviceProvider.GetRequiredService<IMongoClient>();
+            //    return new MongoDbContext(client, mongoDbSettings["DatabaseName"]!);
+            //});
           
             // Optional: Create indexes on startup
             //services.AddHostedService<MongoIndexService>();
