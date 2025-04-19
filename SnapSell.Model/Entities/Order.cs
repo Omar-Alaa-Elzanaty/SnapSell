@@ -30,7 +30,7 @@ namespace SnapSell.Domain.Entities
 
     public class ProvisionOrder : Order
     {
-        // Seller restocking fields
+        // Seller fields
        
     }
 }

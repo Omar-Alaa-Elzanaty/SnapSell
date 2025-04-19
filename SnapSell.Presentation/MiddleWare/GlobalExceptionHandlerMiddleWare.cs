@@ -28,7 +28,7 @@ namespace SnapSell.Presentation.MiddleWare
             }
         }
 
-       
+         
         private static async Task HandleExceptionAsync(HttpContext context, BaseException ex)
         {
             var response = new Result<object>
