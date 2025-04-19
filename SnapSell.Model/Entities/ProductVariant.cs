@@ -8,7 +8,7 @@
         public required string Color { get; set; }
         public required string Size { get; set; }
         public string? SKU { get; set; }
-        public int StockQuantity { get; set; }
-        public required string StockStatus { get; set; }
+        //public int StockQuantity { get; set; }
+        //public required string StockStatus { get; set; }
     }
 }

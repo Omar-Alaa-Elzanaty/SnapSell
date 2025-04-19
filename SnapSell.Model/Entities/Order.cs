@@ -15,9 +15,9 @@ namespace SnapSell.Domain.Entities
 
     public class CustomerOrder : Order
     {
-        public int ShippingAddressId { get; set; }
+        public Guid ShippingAddressId { get; set; }
         public required Address ShippingAddress { get; set; }
-        public int? BillingAddressId { get; set; }
+        public Guid? BillingAddressId { get; set; }
         public Address? BillingAddress { get; set; }
         public required string PaymentMethod { get; set; }
         public required string Email { get; set; }

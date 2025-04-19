@@ -1,7 +1,6 @@
 ﻿using FluentValidation.Results;
 using SnapSell.Domain.Extnesions;
 using System.Net;
-using System.Runtime.InteropServices;
 
 namespace SnapSell.Domain.Dtos.ResultDtos
 {
