@@ -9,6 +9,5 @@
         public decimal Amount { get; set; }
         public bool IsSuccessful { get; set; }
         public DateTime CreatedAt { get; set; } 
-
     }
 }
