@@ -1,7 +1,11 @@
+
 ﻿namespace SnapSell.Domain.Models
 {
-    public class Product
+     public class Product : Auditable
     {
+         [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public string EnglishName { get; set; }
         public string ArabicName { get; set; }
 
@@ -18,5 +22,28 @@
         public Brand Brand { get; set; }
         public int MinDeleveryDays { get; set; }
         public int MaxDeleveryDays { get; set; }
+// =======
+// ﻿using MongoDB.Bson;
+// using MongoDB.Bson.Serialization.Attributes;
+
+// namespace SnapSell.Domain.Models
+// {
+//     public class Product : Auditable
+//     {
+        
+//         public string Title { get; set; }
+//         public List<ProductModel> Models { get; set; }
+//     }
+
+//     public class ProductModel
+//     {
+//         [BsonIgnoreIfDefault]
+//         [BsonIgnoreIfNull]
+//         public string Color { get; set; }
+//         [BsonIgnoreIfDefault]
+//         [BsonIgnoreIfNull]
+//         public string Size { get; set; }
+//         public int Quantity { get; set; }
+// >>>>>>> main
     }
 }

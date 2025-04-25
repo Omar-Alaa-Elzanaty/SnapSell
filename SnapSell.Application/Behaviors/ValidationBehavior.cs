@@ -4,11 +4,11 @@ using SnapSell.Application.Exceptions;
 
 namespace SnapSell.Application.Behaviors
 {
-    public class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest> validator = null)
+    public class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? validator = null)
     : IPipelineBehavior<TRequest, TResponse>
-     where TRequest : IRequest<TResponse>
+    where TRequest : IRequest<TResponse>
     {
-        private readonly IValidator<TRequest> _validator = validator;
+        private readonly IValidator<TRequest>? _validator = validator;
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             if (_validator is null) return await next();
