@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnapSell.Domain.Models
 {
-    public class Brand
+    public class Brand:BaseEntity
     {
         public int Id { get; set; }
 

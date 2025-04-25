@@ -1,7 +1,13 @@
-﻿namespace SnapSell.Domain.Models
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace SnapSell.Domain.Models
 {
     public class Product
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public string EnglishName { get; set; }
         public string ArabicName { get; set; }
 
@@ -18,5 +24,6 @@
         public Brand Brand { get; set; }
         public int MinDeleveryDays { get; set; }
         public int MaxDeleveryDays { get; set; }
+
     }
 }

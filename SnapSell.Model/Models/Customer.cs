@@ -1,6 +1,6 @@
 ﻿namespace SnapSell.Domain.Models
 {
-    public class Customer
+    public class Customer:ApplicationUser
     {
         public List<Order> Orders { get; set; }
 
