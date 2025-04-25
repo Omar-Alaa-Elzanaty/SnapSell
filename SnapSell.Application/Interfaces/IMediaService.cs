@@ -8,5 +8,6 @@ namespace SnapSell.Application.Interfaces
         Task<string?> SaveAsync(MediaFileDto file,MediaTypes mediaTypes);
         void Delete(string file);
         Task<string?> UpdateAsync(MediaFileDto file,MediaTypes mediaType, string oldUrl);
+        string? GetUrl(string? fileUrl);
     }
 }

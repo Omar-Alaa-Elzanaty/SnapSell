@@ -1,7 +1,6 @@
 ﻿using FluentValidation.Results;
 using Mapster;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using SnapSell.Application.Exceptions;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Extnesions;
@@ -34,10 +33,10 @@ namespace SnapSell.Presentation.MiddleWare
 
         }
 
-       
+
         private static async Task HandleBaseExceptionAsync(HttpContext context, BaseException ex)
         {
-            
+
             var response = new Result<object>
             {
                 Message = ex.Message,
@@ -55,11 +54,11 @@ namespace SnapSell.Presentation.MiddleWare
         }
         private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            
+
             var response = new Result<object>
             {
                 Message = ex.Message,
-                StatusCode = (HttpStatusCode)context.Response.StatusCode,
+                StatusCode = HttpStatusCode.InternalServerError,
             };
 
             var jsonOptions = new JsonSerializerOptions()

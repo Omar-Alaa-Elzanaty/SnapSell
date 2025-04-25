@@ -1,31 +1,36 @@
 ﻿using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
+using SnapSell.Domain.Models;
+using SnapSell.Presistance.Context;
+using SnapSell.Presistance.Repos;
 using System.Collections;
 
 namespace SnapSell.Presistance
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private Hashtable _repositories;
+        private readonly SqlDbContext _context;
 
-        public UnitOfWork()
+        public IMongoBaseRepo<Product> ProductsRepo { get; private set; }
+
+        public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
+
+        public UnitOfWork(
+            SqlDbContext context,
+            IMongoBaseRepo<Product> productRepo,
+            ISQLBaseRepo<CacheCode> cacheCodesRepo)
         {
-            _repositories = [];
+            _context = context;
+            ProductsRepo = productRepo;
+            CacheCodesRepo = cacheCodesRepo;
         }
+
+        public async Task<int> SaveAsync(CancellationToken cancellationToken = default) => await _context.SaveChangesAsync(cancellationToken);
 
         public void Dispose()
         {
-            throw new NotImplementedException();
-        }
-
-        public IBaseRepo<T> Repository<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> SaveAsync()
-        {
-            throw new NotImplementedException();
+            _context.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

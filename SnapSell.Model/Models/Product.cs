@@ -1,9 +1,9 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace SnapSell.Domain.Models
 {
-    public class Product
+     public class Product : Auditable
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

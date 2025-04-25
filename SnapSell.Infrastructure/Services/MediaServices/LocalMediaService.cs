@@ -5,7 +5,7 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Enums;
 
-namespace SnapSell.Infrastructure.MediaServices
+namespace SnapSell.Infrastructure.Services.MediaServices
 {
     public class LocalMediaService : IMediaService
     {
@@ -28,6 +28,14 @@ namespace SnapSell.Infrastructure.MediaServices
             {
                 File.Delete(path);
             }
+        }
+
+        public string? GetUrl(string? fileUrl)
+        {
+            if (fileUrl.IsNullOrEmpty())
+                return null;
+
+            return _configuration[""] + fileUrl;
         }
 
         public async Task<string?> SaveAsync(MediaFileDto media, MediaTypes mediaType)
@@ -78,6 +86,7 @@ namespace SnapSell.Infrastructure.MediaServices
             return mediaType switch
             {
                 MediaTypes.Image => _configuration["MediaSavePath:ImagePath"]!,
+                MediaTypes.Video => _configuration["MediaSavePath:VideoPath"]!,
                 _ => "",
             };
         }
