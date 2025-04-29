@@ -7,74 +7,77 @@ using SnapSell.Domain.Models;
 using SnapSell.Presistance.Extensions;
 using System.Security.Claims;
 
-namespace SnapSell.Presistance.Context
+namespace SnapSell.Presistance.Context;
+
+public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpContextAccessor contextAccessor)
+    : IdentityDbContext<User>(options)
 {
-    public class SqlDbContext : IdentityDbContext<ApplicationUser>
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Brand> Brands { get; set; }
+    public DbSet<Color> Colors { get; set; }
+    public DbSet<Size> Sizes { get; set; }
+    public DbSet<Variant> Variants { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<OrderAddress> OrderAddresses { get; set; }
+    public DbSet<ShoppingBag> ShoppingBags { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    //public DbSet<CacheCode> CacheCodes { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        private readonly IHttpContextAccessor _contextAccessor;
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<User>().ToTable("Accounts").Property(x => x.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+        modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+        modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+        modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+        modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+        modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SqlDbContext).Assembly);
 
-        public SqlDbContext(
-            DbContextOptions<SqlDbContext> options,
-            IHttpContextAccessor contextAccessor) : base(options)
+
+        modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var userId = contextAccessor.HttpContext is null || contextAccessor.HttpContext.User is null ?
+            null : contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        foreach (var entity in ChangeTracker
+                     .Entries()
+                     .Where(x => x.Entity is IAuditable 
+                                 && (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)))
         {
-            _contextAccessor = contextAccessor;
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ApplicationUser>().ToTable("Accounts").Property(x => x.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
-            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
-            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
-            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
-            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SqlDbContext).Assembly);
+            IAuditable auditedEntity = (entity as IAuditable)!;
 
-            modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
-        }
-
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            var userId = _contextAccessor.HttpContext is null || _contextAccessor.HttpContext.User is null ?
-                null : _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            foreach (var entity in ChangeTracker
-            .Entries()
-                .Where(x => x.Entity is IAuditable 
-                && (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)))
+            if (entity.State == EntityState.Added)
             {
-                IAuditable auditedEntity = (entity as IAuditable)!;
+                auditedEntity.CreatedAt = DateTime.UtcNow;
 
-                if (entity.State == EntityState.Added)
+                if (userId != null)
                 {
-                    auditedEntity.CreatedAt = DateTime.UtcNow;
-
-                    if (userId != null)
-                    {
-                        auditedEntity.CreatedBy = userId;
-                    }
-                }
-                else
-                {
-                    if (entity.State == EntityState.Deleted)
-                    {
-                        auditedEntity.IsDeleted = true;
-                        entity.State = EntityState.Modified;
-                    }
-
-                    auditedEntity.LastUpdatedAt = DateTime.UtcNow;
-
-                    if (userId != null)
-                    {
-                        auditedEntity.LastUpdatedBy = userId;
-                    }
+                    auditedEntity.CreatedBy = userId;
                 }
             }
+            else
+            {
+                if (entity.State == EntityState.Deleted)
+                {
+                    auditedEntity.IsDeleted = true;
+                    entity.State = EntityState.Modified;
+                }
 
-            return await base.SaveChangesAsync(cancellationToken);
+                auditedEntity.LastUpdatedAt = DateTime.UtcNow;
+
+                if (userId != null)
+                {
+                    auditedEntity.LastUpdatedBy = userId;
+                }
+            }
         }
 
-        public DbSet<CacheCode> CacheCodes { get; set; }
+        return await base.SaveChangesAsync(cancellationToken);
     }
 }

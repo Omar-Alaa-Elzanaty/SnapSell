@@ -20,8 +20,6 @@ namespace SnapSell.Application.Extensions.Services
 
         private static IServiceCollection AddMediator(this IServiceCollection services)
         {
-            //return services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
             services.AddMediatR(configuration =>
             {
                 configuration.RegisterServicesFromAssembly(typeof(ServicesCollection).Assembly);

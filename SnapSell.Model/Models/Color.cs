@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace SnapSell.Domain.Models
+namespace SnapSell.Domain.Models;
+
+public sealed class Color : BaseEntity
 {
-    public class Color
-    {
-        public int Id { get; set; }
-        public int Name { get; set; }
-    }
+    public required string Name { get; set; }
+    public string? HexCode { get; set; }
 }

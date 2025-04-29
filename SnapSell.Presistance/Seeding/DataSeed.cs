@@ -28,10 +28,9 @@ namespace SnapSell.Presistance.Seeding
 
                 var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-                var admin = new ApplicationUser()
+                var admin = new User()
                 {
-                    FirstName = "admin",
-                    LastName = "admin",
+                    FullName = "admin",
                     Email = "admin@gmail.com",
                     UserName= "admin"
                 };

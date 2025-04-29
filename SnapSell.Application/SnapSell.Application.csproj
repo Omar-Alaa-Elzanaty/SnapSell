@@ -28,4 +28,7 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="SnapSell.Test" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Features\Product\" />
+	</ItemGroup>
 </Project>

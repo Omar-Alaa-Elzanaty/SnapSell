@@ -1,26 +1,25 @@
 ﻿using FluentValidation.Results;
 
-namespace SnapSell.Domain.Extnesions
+namespace SnapSell.Domain.Extnesions;
+
+public static class ValidationExtenstion
 {
-    public static class ValidationExtenstion
+    public static Dictionary<string, List<string>> GetErrorsDictionary(this List<ValidationFailure> validationFailures)
     {
-        public static Dictionary<string, List<string>> GetErrorsDictionary(this List<ValidationFailure> validationFailures)
+        Dictionary<string,List<string>> errors = [];
+
+        validationFailures.ForEach(a =>
         {
-            Dictionary<string,List<string>> errors = [];
-
-            validationFailures.ForEach(a =>
+            if(errors.ContainsKey(a.PropertyName))
             {
-                if(errors.ContainsKey(a.PropertyName))
-                {
-                    errors[a.PropertyName].Add(a.ErrorMessage);
-                }
-                else
-                {
-                    errors.Add(a.PropertyName, [a.ErrorMessage]);
-                }
-            });
+                errors[a.PropertyName].Add(a.ErrorMessage);
+            }
+            else
+            {
+                errors.Add(a.PropertyName, [a.ErrorMessage]);
+            }
+        });
 
-            return errors;
-        }
+        return errors;
     }
 }

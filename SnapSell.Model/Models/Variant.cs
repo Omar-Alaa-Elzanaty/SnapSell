@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace SnapSell.Domain.Models
+namespace SnapSell.Domain.Models;
+
+public sealed class Variant : BaseEntity
 {
-    public class Variant
-    {
-        public int Id { get; set; }
-        public int Quantity { get; set; }
-        public int Price { get; set; }
-        public int RegularPrice { get; set; }
-        public int? SalePrice { get; set; }
-    }
+    public Guid ProductId { get; set; }
+    public Product Product { get; set; }
+    public Guid? SizeId { get; set; }
+    public Size? Size { get; set; }
+    public Guid? ColorId { get; set; }
+    public Color? Color { get; set; }
+    public int Quantity { get; set; }
+    public decimal Price { get; set; }
+    public decimal RegularPrice { get; set; }
+    public decimal? SalePrice { get; set; }
+    public string? SKU { get; set; }
+    public string? Barcode { get; set; }
 }

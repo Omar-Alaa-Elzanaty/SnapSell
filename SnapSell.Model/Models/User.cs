@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace SnapSell.Domain.Models
+namespace SnapSell.Domain.Models;
+
+public sealed class User: IdentityUser
 {
-    public class User
-    {
-    }
+    public required string FullName { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? LastUpdatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public string? LastUpdatedBy { get; set; }
+    public bool IsDeleted { get; set; }
+    public List<Order> Orders { get; set; } = [];
+    public List<OrderAddress> Addresses { get; set; } = [];
+    public List<Review> Reviews { get; set; } = [];
+    public List<Product> Products { get; set; }
 }

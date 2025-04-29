@@ -1,8 +1,7 @@
-﻿namespace SnapSell.Domain.Enums
+﻿namespace SnapSell.Domain.Enums;
+
+public enum MediaTypes : byte
 {
-    public enum MediaTypes : byte
-    {
-        Image = 1,
-        Video = 2
-    }
+    Image = 1,
+    Video = 2
 }

@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace SnapSell.Domain.Models;
 
-namespace SnapSell.Domain.Models
+public sealed class Category:BaseEntity
 {
-    public class Category
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-
-    }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
+    public string? ImageUrl { get; set; }
+    public Guid? ParentCategoryId { get; set; }
+    public Category? ParentCategory { get; set; }
 }

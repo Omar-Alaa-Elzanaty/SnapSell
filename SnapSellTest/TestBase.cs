@@ -13,7 +13,7 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Constants;
 using SnapSell.Domain.Models;
-using SnapSell.Infrastructure.Extensions;
+using SnapSell.Infrastructure.Extnesions;
 using SnapSell.Presistance;
 using SnapSell.Presistance.Context;
 using SnapSell.Presistance.Repos;
@@ -52,10 +52,10 @@ namespace SnapSell.Test
                 _serviceProvider = _builder.Services.BuildServiceProvider();
             }
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>()
                     .AddRoles<IdentityRole>()
-                    .AddSignInManager<SignInManager<ApplicationUser>>()
-                    .AddUserManager<UserManager<ApplicationUser>>()
+                    .AddSignInManager<SignInManager<User>>()
+                    .AddUserManager<UserManager<User>>()
                     .AddEntityFrameworkStores<SqlDbContext>()
                     .AddDefaultTokenProviders();
 
@@ -82,12 +82,11 @@ namespace SnapSell.Test
             try
             {
                 var roleManger = _serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = _serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var userManager = _serviceProvider.GetRequiredService<UserManager<User>>();
 
-                var admin = new ApplicationUser()
+                var admin = new User()
                 {
-                    FirstName = "admin",
-                    LastName = "admin",
+                    FullName = "admin",
                     Email = "admin@gmail.com",
                     UserName = "admin"
                 };

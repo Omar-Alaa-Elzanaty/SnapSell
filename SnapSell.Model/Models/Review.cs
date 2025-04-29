@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+namespace SnapSell.Domain.Models;
 
-namespace SnapSell.Domain.Models
+public sealed class Review : BaseEntity
 {
-    public class Review
-    {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public int Content { get; set; }
-    }
+    public string UserId { get; set; }
+    public User User { get; set; }
+    public double Score { get; set; }
+    public string? Content { get; set; }
+    public Guid ProductId { get; set; }
+    public Product Product { get; set; }
 }

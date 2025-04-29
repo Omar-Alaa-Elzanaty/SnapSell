@@ -1,6 +1,6 @@
-﻿namespace SnapSell.Domain.Models
+﻿namespace SnapSell.Domain.Models;
+
+public class BaseEntity : Auditable
 {
-    public class BaseEntity : Auditable
-    {
-    }
+    public Guid Id { get; set; }
 }

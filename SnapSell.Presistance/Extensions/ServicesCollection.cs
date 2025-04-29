@@ -42,10 +42,10 @@ namespace SnapSell.Presistance.Extensions
                          sqlOptions => sqlOptions.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)
                 ));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>()
                     .AddRoles<IdentityRole>()
-                    .AddSignInManager<SignInManager<ApplicationUser>>()
-                    .AddUserManager<UserManager<ApplicationUser>>()
+                    .AddSignInManager<SignInManager<User>>()
+                    .AddUserManager<UserManager<User>>()
                     .AddEntityFrameworkStores<SqlDbContext>()
                     .AddDefaultTokenProviders();
 

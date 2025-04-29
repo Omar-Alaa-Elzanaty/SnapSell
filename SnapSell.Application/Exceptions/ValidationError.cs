@@ -1,10 +1,3 @@
-﻿namespace SnapSell.Application.Exceptions
-{
-    public sealed record ValidationError(string PropertyName,
-        string ErrorMessage);
+﻿namespace SnapSell.Application.Exceptions;
 
-    public sealed class ValidationException : BaseException
-    {
-        public ValidationException(IEnumerable<ValidationError> errors):base(errors) { }
-    }
-}
+public sealed record ValidationError(string PropertyName, string ErrorMessage);

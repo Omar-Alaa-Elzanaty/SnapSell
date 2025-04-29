@@ -1,8 +1,7 @@
-﻿namespace SnapSell.Domain.Models
+﻿namespace SnapSell.Domain.Models;
+
+public sealed class ShoppingBag:BaseEntity
 {
-    public class ShoppingBag
-    {
-        public int ProductId { get; set; }
-        public int Quantity { get; set; }
-    }
+    public Guid ProductId { get; set; }
+    public int Quantity { get; set; }
 }

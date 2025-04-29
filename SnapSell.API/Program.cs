@@ -2,7 +2,7 @@ using Microsoft.Extensions.Options;
 using Serilog;
 using SnapSell.API;
 using SnapSell.Application.Extensions.Services;
-using SnapSell.Infrastructure.Extensions;
+using SnapSell.Infrastructure.Extnesions;
 using SnapSell.Infrastructure.Services.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
 using SnapSell.Presistance.Extensions;

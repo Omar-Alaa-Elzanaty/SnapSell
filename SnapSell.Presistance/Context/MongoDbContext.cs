@@ -27,7 +27,7 @@ namespace SnapSell.Presistance.Context
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var userId = _contextAccessor.HttpContext is null || _contextAccessor.HttpContext.User is null ?
+            var userId = _contextAccessor.HttpContext is null || _contextAccessor.HttpContext?.User is null ?
                 null : _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             foreach (var entity in ChangeTracker
