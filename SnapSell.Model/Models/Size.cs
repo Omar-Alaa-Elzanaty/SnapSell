@@ -2,5 +2,6 @@
 
 public sealed class Size:BaseEntity
 {
-    public int Name { get; set; }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
 }

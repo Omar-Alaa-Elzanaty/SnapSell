@@ -24,21 +24,6 @@ public abstract class ApiControllerBase(ICacheService cacheService) : Controller
     }
     protected IActionResult HandleMediatorResult<TResult>(Result<TResult> result)
     {
-        if (result.IsSuccess)
-        {
-            return result.StatusCode switch
-            {
-                HttpStatusCode.OK => Ok(result.Data),
-                HttpStatusCode.Created => Created("", result.Data),
-                _ => Ok(result.Data)
-            };
-        }
-
-        return result.StatusCode switch
-        {
-            HttpStatusCode.BadRequest => BadRequest(Result<bool>.Failure(message:"An Error happend",HttpStatusCode.BadRequest)),
-            HttpStatusCode.NotFound => NotFound(Result<bool>.Failure(message: "An Error happend", HttpStatusCode.NotFound)),
-            _ => StatusCode((int)result.StatusCode, new { result.Message, result.Errors })
-        };
+        return StatusCode((int)result.StatusCode, result);
     }
 }

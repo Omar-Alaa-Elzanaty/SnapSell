@@ -1,42 +1,37 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SnapSell.Domain.Constants;
 using SnapSell.Domain.Models;
 using SnapSell.Presistance.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SnapSell.Presistance.Seeding
+namespace SnapSell.Presistance.Seeding;
+
+public class DataSeed
 {
-    public class DataSeed
+    public static async Task SeedDate(IServiceProvider services)
     {
-        public static async Task SeedDate(IServiceProvider services)
+        var context = services.GetRequiredService<SqlDbContext>();
+        if ((await context.Database.GetPendingMigrationsAsync()).Any())
         {
-            var context = services.GetRequiredService<SqlDbContext>();
+            await context.Database.MigrateAsync();
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-            if (context.Database.GetPendingMigrations().Any())
+            await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+            await roleManager.CreateAsync(new IdentityRole(Roles.Client));
+            var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+
+            var admin = new User()
             {
-                await context.Database.MigrateAsync();
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                FullName = "admin",
+                Email = "admin@gmail.com",
+                UserName = "admin"
+            };
 
-                await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
-                await roleManager.CreateAsync(new IdentityRole(Roles.Client));
+            await userManager.CreateAsync(admin, "123@Abc");
+            await context.SaveChangesAsync();
 
-                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-
-                var admin = new User()
-                {
-                    FullName = "admin",
-                    Email = "admin@gmail.com",
-                    UserName= "admin"
-                };
-
-                await userManager.CreateAsync(admin, "123@Abc");
-            }
         }
     }
 }

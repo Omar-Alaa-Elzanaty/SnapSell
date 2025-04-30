@@ -31,7 +31,8 @@ namespace SnapSell.Application.Extensions.Services
 
         private static IServiceCollection AddFluentValidation(this IServiceCollection services)
         {
-            return services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssemblyContaining(typeof(ServiceCollection));
+            return services;
         }
 
         private static IServiceCollection AddMapping(this IServiceCollection services)

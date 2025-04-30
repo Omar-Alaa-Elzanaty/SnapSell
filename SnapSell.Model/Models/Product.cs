@@ -11,7 +11,6 @@ public sealed class Product : BaseEntity
     public List<Color> Colors { get; set; }
     public List<Variant> Variants { get; set; }
     public List<Review> Reviews { get; set; }
-    public Guid ShippingAddress { get; set; }
     public bool IsFeatured { get; set; }
     public bool IsHidden { get; set; }
     public Guid BrandId { get; set; }

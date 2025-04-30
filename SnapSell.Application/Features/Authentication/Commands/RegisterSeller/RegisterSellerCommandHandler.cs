@@ -8,7 +8,7 @@ using SnapSell.Domain.Models;
 
 namespace SnapSell.Application.Features.Authentication.Commands.RegisterSeller;
 
-public sealed class RegisterSellerCommandHandler(
+internal sealed class RegisterSellerCommandHandler(
     IAuthenticationService authenticationService,
     UserManager<User> userManager,
     RoleManager<IdentityRole> roleManager)
@@ -25,12 +25,11 @@ public sealed class RegisterSellerCommandHandler(
             UserName = request.ShopName,
             CreatedAt = DateTime.UtcNow,
         };
-        var result = await userManager.CreateAsync(user, request.Password);
-        if (!result.Succeeded)
+        if (await userManager.FindByNameAsync(request.SellerName) is not null)
         {
             return Result<RegisterSellerResult>.Failure(
-                message: "Creation Of user proess is failed",
-                statusCode: HttpStatusCode.BadRequest);
+                message: "This Seller Name Is Already taken.",
+                statusCode: HttpStatusCode.Conflict);
         }
 
         if (!await roleManager.RoleExistsAsync(DefaultSellerRole))
@@ -50,6 +49,14 @@ public sealed class RegisterSellerCommandHandler(
             return Result<RegisterSellerResult>.Failure(
                 message: "Failed to assign seller role to user",
                 statusCode: HttpStatusCode.InternalServerError);
+        }
+
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            return Result<RegisterSellerResult>.Failure(
+                message: "Creation Of user proess is failed",
+                statusCode: HttpStatusCode.BadRequest);
         }
 
         var token = await authenticationService.GenerateTokenAsync(user, DefaultSellerRole, isMobile: true);

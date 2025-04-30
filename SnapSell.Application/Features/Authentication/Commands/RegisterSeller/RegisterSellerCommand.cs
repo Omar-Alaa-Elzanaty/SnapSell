@@ -8,4 +8,4 @@ public sealed record RegisterSellerCommand(string SellerName,
     string ShopName,
     string Password) : IRequest<Result<RegisterSellerResult>>;
 
-public sealed record RegisterSellerResult(RegisterResponseSellerDto Response , string Token);
+public sealed record RegisterSellerResult(RegisterResponseSellerDto Seller , string Token);

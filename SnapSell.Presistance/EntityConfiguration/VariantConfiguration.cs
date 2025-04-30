@@ -13,6 +13,9 @@ public sealed class VariantConfiguration : AuditableEntityConfiguration<Variant>
 
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
         builder.HasOne(x => x.Product)
             .WithMany(x => x.Variants)
             .HasForeignKey(x => x.ProductId)

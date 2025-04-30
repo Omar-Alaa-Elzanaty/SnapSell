@@ -7,8 +7,7 @@ using System.Net;
 using SnapSell.Application.Interfaces.Authentication;
 
 namespace SnapSell.Application.Features.Authentication.Commands.RegisterCustomer;
-
-public sealed class RegisterCustomerCommandHandler(
+internal sealed class RegisterCustomerCommandHandler(
     IAuthenticationService authenticationService,
     UserManager<User> userManager,
     RoleManager<IdentityRole> roleManager) : IRequestHandler<RegisterCustomerCommand, Result<RegisterCustomerResult>>
@@ -24,12 +23,11 @@ public sealed class RegisterCustomerCommandHandler(
             UserName = request.UserName,
             CreatedAt = DateTime.UtcNow,
         };
-        var result = await userManager.CreateAsync(user, request.Password);
-        if (!result.Succeeded)
+        if (await userManager.FindByNameAsync(request.UserName) is not null)
         {
             return Result<RegisterCustomerResult>.Failure(
-                message: "Creation Of user proess is failed",
-                statusCode: HttpStatusCode.BadRequest);
+                message: "This Customer Name Is Already taken.",
+                statusCode: HttpStatusCode.Conflict);
         }
 
         if (!await roleManager.RoleExistsAsync(DefaultCustomerRole))
@@ -49,6 +47,15 @@ public sealed class RegisterCustomerCommandHandler(
             return Result<RegisterCustomerResult>.Failure(
                 message: "Failed to assign customer role to user",
                 statusCode: HttpStatusCode.InternalServerError);
+        }
+
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors;
+            return Result<RegisterCustomerResult>.Failure(
+                message: $"Creation Of user proess is failed{errors}",
+                statusCode: HttpStatusCode.BadRequest);
         }
 
         var token = await authenticationService.GenerateTokenAsync(user, DefaultCustomerRole, isMobile: true);

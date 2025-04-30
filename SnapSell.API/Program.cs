@@ -11,14 +11,16 @@ using SnapSell.Presistance.Seeding;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
-});
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(SnapSell.Presentation.EndPoints.AccountController).Assembly)
+    .AddApplicationPart(typeof(SnapSell.Presentation.EndPoints.ProductController).Assembly)
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
 builder.Services
        .AddInfrastructure(builder.Configuration)
        .AddPresistance(builder.Configuration)
