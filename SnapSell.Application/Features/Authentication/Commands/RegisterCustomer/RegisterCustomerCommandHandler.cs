@@ -7,6 +7,7 @@ using System.Net;
 using SnapSell.Application.Interfaces.Authentication;
 
 namespace SnapSell.Application.Features.Authentication.Commands.RegisterCustomer;
+
 internal sealed class RegisterCustomerCommandHandler(
     IAuthenticationService authenticationService,
     UserManager<User> userManager,
@@ -30,6 +31,15 @@ internal sealed class RegisterCustomerCommandHandler(
                 statusCode: HttpStatusCode.Conflict);
         }
 
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors;
+            return Result<RegisterCustomerResult>.Failure(
+                message: $"Creation Of user proess is failed{errors}",
+                statusCode: HttpStatusCode.BadRequest);
+        }
+
         if (!await roleManager.RoleExistsAsync(DefaultCustomerRole))
         {
             var roleResult = await roleManager.CreateAsync(new IdentityRole(DefaultCustomerRole));
@@ -49,17 +59,9 @@ internal sealed class RegisterCustomerCommandHandler(
                 statusCode: HttpStatusCode.InternalServerError);
         }
 
-        var result = await userManager.CreateAsync(user, request.Password);
-        if (!result.Succeeded)
-        {
-            var errors = result.Errors;
-            return Result<RegisterCustomerResult>.Failure(
-                message: $"Creation Of user proess is failed{errors}",
-                statusCode: HttpStatusCode.BadRequest);
-        }
 
         var token = await authenticationService.GenerateTokenAsync(user, DefaultCustomerRole, isMobile: true);
-        RegisterResponseCustomerDto customerDto = new RegisterResponseCustomerDto(
+        var customerDto = new RegisterResponseCustomerDto(
             user.Id,
             user.FullName,
             user.UserName);

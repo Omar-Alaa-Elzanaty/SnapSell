@@ -1,5 +1,4 @@
-﻿
-namespace SnapSell.Application.DTOs.Authentication;
+﻿namespace SnapSell.Application.DTOs.Authentication;
 
 
 public sealed record RegisterRequestCustomerDto(

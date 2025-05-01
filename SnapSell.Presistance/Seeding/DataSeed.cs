@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using SnapSell.Domain.Constants;
 using SnapSell.Domain.Models;
 using SnapSell.Presistance.Context;

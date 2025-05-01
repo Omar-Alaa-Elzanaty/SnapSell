@@ -25,11 +25,19 @@ internal sealed class RegisterSellerCommandHandler(
             UserName = request.ShopName,
             CreatedAt = DateTime.UtcNow,
         };
-        if (await userManager.FindByNameAsync(request.SellerName) is not null)
+        if (await userManager.FindByNameAsync(request.ShopName) is not null)
         {
             return Result<RegisterSellerResult>.Failure(
                 message: "This Seller Name Is Already taken.",
                 statusCode: HttpStatusCode.Conflict);
+        }
+
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            return Result<RegisterSellerResult>.Failure(
+                message: "Creation Of user proess is failed",
+                statusCode: HttpStatusCode.BadRequest);
         }
 
         if (!await roleManager.RoleExistsAsync(DefaultSellerRole))
@@ -51,16 +59,8 @@ internal sealed class RegisterSellerCommandHandler(
                 statusCode: HttpStatusCode.InternalServerError);
         }
 
-        var result = await userManager.CreateAsync(user, request.Password);
-        if (!result.Succeeded)
-        {
-            return Result<RegisterSellerResult>.Failure(
-                message: "Creation Of user proess is failed",
-                statusCode: HttpStatusCode.BadRequest);
-        }
-
         var token = await authenticationService.GenerateTokenAsync(user, DefaultSellerRole, isMobile: true);
-        RegisterResponseSellerDto sellerDto = new RegisterResponseSellerDto(
+        var sellerDto = new RegisterResponseSellerDto(
             user.Id,
             user.FullName,
             user.UserName);

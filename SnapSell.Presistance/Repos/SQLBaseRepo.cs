@@ -28,11 +28,13 @@ public class SQLBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : cl
         if (entity == null) throw new ArgumentNullException(nameof(entity));
         _context.Remove(entity);
     }
+
     public void UpdateAsync(T entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
         _context.Update(entity);
     }
+
     public IQueryable<T> Entites => _context.Set<T>();
 
     public async Task<T?> GetByIdAsync(Guid id) => await _context.Set<T>().FindAsync(id);
@@ -40,7 +42,7 @@ public class SQLBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : cl
     public async Task<IEnumerable<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
 
     public async Task<IEnumerable<T>> FindAsync(Func<T, bool> predicate)
-        =>  await Task.FromResult(_context.Set<T>().Where(predicate));
+        => await Task.FromResult(_context.Set<T>().Where(predicate));
 
     public async Task<T?> FindOnCriteriaAsync(Expression<Func<T, bool>> predicate)
         => await _context.Set<T>().FirstOrDefaultAsync(predicate);

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SnapSell.Application.Extensions
 {
-    public static class QuerableExtensions
+    public static class SqlQuerableExtensions
     {
         public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
