@@ -18,5 +18,6 @@ public sealed class Product : BaseEntity
     public int MinDeleveryDays { get; set; }
     public int MaxDeleveryDays { get; set; }
     public string? MainImageUrl { get; set; }
+    public string? MainVideoUrl { get; set; } 
     public List<string> AdditionalImageUrls { get; set; } = [];
 }

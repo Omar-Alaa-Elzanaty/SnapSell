@@ -1,4 +1,4 @@
-﻿namespace SnapSell.Domain.Interfaces
+﻿namespace SnapSell.Domain.Models.Interfaces
 {
     public interface IUserCache
     {

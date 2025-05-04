@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using MediatR;
+using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Extnesions;
+using System.Net;
 
 namespace SnapSell.Application.Behaviors;
 
-public sealed class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? validator = null)
+internal sealed class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? validator = null)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
@@ -23,9 +25,12 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>
 
         var errors = validationResult.Errors.GetErrorsDictionary();
 
-        if (errors.Any())
-            throw new InvalidOperationException("An Error in validation behavior.");
+        var errorResult = new ErrorResult(
+            message: "Validation failed",
+            errors: errors,
+            statusCode: HttpStatusCode.BadRequest 
+        );
 
-        return await next();
+        return (TResponse)(object)errorResult;
     }
 }

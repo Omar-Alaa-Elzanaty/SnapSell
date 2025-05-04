@@ -37,6 +37,7 @@ public sealed class AccountController(ICacheService cacheService, ISender sender
         var result = await sender.Send(command, cancellationToken);
         return HandleMediatorResult<SellerLogInResult>(result);
     }
+
     [HttpPost("LogInCustomer")]
     public async Task<IActionResult> LogInCustomer([FromForm] LogInCustomerRequest request,
         CancellationToken cancellationToken)

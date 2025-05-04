@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Interfaces;
+using SnapSell.Domain.Models.Interfaces;
 using System.Security.Claims;
 
 namespace SnapSell.Infrastructure.Services.CacheServices

@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers()
+    .AddApplicationPart(typeof(SnapSell.Presentation.EndPoints.ApiControllerBase).Assembly)
     .AddApplicationPart(typeof(SnapSell.Presentation.EndPoints.AccountController).Assembly)
     .AddApplicationPart(typeof(SnapSell.Presentation.EndPoints.ProductController).Assembly)
     .AddJsonOptions(options =>

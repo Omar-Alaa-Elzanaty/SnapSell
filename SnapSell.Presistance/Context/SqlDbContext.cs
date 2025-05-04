@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SnapSell.Domain.Interfaces;
 using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.Interfaces;
 using SnapSell.Presistance.Extensions;
 using System.Security.Claims;
 
@@ -22,7 +22,9 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<OrderAddress> OrderAddresses { get; set; }
     public DbSet<ShoppingBag> ShoppingBags { get; set; }
+
     public DbSet<Review> Reviews { get; set; }
+
     //public DbSet<CacheCode> CacheCodes { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,39 +44,37 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var userId = contextAccessor.HttpContext is null || contextAccessor.HttpContext.User is null ?
-            null : contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userId = contextAccessor.HttpContext is null || contextAccessor.HttpContext.User is null
+            ? null
+            : contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        foreach (var entity in ChangeTracker
-                     .Entries()
-                     .Where(x => x.Entity is IAuditable 
-                                 && (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)))
+        foreach (var entityEntry in ChangeTracker.Entries()
+                     .Where(x => x.State == EntityState.Added || x.State == EntityState.Modified ||
+                                 x.State == EntityState.Deleted))
         {
-            IAuditable auditedEntity = (entity as IAuditable)!;
-
-            if (entity.State == EntityState.Added)
+            if (entityEntry.Entity is not IAuditable auditableEntity)
             {
-                auditedEntity.CreatedAt = DateTime.UtcNow;
-
-                if (userId != null)
-                {
-                    auditedEntity.CreatedBy = userId;
-                }
+                continue; // skip non-auditable entities
             }
-            else
+
+            var currentTime = DateTime.UtcNow;
+
+            switch (entityEntry.State)
             {
-                if (entity.State == EntityState.Deleted)
-                {
-                    auditedEntity.IsDeleted = true;
-                    entity.State = EntityState.Modified;
-                }
-
-                auditedEntity.LastUpdatedAt = DateTime.UtcNow;
-
-                if (userId != null)
-                {
-                    auditedEntity.LastUpdatedBy = userId;
-                }
+                case EntityState.Added:
+                    auditableEntity.CreatedAt = currentTime;
+                    auditableEntity.CreatedBy = userId;
+                    break;
+                case EntityState.Modified:
+                    auditableEntity.LastUpdatedAt = currentTime;
+                    auditableEntity.LastUpdatedBy = userId;
+                    break;
+                case EntityState.Deleted:
+                    auditableEntity.IsDeleted = true;
+                    auditableEntity.LastUpdatedAt = currentTime;
+                    auditableEntity.LastUpdatedBy = userId;
+                    entityEntry.State = EntityState.Modified;
+                    break;
             }
         }
 

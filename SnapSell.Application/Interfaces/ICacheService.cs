@@ -1,5 +1,5 @@
 ﻿using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Interfaces;
+using SnapSell.Domain.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

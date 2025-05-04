@@ -13,8 +13,8 @@ namespace SnapSell.Application.Extensions.Services
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddMediator()
-                    .AddMapping()
-                    .AddFluentValidation();
+                .AddMapping()
+                .AddFluentValidation();
 
             return services;
         }

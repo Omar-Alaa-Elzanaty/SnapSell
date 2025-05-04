@@ -1,8 +1,10 @@
 ﻿using System.Net;
 using System.Security.Claims;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using SnapSell.Application.DTOs.Product;
+using SnapSell.Application.DTOs.variant;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos;
@@ -12,8 +14,10 @@ using SnapSell.Domain.Models;
 
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
+
 internal sealed class CreatProductCommandHandler(
     ISQLBaseRepo<Product> productRepository,
+    ISQLBaseRepo<Variant> variantRepository,
     IUnitOfWork unitOfWork,
     IHttpContextAccessor httpContextAccessor,
     IMediaService mediaService)
@@ -38,22 +42,8 @@ internal sealed class CreatProductCommandHandler(
                 HttpStatusCode.Unauthorized);
         }
 
-        string? imageUrl = null;
-        if (request.MainImageUrl.Length > 0)
-        {
-            using var memoryStream = new MemoryStream();
-            await request.MainImageUrl.CopyToAsync(memoryStream, cancellationToken);
-            var base64 = Convert.ToBase64String(memoryStream.ToArray());
-
-            var mediaDto = new MediaFileDto
-            {
-                FileName = request.MainImageUrl.FileName,
-                Base64 = base64
-            };
-
-            var savedPath = await mediaService.SaveAsync(mediaDto, MediaTypes.Image);
-            imageUrl = mediaService.GetUrl(savedPath);
-        }
+        var imageUrl = await ProcessMediaUpload(request.MainImageUrl, MediaTypes.Image);
+        var videoUrl = await ProcessMediaUpload(request.MainVideoUrl, MediaTypes.Video);
 
         var product = new Product
         {
@@ -67,10 +57,28 @@ internal sealed class CreatProductCommandHandler(
             MaxDeleveryDays = request.MaxDeleveryDays,
             CreatedBy = userId,
             CreatedAt = DateTime.UtcNow,
-            MainImageUrl = imageUrl
+            MainVideoUrl = videoUrl,
+            MainImageUrl = imageUrl,
+            Variants = request.Variants?.Select(v => new Variant
+            {
+                SizeId = v.SizeId,
+                ColorId = v.ColorId,
+                Quantity = v.Quantity,
+                Price = v.Price,
+                RegularPrice = v.RegularPrice,
+                SalePrice = v.SalePrice,
+                SKU = v.SKU ?? GenerateSku(),
+                Barcode = v.Barcode ?? GenerateBarcode()
+            }).ToList() ?? new List<Variant>()
         };
 
         await productRepository.AddAsync(product);
+        foreach (var variant in product.Variants)
+        {
+            variant.ProductId = product.Id;
+            await variantRepository.AddAsync(variant);
+        }
+
         await unitOfWork.SaveAsync(cancellationToken);
 
         var response = new CreateProductResponse(
@@ -84,12 +92,51 @@ internal sealed class CreatProductCommandHandler(
             IsHidden: product.IsHidden,
             MinDeleveryDays: product.MinDeleveryDays,
             MaxDeleveryDays: product.MaxDeleveryDays,
-            MainImageUrl: product.MainImageUrl
+            MainImageUrl: product.MainImageUrl,
+            MainVideoUrl: product.MainVideoUrl,
+            Variants: product.Variants?.Select(v => v.Adapt<VariantResponse>()).ToList() ?? []
         );
 
         return Result<CreateProductResponse>.Success(
             data: response,
             message: "Product Created Successfully.",
             statusCode: HttpStatusCode.Created);
+    }
+
+    private string GenerateSku()
+    {
+        return $"SKU-{Guid.NewGuid().ToString()[..8].ToUpper()}";
+    }
+
+    private string GenerateBarcode()
+    {
+        return $"{DateTime.Now:yyyyMMdd}-{new Random().Next(100000, 999999)}";
+    }
+
+    private async Task<string?> ProcessMediaUpload(IFormFile file, MediaTypes mediaType)
+    {
+        try
+        {
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            var base64 = Convert.ToBase64String(memoryStream.ToArray());
+
+            var fileExtension = Path.GetExtension(file.FileName);
+            var newFileName = $"{Guid.NewGuid()}{fileExtension}";
+
+            var mediaDto = new MediaFileDto
+            {
+                FileName = newFileName,
+                Base64 = base64
+            };
+
+            var savedPath = await mediaService.SaveAsync(mediaDto, mediaType);
+            return mediaService.GetUrl(savedPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing media upload: {ex.Message}");
+            return null;
+        }
     }
 }

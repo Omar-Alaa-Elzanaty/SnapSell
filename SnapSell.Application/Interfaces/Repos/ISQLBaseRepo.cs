@@ -9,7 +9,7 @@ public interface ISQLBaseRepo<T>
     void Delete(T entity);
     void UpdateAsync(T entity);
     void UpdateRangeAsync(IEnumerable<T> entities);
-    IQueryable<T> Entites { get; }
+     IQueryable<T> Entites { get; }
     Task<T?> GetByIdAsync(Guid id);
     Task<IEnumerable<T>> GetAllAsync();
     Task<IEnumerable<T>> FindAsync(Func<T, bool> predicate);

@@ -77,5 +77,15 @@ namespace SnapSell.Domain.Dtos.ResultDtos
                 Message = message
             };
         }
+
+        public static Result<T> ValidationBehavoirFailure(Dictionary<string, List<string>> errors, string message)
+        {
+            return new()
+            {
+                Errors = errors,
+                StatusCode = HttpStatusCode.UnprocessableEntity,
+                Message = message
+            };
+        }
     }
 }

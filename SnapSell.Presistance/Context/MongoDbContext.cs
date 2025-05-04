@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.EntityFrameworkCore.Extensions;
-using SnapSell.Domain.Interfaces;
 using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.Interfaces;
 using System.Security.Claims;
 
 namespace SnapSell.Presistance.Context

@@ -7,6 +7,8 @@ using SnapSell.Application.DTOs.Brands;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
 using SnapSell.Application.DTOs.categories;
+using SnapSell.Application.Features.colors.Queries;
+using SnapSell.Application.DTOs.colors;
 
 namespace SnapSell.Presentation.EndPoints;
 
@@ -30,8 +32,20 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         return HandleMediatorResult<List<GetAllCategoriesResponse>>(result);
     }
 
+
+    [HttpGet("GetAllColors/{userId}")]
+    public async Task<IActionResult> GetAllColors(string userId, CancellationToken cancellationToken)
+    {
+        var query = new GetAllColorsQuery(userId);
+
+        var result = await sender.Send(query, cancellationToken);
+        return HandleMediatorResult<List<GetAllColorsResponse>>(result);
+    }
+
+
     [HttpPost("CreateProduct")]
-    public async Task<IActionResult> CreateProduct(CreateProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequest request,
+        CancellationToken cancellationToken)
     {
         var command = new CreatProductCommand(request.EnglishName,
             request.ArabicName,
@@ -41,7 +55,9 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
             request.IsHidden,
             request.MinDeleveryDays,
             request.MaxDeleveryDays,
-            request.MainImageUrl!);
+            request.MainImageUrl!,
+            request.MainImageUrl!,
+            request.Variants);
 
         var result = await sender.Send(command, cancellationToken);
         return HandleMediatorResult<CreateProductResponse>(result);
