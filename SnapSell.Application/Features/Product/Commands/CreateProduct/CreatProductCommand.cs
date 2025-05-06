@@ -1,12 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using SnapSell.Application.DTOs.Product;
-using SnapSell.Application.DTOs.variant;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
-public sealed record CreatProductCommand(
+public sealed record CreatProductCommand(Guid BrandId,
     string EnglishName,
     string ArabicName,
     string? Description,
@@ -16,5 +15,4 @@ public sealed record CreatProductCommand(
     int MinDeleveryDays,
     int MaxDeleveryDays,
     IFormFile MainImageUrl,
-    IFormFile MainVideoUrl,
-    List<VariantDto> Variants) : IRequest<Result<CreateProductResponse>>;
+    IFormFile Video) : IRequest<Result<CreateProductResponse>>;

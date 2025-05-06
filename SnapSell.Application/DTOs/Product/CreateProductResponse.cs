@@ -18,8 +18,8 @@ public sealed record CreateProductResponse(
     string? MainVideoUrl,
     List<VariantResponse> Variants);
 
-
 public sealed record CreateProductRequest(
+    Guid BrandId,
     string EnglishName,
     string ArabicName,
     string? Description,
@@ -29,5 +29,4 @@ public sealed record CreateProductRequest(
     int MinDeleveryDays,
     int MaxDeleveryDays,
     IFormFile? MainImageUrl,
-    IFormFile? MainVideoUrl,
-    List<VariantDto> Variants);
+    IFormFile? MainVideoUrl);

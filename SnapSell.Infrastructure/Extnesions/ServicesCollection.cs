@@ -48,7 +48,8 @@ namespace SnapSell.Infrastructure.Extnesions
                 .AddScoped<IPushNotificationSender, PushNotificationSender>()
                 .AddScoped<IApiRequestHandleService, ApiRequestHandleService>()
                 .AddScoped<ICacheService, CacheService>()
-                .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
+                .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>()
+                .AddScoped<IVideoUploadService, VideoUploadService>();
 
             return services;
         }

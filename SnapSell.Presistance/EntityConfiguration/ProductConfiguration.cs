@@ -29,7 +29,7 @@ public sealed class ProductConfiguration : AuditableEntityConfiguration<Product>
         builder.HasOne(x => x.Brand)
             .WithMany()
             .HasForeignKey(x => x.BrandId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.IsFeatured)
             .HasDefaultValue(false);

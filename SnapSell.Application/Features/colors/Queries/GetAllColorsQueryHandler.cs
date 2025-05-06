@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using SnapSell.Application.DTOs.colors;
 using SnapSell.Domain.Dtos.ResultDtos;
@@ -7,6 +6,7 @@ using System.Net;
 using System.Security.Claims;
 using Mapster;
 using SnapSell.Application.Interfaces.Repos;
+using SnapSell.Domain.Models;
 
 namespace SnapSell.Application.Features.colors.Queries;
 

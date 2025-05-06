@@ -47,7 +47,8 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
     public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequest request,
         CancellationToken cancellationToken)
     {
-        var command = new CreatProductCommand(request.EnglishName,
+        var command = new CreatProductCommand(request.BrandId,
+            request.EnglishName,
             request.ArabicName,
             request.Description,
             request.ShortDescription,
@@ -56,10 +57,19 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
             request.MinDeleveryDays,
             request.MaxDeleveryDays,
             request.MainImageUrl!,
-            request.MainImageUrl!,
-            request.Variants);
+            request.MainVideoUrl!);
 
         var result = await sender.Send(command, cancellationToken);
         return HandleMediatorResult<CreateProductResponse>(result);
     }
+
+    //[HttpPost("UpdateProduct")]
+    //public async Task<IActionResult> UpdateProduct([FromForm] CreateProductRequest request,
+    //    CancellationToken cancellationToken)
+    //{
+    //    var command = new CreatProductCommand(request.BrandId);
+
+    //    var result = await sender.Send(command, cancellationToken);
+    //    return HandleMediatorResult<CreateProductResponse>(result);
+    //}
 }

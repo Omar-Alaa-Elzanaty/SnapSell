@@ -42,42 +42,46 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
         modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        var userId = contextAccessor.HttpContext is null || contextAccessor.HttpContext.User is null
-            ? null
-            : contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    //public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    //{
+    //    var userId = contextAccessor.HttpContext is null || contextAccessor.HttpContext.User is null
+    //        ? null
+    //        : contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        foreach (var entityEntry in ChangeTracker.Entries()
-                     .Where(x => x.State == EntityState.Added || x.State == EntityState.Modified ||
-                                 x.State == EntityState.Deleted))
-        {
-            if (entityEntry.Entity is not IAuditable auditableEntity)
-            {
-                continue; // skip non-auditable entities
-            }
+    //    foreach (var entity in ChangeTracker
+    //                 .Entries()
+    //                 .Where(x => x.Entity is IAuditable
+    //                             && (x.State == EntityState.Added ||
+    //                                 x.State == EntityState.Modified ||
+    //                                 x.State == EntityState.Deleted)))
+    //    {
+    //        IAuditable auditedEntity = (entity as IAuditable)!;
 
-            var currentTime = DateTime.UtcNow;
+    //        if (entity.State == EntityState.Added)
+    //        {
+    //            auditedEntity.CreatedAt = DateTime.UtcNow;
 
-            switch (entityEntry.State)
-            {
-                case EntityState.Added:
-                    auditableEntity.CreatedAt = currentTime;
-                    auditableEntity.CreatedBy = userId;
-                    break;
-                case EntityState.Modified:
-                    auditableEntity.LastUpdatedAt = currentTime;
-                    auditableEntity.LastUpdatedBy = userId;
-                    break;
-                case EntityState.Deleted:
-                    auditableEntity.IsDeleted = true;
-                    auditableEntity.LastUpdatedAt = currentTime;
-                    auditableEntity.LastUpdatedBy = userId;
-                    entityEntry.State = EntityState.Modified;
-                    break;
-            }
-        }
+    //            if (userId != null)
+    //            {
+    //                auditedEntity.CreatedBy = userId;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            if (entity.State == EntityState.Deleted)
+    //            {
+    //                auditedEntity.IsDeleted = true;
+    //                entity.State = EntityState.Modified;
+    //            }
 
-        return await base.SaveChangesAsync(cancellationToken);
-    }
+    //            auditedEntity.LastUpdatedAt = DateTime.UtcNow;
+
+    //            if (userId != null)
+    //            {
+    //                auditedEntity.LastUpdatedBy = userId;
+    //            }
+    //        }
+    //    }
+    //    return await base.SaveChangesAsync(cancellationToken);
+    //}
 }

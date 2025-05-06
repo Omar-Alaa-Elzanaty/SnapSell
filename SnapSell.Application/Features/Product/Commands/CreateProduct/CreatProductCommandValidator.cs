@@ -8,6 +8,8 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
 {
     public CreatProductCommandValidator()
     {
+        RuleFor(c => c.BrandId).NotEmpty().WithMessage("BrandId is required");
+
         RuleFor(x => x.EnglishName)
             .NotEmpty().WithMessage("English name is required")
             .MaximumLength(100).WithMessage("English name must not exceed 100 characters");
@@ -36,15 +38,9 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
         RuleFor(x => x.MainImageUrl)
             .Must(BeAValidImage).WithMessage("Invalid image file");
 
-        RuleFor(x => x.MainVideoUrl)
-            .Must(BeAValidVideo).WithMessage("Invalid video file");
 
-        RuleFor(x => x.Variants)
-            .Must(v => v.GroupBy(x => new { x.SizeId, x.ColorId })
-                .All(g => g.Count() == 1))
-            .WithMessage("Duplicate variant combinations (same color and size)");
-
-        RuleForEach(x => x.Variants).SetValidator(new VariantDtoValidator());
+        RuleFor(x => x.Video)
+            .Must(BeAValidVideo).WithMessage("Invalid image file");
     }
 
     private bool BeAValidImage(IFormFile? file)
@@ -80,26 +76,26 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
         return allowedExtensions.Contains(extension) &&
                file.ContentType.StartsWith("video/");
     }
-}
 
-public sealed class VariantDtoValidator : AbstractValidator<VariantDto>
-{
-    public VariantDtoValidator()
+    public sealed class AddVariantsDtoValidator : AbstractValidator<VariantDto>
     {
-        RuleFor(x => x.Price)
-            .GreaterThan(0).WithMessage("Price must be greater than 0");
+        public AddVariantsDtoValidator()
+        {
+            RuleFor(x => x.Price)
+                .GreaterThan(0).WithMessage("Price must be greater than 0");
 
-        RuleFor(x => x.RegularPrice)
-            .GreaterThanOrEqualTo(x => x.Price)
-            .WithMessage("Regular price must be greater than or equal to sale price");
+            RuleFor(x => x.RegularPrice)
+                .GreaterThanOrEqualTo(x => x.Price)
+                .WithMessage("Regular price must be greater than or equal to sale price");
 
-        RuleFor(x => x.Quantity)
-            .GreaterThanOrEqualTo(0).WithMessage("Quantity cannot be negative");
+            RuleFor(x => x.Quantity)
+                .GreaterThanOrEqualTo(0).WithMessage("Quantity cannot be negative");
 
-        RuleFor(x => x.SKU)
-            .MaximumLength(50).WithMessage("SKU must not exceed 50 characters");
+            RuleFor(x => x.SKU)
+                .MaximumLength(50).WithMessage("SKU must not exceed 50 characters");
 
-        RuleFor(x => x.Barcode)
-            .MaximumLength(50).WithMessage("Barcode must not exceed 50 characters");
+            RuleFor(x => x.Barcode)
+                .MaximumLength(50).WithMessage("Barcode must not exceed 50 characters");
+        }
     }
 }

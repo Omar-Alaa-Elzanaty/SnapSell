@@ -7,6 +7,7 @@ namespace SnapSell.Application.Interfaces
     {
         //IBaseRepo<T> Repository<T>() where T : class;
         IMongoBaseRepo<Product> ProductsRepo { get; }
+        ISQLBaseRepo<Product> ProductsRepository { get; }
         ISQLBaseRepo<CacheCode> CacheCodesRepo { get; }
         Task<int> SaveAsync(CancellationToken cancellationToken = default);
     }
