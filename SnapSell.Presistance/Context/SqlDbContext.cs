@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using SnapSell.Domain.Models;
 using SnapSell.Domain.Models.Interfaces;
 using SnapSell.Presistance.Extensions;
-using System.Security.Claims;
 
 namespace SnapSell.Presistance.Context;
 
@@ -22,7 +21,7 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<OrderAddress> OrderAddresses { get; set; }
     public DbSet<ShoppingBag> ShoppingBags { get; set; }
-
+    public DbSet<PaymentMethod> PaymentMethods { get; set; }
     public DbSet<Review> Reviews { get; set; }
 
     //public DbSet<CacheCode> CacheCodes { get; set; }

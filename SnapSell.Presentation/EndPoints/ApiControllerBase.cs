@@ -25,4 +25,8 @@ public abstract class ApiControllerBase(ICacheService cacheService) : Controller
     {
         return StatusCode((int)result.StatusCode, result);
     }
+    protected IActionResult HandleMediatorResult<TResult>(PaginatedResult<TResult> result)
+    {
+        return StatusCode((int)result.StatusCode, result);
+    }
 }

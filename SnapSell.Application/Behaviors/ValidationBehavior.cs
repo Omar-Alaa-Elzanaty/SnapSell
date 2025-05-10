@@ -20,7 +20,6 @@ internal sealed class ValidationBehavior<TRequest, TResponse>(IValidator<TReques
         if (validationResult.IsValid) return await next();
         var errors = validationResult.Errors.GetErrorsDictionary();
 
-        // Handle Result<T> response type
         if (typeof(TResponse).IsGenericType &&
             typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
         {

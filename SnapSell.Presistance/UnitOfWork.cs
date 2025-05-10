@@ -12,17 +12,20 @@ public class UnitOfWork : IUnitOfWork
     public IMongoBaseRepo<Product> ProductsRepo { get; private set; }
     public ISQLBaseRepo<Product> ProductsRepository { get; private set; }
     public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
+    public ISQLBaseRepo<Variant> Variants { get; set; }
 
     public UnitOfWork(
         SqlDbContext context,
         IMongoBaseRepo<Product> productRepo,
         ISQLBaseRepo<CacheCode> cacheCodesRepo,
-        ISQLBaseRepo<Product> productsRepository)
+        ISQLBaseRepo<Product> productsRepository,
+        ISQLBaseRepo<Variant> variants)
     {
         _context = context;
         ProductsRepo = productRepo;
         CacheCodesRepo = cacheCodesRepo;
         ProductsRepository = productsRepository;
+        Variants = variants;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default) =>

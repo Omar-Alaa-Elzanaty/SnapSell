@@ -1,6 +1,4 @@
-﻿
-
-namespace SnapSell.Domain.Models;
+﻿namespace SnapSell.Domain.Models;
 
 public sealed class Variant : BaseEntity
 {

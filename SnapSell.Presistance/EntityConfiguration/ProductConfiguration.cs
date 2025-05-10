@@ -36,5 +36,28 @@ public sealed class ProductConfiguration : AuditableEntityConfiguration<Product>
 
         builder.Property(x => x.IsHidden)
             .HasDefaultValue(false);
+
+        builder.Property(p => p.MainImageUrl)
+            .IsRequired(false);
+
+        builder.Property(p => p.MainVideoUrl)
+            .IsRequired(false);
+
+        builder.HasMany(p => p.Variants)
+            .WithOne(v => v.Product)
+            .HasForeignKey(v => v.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(p => p.ProductPaymentMethods)
+            .WithOne(ppm => ppm.Product)
+            .HasForeignKey(ppm => ppm.ProductId);
+
+        builder.Property(x => x.ProductStatus)
+            .HasConversion<string>()
+            .IsRequired(false);
+
+        builder.Property(x => x.ShippingType)
+            .HasConversion<string>()
+            .IsRequired(false);
     }
 }

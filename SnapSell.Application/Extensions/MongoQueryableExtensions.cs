@@ -126,7 +126,7 @@ public static class MongoQueryableExtensions
                 method.GetGenericArguments().Length == 2 &&
                 method.GetParameters().Length == 2)
             .MakeGenericMethod(typeof(T), type)
-            .Invoke(null, new object[] { source, lambda })!;
+            .Invoke(null, new object[] { source, lambda });
 
         return (IOrderedQueryable<T>)result;
     }

@@ -195,9 +195,6 @@ namespace SnapSell.Presistance.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("LogoUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -223,12 +220,6 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -477,6 +468,40 @@ namespace SnapSell.Presistance.Migrations
                     b.ToTable("OrderItems", (string)null);
                 });
 
+            modelBuilder.Entity("SnapSell.Domain.Models.PaymentMethod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentMethods");
+                });
+
             modelBuilder.Entity("SnapSell.Domain.Models.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -485,6 +510,9 @@ namespace SnapSell.Presistance.Migrations
 
                     b.PrimitiveCollection<string>("AdditionalImageUrls")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArabicDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ArabicName")
@@ -502,7 +530,7 @@ namespace SnapSell.Presistance.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("EnglishDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EnglishName")
@@ -544,7 +572,10 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<int>("MinDeleveryDays")
                         .HasColumnType("int");
 
-                    b.Property<string>("ShortDescription")
+                    b.Property<string>("ProductStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -557,6 +588,21 @@ namespace SnapSell.Presistance.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("SnapSell.Domain.Models.ProductPaymentMethod", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PaymentMethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ProductId", "PaymentMethodId");
+
+                    b.HasIndex("PaymentMethodId");
+
+                    b.ToTable("ProductPaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.Review", b =>
@@ -649,9 +695,6 @@ namespace SnapSell.Presistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -983,6 +1026,25 @@ namespace SnapSell.Presistance.Migrations
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("SnapSell.Domain.Models.ProductPaymentMethod", b =>
+                {
+                    b.HasOne("SnapSell.Domain.Models.PaymentMethod", "PaymentMethod")
+                        .WithMany("ProductPaymentMethods")
+                        .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SnapSell.Domain.Models.Product", "Product")
+                        .WithMany("ProductPaymentMethods")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PaymentMethod");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("SnapSell.Domain.Models.Review", b =>
                 {
                     b.HasOne("SnapSell.Domain.Models.Product", "Product")
@@ -1039,9 +1101,16 @@ namespace SnapSell.Presistance.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("SnapSell.Domain.Models.PaymentMethod", b =>
+                {
+                    b.Navigation("ProductPaymentMethods");
+                });
+
             modelBuilder.Entity("SnapSell.Domain.Models.Product", b =>
                 {
                     b.Navigation("Colors");
+
+                    b.Navigation("ProductPaymentMethods");
 
                     b.Navigation("Reviews");
 

@@ -1,18 +1,14 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using SnapSell.Application.DTOs.Product;
 using SnapSell.Domain.Dtos.ResultDtos;
+using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
 public sealed record CreatProductCommand(Guid BrandId,
     string EnglishName,
     string ArabicName,
-    string? Description,
-    string? ShortDescription,
     bool IsFeatured,
     bool IsHidden,
-    int MinDeleveryDays,
-    int MaxDeleveryDays,
-    IFormFile MainImageUrl,
-    IFormFile Video) : IRequest<Result<CreateProductResponse>>;
+    ShippingType ShippingType,
+    ProductStatus ProductStatus) : IRequest<Result<CreateProductResponse>>;

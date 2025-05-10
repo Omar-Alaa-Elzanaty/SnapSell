@@ -65,8 +65,6 @@ namespace SnapSell.Presistance.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ParentCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -83,6 +81,23 @@ namespace SnapSell.Presistance.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentMethods",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    LastUpdatedBy = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentMethods", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,14 +234,16 @@ namespace SnapSell.Presistance.Migrations
                     ArabicName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ShippingAddress = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsFeatured = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     BrandId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MinDeleveryDays = table.Column<int>(type: "int", nullable: false),
                     MaxDeleveryDays = table.Column<int>(type: "int", nullable: false),
                     MainImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MainVideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdditionalImageUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippingType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -247,7 +264,7 @@ namespace SnapSell.Presistance.Migrations
                         column: x => x.BrandId,
                         principalTable: "Brands",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -385,6 +402,30 @@ namespace SnapSell.Presistance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductPaymentMethods",
+                columns: table => new
+                {
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PaymentMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductPaymentMethods", x => new { x.ProductId, x.PaymentMethodId });
+                    table.ForeignKey(
+                        name: "FK_ProductPaymentMethods_PaymentMethods_PaymentMethodId",
+                        column: x => x.PaymentMethodId,
+                        principalTable: "PaymentMethods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductPaymentMethods_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -421,7 +462,7 @@ namespace SnapSell.Presistance.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -590,6 +631,11 @@ namespace SnapSell.Presistance.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductPaymentMethods_PaymentMethodId",
+                table: "ProductPaymentMethods",
+                column: "PaymentMethodId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
                 table: "Products",
                 column: "BrandId");
@@ -667,6 +713,9 @@ namespace SnapSell.Presistance.Migrations
                 name: "ProductCategories");
 
             migrationBuilder.DropTable(
+                name: "ProductPaymentMethods");
+
+            migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
@@ -695,6 +744,9 @@ namespace SnapSell.Presistance.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "PaymentMethods");
 
             migrationBuilder.DropTable(
                 name: "Roles");

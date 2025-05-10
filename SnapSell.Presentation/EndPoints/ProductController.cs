@@ -9,15 +9,22 @@ using SnapSell.Application.Features.categories.Queries;
 using SnapSell.Application.DTOs.categories;
 using SnapSell.Application.Features.colors.Queries;
 using SnapSell.Application.DTOs.colors;
+using SnapSell.Application.DTOs.media;
+using SnapSell.Application.DTOs.payment;
+using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
+using SnapSell.Application.Features.product.Commands.UploadProductImage;
+using SnapSell.Application.Features.product.Commands.UploadProductVideo;
+using SnapSell.Application.Features.product.Queries.GetAllPaymentMethods;
+using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
 
 namespace SnapSell.Presentation.EndPoints;
 
 public sealed class ProductController(ICacheService cacheService, ISender sender) : ApiControllerBase(cacheService)
 {
-    [HttpGet("GetAllBrands/{userId}")]
-    public async Task<IActionResult> GetAllBrands(string userId, CancellationToken cancellationToken)
+    [HttpGet("GetAllBrands/{sellerId}")]
+    public async Task<IActionResult> GetAllBrands(string sellerId, CancellationToken cancellationToken)
     {
-        var query = new GetAllPrandsQuery(userId);
+        var query = new GetAllPrandsQuery(sellerId);
 
         var result = await sender.Send(query, cancellationToken);
         return HandleMediatorResult<List<GetAllBrandsResponse>>(result);
@@ -32,6 +39,15 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         return HandleMediatorResult<List<GetAllCategoriesResponse>>(result);
     }
 
+
+    [HttpGet("GetAllPaymentMethods/{userId}")]
+    public async Task<IActionResult> GetAllPaymentMethods(string userId, CancellationToken cancellationToken)
+    {
+        var query = new GetAllPaymentMethodsQuery(userId);
+
+        var result = await sender.Send(query, cancellationToken);
+        return HandleMediatorResult<List<GetAllPaymentMethodsResponse>>(result);
+    }
 
     [HttpGet("GetAllColors/{userId}")]
     public async Task<IActionResult> GetAllColors(string userId, CancellationToken cancellationToken)
@@ -50,26 +66,62 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         var command = new CreatProductCommand(request.BrandId,
             request.EnglishName,
             request.ArabicName,
-            request.Description,
-            request.ShortDescription,
             request.IsFeatured,
             request.IsHidden,
-            request.MinDeleveryDays,
-            request.MaxDeleveryDays,
-            request.MainImageUrl!,
-            request.MainVideoUrl!);
+            request.ShippingType,
+            request.ProductStatus);
 
         var result = await sender.Send(command, cancellationToken);
         return HandleMediatorResult<CreateProductResponse>(result);
     }
 
-    //[HttpPost("UpdateProduct")]
-    //public async Task<IActionResult> UpdateProduct([FromForm] CreateProductRequest request,
-    //    CancellationToken cancellationToken)
-    //{
-    //    var command = new CreatProductCommand(request.BrandId);
+    [HttpPost("UploadProductImage")]
+    public async Task<IActionResult> UploadProductImage(
+        [FromForm] UploadProductImageRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UploadProductImageCommand(request.ProductId, request.Image);
 
-    //    var result = await sender.Send(command, cancellationToken);
-    //    return HandleMediatorResult<CreateProductResponse>(result);
-    //}
+        var result = await sender.Send(command, cancellationToken);
+        return HandleMediatorResult<UploadProductImageResponse>(result);
+    }
+
+    [HttpPost("CreateProductAdditionalInformation")]
+    public async Task<IActionResult> CreateProductAdditionalInformation(
+        [FromBody] CreateProductAdditionalInformationRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new AddAdditionalInformationToProductCommand(
+            request.ProductId,
+            request.EnglishDescription,
+            request.ArabicDescription,
+            request.MinDeleveryDays,
+            request.MaxDeleveryDays,
+            request.Variants);
+
+        var result = await sender.Send(command, cancellationToken);
+        return HandleMediatorResult<CreateProductAdditionalInformationResponse>(result);
+    }
+
+    [HttpPost("UploadProductVideo")]
+    [RequestSizeLimit(500 * 1024 * 1024)] // 500MB limit
+    public async Task<IActionResult> UploadProductVideo([FromForm] UploadVideoRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UploadProductVideoCommand(request.ProductId, request.Video);
+
+        var result = await sender.Send(command, cancellationToken);
+        return HandleMediatorResult<UploeadProductVideoResponse>(result);
+    }
+
+    [HttpGet("GetAllProductsForSpecificSeller/{sellerId}")]
+    public async Task<IActionResult> GetAllProductsForSpecificSeller(string sellerId,
+        [FromQuery] GetAllProductsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAllProductsForSpecificSellerQuery(sellerId, request.PageNumber, request.PageSize);
+
+        var result = await sender.Send(query, cancellationToken);
+        return HandleMediatorResult<GetAllProductsForSpecificSellerResponse>(result);
+    }
 }

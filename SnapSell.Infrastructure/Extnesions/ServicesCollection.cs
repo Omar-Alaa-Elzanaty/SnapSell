@@ -41,15 +41,14 @@ namespace SnapSell.Infrastructure.Extnesions
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services
-                .AddScoped<IMediaService, LocalMediaService>()
+                .AddScoped<IMediaService, MediaService>()
                 .AddScoped<IPaymobService, PaymobService>()
                 .AddScoped<IEmailSender, EmailSender>()
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IPushNotificationSender, PushNotificationSender>()
                 .AddScoped<IApiRequestHandleService, ApiRequestHandleService>()
                 .AddScoped<ICacheService, CacheService>()
-                .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>()
-                .AddScoped<IVideoUploadService, VideoUploadService>();
+                .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
 
             return services;
         }

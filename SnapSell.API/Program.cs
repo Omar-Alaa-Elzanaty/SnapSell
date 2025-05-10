@@ -7,6 +7,7 @@ using SnapSell.Infrastructure.Services.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
 using SnapSell.Presistance.Extensions;
 using SnapSell.Presistance.Seeding;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
 builder.Services.AddEndpointsApiExplorer();
