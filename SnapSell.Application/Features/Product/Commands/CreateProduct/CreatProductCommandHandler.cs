@@ -1,11 +1,13 @@
 ﻿using System.Net;
 using System.Security.Claims;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
+using SnapSell.Domain.Extnesions;
 using SnapSell.Domain.Models;
 
 
@@ -14,12 +16,26 @@ namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 internal sealed class CreatProductCommandHandler(
     ISQLBaseRepo<Product> productRepository,
     IUnitOfWork unitOfWork,
-    IHttpContextAccessor httpContextAccessor)
+    IHttpContextAccessor httpContextAccessor,
+    IValidator<CreatProductCommand> validator)
     : IRequestHandler<CreatProductCommand, Result<CreateProductResponse>>
 {
     public async Task<Result<CreateProductResponse>> Handle(CreatProductCommand request,
         CancellationToken cancellationToken)
     {
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.GetErrorsDictionary();
+            return new Result<CreateProductResponse>()
+            {
+                Errors = errors,
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = "Validation failed"
+            };
+        }
+
         var currentUser = httpContextAccessor.HttpContext?.User;
         if (currentUser is null)
         {

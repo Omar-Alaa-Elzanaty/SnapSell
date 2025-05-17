@@ -18,7 +18,7 @@ public static class SqlQuerableExtensions
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return PaginatedResult<T>.Create(items, count, pageNumber, pageSize);
+        return await PaginatedResult<T>.SuccessAsync(items, count, pageNumber, pageSize);
     }
 
     public static IQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> query, string sorting)

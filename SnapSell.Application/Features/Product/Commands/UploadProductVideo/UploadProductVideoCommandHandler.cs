@@ -9,7 +9,8 @@ using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models;
-using Microsoft.Extensions.Logging;
+using FluentValidation;
+using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Application.Features.product.Commands.UploadProductVideo;
 
@@ -18,13 +19,26 @@ internal sealed class UploadProductVideoCommandHandler(
     IHttpContextAccessor httpContextAccessor,
     IMediaService mediaService,
     IUnitOfWork unitOfWork,
-    ILogger<UploadProductVideoCommandHandler> logger)
+    IValidator<UploadProductVideoCommand> validator)
     : IRequestHandler<UploadProductVideoCommand, Result<UploeadProductVideoResponse>>
 {
     public async Task<Result<UploeadProductVideoResponse>> Handle(
         UploadProductVideoCommand request,
         CancellationToken cancellationToken)
     {
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.GetErrorsDictionary();
+            return new Result<UploeadProductVideoResponse>()
+            {
+                Errors = errors,
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = "Validation failed"
+            };
+        }
+
         try
         {
             var currentUser = httpContextAccessor.HttpContext?.User;
@@ -85,7 +99,6 @@ internal sealed class UploadProductVideoCommandHandler(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error uploading product video for product {ProductId}", request.ProductId);
             return Result<UploeadProductVideoResponse>.Failure(
                 "An error occurred while uploading the video",
                 HttpStatusCode.InternalServerError);

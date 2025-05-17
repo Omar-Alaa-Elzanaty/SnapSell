@@ -1,21 +1,22 @@
-﻿using SnapSell.Application.Interfaces;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.Features.product.Commands.CreateProduct;
-using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.DTOs.Brands;
-using SnapSell.Application.Features.brands.Queries;
-using SnapSell.Application.Features.categories.Queries;
 using SnapSell.Application.DTOs.categories;
-using SnapSell.Application.Features.colors.Queries;
 using SnapSell.Application.DTOs.colors;
 using SnapSell.Application.DTOs.media;
 using SnapSell.Application.DTOs.payment;
+using SnapSell.Application.DTOs.Product;
+using SnapSell.Application.Features.brands.Queries;
+using SnapSell.Application.Features.categories.Queries;
+using SnapSell.Application.Features.colors.Queries;
 using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
+using SnapSell.Application.Features.product.Commands.CreateProduct;
 using SnapSell.Application.Features.product.Commands.UploadProductImage;
 using SnapSell.Application.Features.product.Commands.UploadProductVideo;
 using SnapSell.Application.Features.product.Queries.GetAllPaymentMethods;
 using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
+using SnapSell.Application.Interfaces;
+using SnapSell.Domain.Dtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
@@ -116,12 +117,12 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
 
     [HttpGet("GetAllProductsForSpecificSeller/{sellerId}")]
     public async Task<IActionResult> GetAllProductsForSpecificSeller(string sellerId,
-        [FromQuery] GetAllProductsRequest request,
+        [FromQuery] PaginatedRequest request,
         CancellationToken cancellationToken)
     {
-        var query = new GetAllProductsForSpecificSellerQuery(sellerId, request.PageNumber, request.PageSize);
+        var query = new GetAllProductsForSpecificSellerQuery(sellerId,request);
 
         var result = await sender.Send(query, cancellationToken);
-        return HandleMediatorResult<GetAllProductsForSpecificSellerResponse>(result);
+        return Ok(result);
     }
 }

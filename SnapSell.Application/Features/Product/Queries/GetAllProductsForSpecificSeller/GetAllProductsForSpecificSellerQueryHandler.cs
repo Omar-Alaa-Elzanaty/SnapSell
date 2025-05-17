@@ -1,52 +1,74 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using SnapSell.Application.DTOs.Product;
+using SnapSell.Application.Extensions;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models;
-using Mapster;
-using Microsoft.EntityFrameworkCore;
-using SnapSell.Application.Extensions;
 using System.Net;
 using System.Security.Claims;
-using SnapSell.Application.DTOs.Product;
 
 namespace SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
 
 internal sealed class GetAllProductsForSpecificSellerQueryHandler(
-    IHttpContextAccessor httpContextAccessor,
-    ISQLBaseRepo<Product> productRepository) : IRequestHandler<GetAllProductsForSpecificSellerQuery
-    , PaginatedResult<GetAllProductsForSpecificSellerResponse>>
+    ISQLBaseRepo<Product> productRepository,
+    IHttpContextAccessor httpContextAccessor)
+    : IRequestHandler<GetAllProductsForSpecificSellerQuery, PaginatedResult<GetAllProductsForSpecificSellerResponse>>
 {
+    private const string DefaultSortField = "EnglishName";
+
     public async Task<PaginatedResult<GetAllProductsForSpecificSellerResponse>> Handle(
-        GetAllProductsForSpecificSellerQuery request, CancellationToken cancellationToken)
+        GetAllProductsForSpecificSellerQuery request,
+        CancellationToken cancellationToken)
     {
-        var currentUser = httpContextAccessor.HttpContext?.User;
-        if (currentUser is null)
-        {
-            return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
-                message: "Current user is null",
-                statusCode: HttpStatusCode.Unauthorized);
-        }
+        var userId = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrWhiteSpace(userId))
+            return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
+                "Authentication required", HttpStatusCode.Unauthorized);
+
+        if (userId != request.SellerId)
+            return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
+                "You can only view your own products", HttpStatusCode.Forbidden);
+        try
+        {
+            var query = productRepository.TheDbSet()
+                .Where(p => !p.IsHidden && p.CreatedBy == userId)
+                .Include(p => p.Brand)
+                .Include(p => p.Variants)
+                .AsNoTracking();
+
+            var sortExpression = $"{request.Pagination.SortBy ?? DefaultSortField} {request.Pagination.SortOrder}";
+            query = query.OrderBy(sortExpression);
+
+            var result = await query
+                .Select(p => p)
+                .ToPaginatedListAsync(
+                    request.Pagination.PageNumber,
+                    request.Pagination.PageSize,
+                    cancellationToken);
+
+            var mappedData = result.Data.Adapt<List<GetAllProductsForSpecificSellerResponse>>();
+            return new PaginatedResult<GetAllProductsForSpecificSellerResponse>(mappedData, result.TotalCount,
+                result.CurrentPage, result.PageSize)
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "Products retrieved successfully"
+            };
+        }
+        catch (ArgumentException ex) when (ex.Message.Contains("sorting", StringComparison.OrdinalIgnoreCase))
         {
             return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
-                message: "User ID not found in claims",
-                statusCode: HttpStatusCode.Unauthorized);
+                $"Invalid sorting parameter: {ex.Message}, Allowwed is: ASC , DESC.",
+                HttpStatusCode.BadRequest);
         }
-
-        var query = productRepository.TheDbSet()
-            .Where(p => !p.IsHidden)
-            .Include(p => p.Brand)
-            .Include(p => p.Variants)
-            .AsQueryable();
-
-        var paginatedProducts = await query
-            .OrderBy(p => p.EnglishName)
-            .ProjectToType<GetAllProductsForSpecificSellerResponse>()
-            .ToPaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
-
-        return paginatedProducts;
+        catch (Exception ex)
+        {
+            return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
+                $"An error occurred: {ex.Message}",
+                HttpStatusCode.InternalServerError);
+        }
     }
 }

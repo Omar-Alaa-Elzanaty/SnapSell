@@ -2,90 +2,90 @@
 using SnapSell.Domain.Extnesions;
 using System.Net;
 
-namespace SnapSell.Domain.Dtos.ResultDtos
+namespace SnapSell.Domain.Dtos.ResultDtos;
+
+public class Result<T> : IResult<T>
 {
-    public class Result<T>
+    public bool IsSuccess => (int)StatusCode >= 200 && (int)StatusCode <= 299;
+    public HttpStatusCode StatusCode { get; set; }
+    public T? Data { get; set; }
+    public string? Message { get; set; }
+    public CacheResponse? CacheCodes { get; set; }
+    public Dictionary<string, List<string>>? Errors { get; set; }
+
+    public static Result<T> Success()
     {
-        public bool IsSuccess => (int)StatusCode >= 200 && (int)StatusCode <= 200;
-        public HttpStatusCode StatusCode { get; set; }
-        public T? Data { get; set; }
-        public string? Message { get; set; }
-        public CacheResponse? CacheCodes { get; set; }
-        public Dictionary<string, List<string>>? Errors { get; set; }
-
-        public static Result<T> Success()
+        return new()
         {
-            return new()
-            {
-                StatusCode = HttpStatusCode.OK
-            };
-        }
+            StatusCode = HttpStatusCode.OK
+        };
+    }
 
-        public static Result<T> Success(T data, string? message = null)
+    public static Result<T> Success(T data, string? message = null)
+    {
+        return new()
         {
-            return new()
-            {
-                Data = data,
-                Message = message,
-                StatusCode = HttpStatusCode.OK
-            };
-        }
+            Data = data,
+            Message = message,
+            StatusCode = HttpStatusCode.OK
+        };
+    }
 
-        public static Result<T> Success(string message)
+    public static Result<T> Success(string message)
+    {
+        return new()
         {
-            return new()
-            {
-                StatusCode = HttpStatusCode.OK,
-                Message = message
-            };
-        }
+            StatusCode = HttpStatusCode.OK,
+            Message = message
+        };
+    }
 
-        public static Result<T> Success(T data, string message, HttpStatusCode statusCode)
+    public static Result<T> Success(T data, string message, HttpStatusCode statusCode)
+    {
+        return new()
         {
-            return new()
-            {
-                Data = data,
-                Message = message,
-                StatusCode = statusCode
-            };
-        }
+            Data = data,
+            Message = message,
+            StatusCode = statusCode
+        };
+    }
 
-        public static Result<T> Failure(string message, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+    public static Result<T> Failure(string message, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+    {
+        return new()
         {
-            return new()
-            {
-                Message = message,
-                StatusCode = statusCode
-            };
-        }
+            Message = message,
+            StatusCode = statusCode
+        };
+    }
 
-        public static Result<T> ValidationFailure(List<ValidationFailure> errors)
+    public static Result<T> ValidationFailure(List<ValidationFailure> errors)
+    {
+        return new()
         {
-            return new()
-            {
-                Errors = errors.GetErrorsDictionary(),
-                StatusCode = HttpStatusCode.UnprocessableEntity
-            };
-        }
+            Errors = errors.GetErrorsDictionary(),
+            StatusCode = HttpStatusCode.UnprocessableEntity
+        };
+    }
 
-        public static Result<T> ValidationFailure(List<ValidationFailure> errors, string message)
+    public static Result<T> ValidationFailure(List<ValidationFailure> errors, string message)
+    {
+        return new()
         {
-            return new()
-            {
-                Errors = errors.GetErrorsDictionary(),
-                StatusCode = HttpStatusCode.UnprocessableEntity,
-                Message = message
-            };
-        }
+            Errors = errors.GetErrorsDictionary(),
+            StatusCode = HttpStatusCode.UnprocessableEntity,
+            Message = message
+        };
+    }
 
-        public static Result<T> ValidationBehavoirFailure(Dictionary<string, List<string>> errors, string message)
+    public IResult ToValidationErrors(Dictionary<string, List<string>> errors, HttpStatusCode statusCode,
+        string message)
+    {
+        return new Result<T>
         {
-            return new()
-            {
-                Errors = errors,
-                StatusCode = HttpStatusCode.UnprocessableEntity,
-                Message = message
-            };
-        }
+            Errors = errors,
+            StatusCode = statusCode,
+            Message = message
+        };
     }
 }

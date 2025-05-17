@@ -35,3 +35,15 @@ public sealed record AddVariantsToProductResponse(Guid ProductId,
     string? MainImageUrl,
     string? MainVideoUrl,
     List<VariantResponse> Variants);
+
+
+public sealed record VariantResponseInGetAllProductsToSeller(
+    Guid VariantId,
+    Guid? SizeId,
+    Guid? ColorId,
+    int Quantity,
+    decimal Price,
+    decimal RegularPrice,
+    decimal? SalePrice,
+    string? SKU,
+    string? Barcode);

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Mapster;
 using MapsterMapper;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Application.Behaviors;
 using SnapSell.Application.Comman.mappingConfig;
@@ -24,7 +25,7 @@ namespace SnapSell.Application.Extensions.Services
             services.AddMediatR(configuration =>
             {
                 configuration.RegisterServicesFromAssembly(typeof(ServicesCollection).Assembly);
-                configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             });
 
             return services;

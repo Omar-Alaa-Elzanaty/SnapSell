@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
 
@@ -14,13 +13,13 @@ public sealed class GetAllProductsForSpecificSellerQueryValidator
             .MaximumLength(50)
             .WithMessage("Seller ID cannot exceed 50 characters");
 
-        RuleFor(x => x.PageNumber)
+        RuleFor(x => x.Pagination.PageNumber)
             .GreaterThan(0)
             .WithMessage("Page number must be greater than 0")
             .LessThanOrEqualTo(1000)
             .WithMessage("Page number cannot exceed 1000");
 
-        RuleFor(x => x.PageSize)
+        RuleFor(x => x.Pagination.PageSize)
             .GreaterThan(0)
             .WithMessage("Page size must be greater than 0")
             .LessThanOrEqualTo(20)

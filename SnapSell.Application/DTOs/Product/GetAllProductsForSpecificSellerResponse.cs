@@ -1,4 +1,5 @@
-﻿using SnapSell.Domain.Enums;
+﻿using SnapSell.Application.DTOs.variant;
+using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.DTOs.Product;
 
@@ -17,4 +18,4 @@ public sealed record GetAllProductsForSpecificSellerResponse(
     string? MainVideoUrl,
     ShippingType? ShippingType,
     string BrandName,
-    int VariantCount);
+    IReadOnlyList<VariantResponseInGetAllProductsToSeller> Variants);

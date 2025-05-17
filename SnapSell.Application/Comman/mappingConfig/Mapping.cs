@@ -5,7 +5,6 @@ using SnapSell.Application.DTOs.colors;
 using SnapSell.Application.DTOs.payment;
 using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.DTOs.variant;
-using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Domain.Models;
 
 namespace SnapSell.Application.Comman.mappingConfig;
@@ -51,6 +50,18 @@ public static class Mapping
             .Map(dest => dest.Barcode, src => src.Barcode);
 
 
+        TypeAdapterConfig<Variant, VariantResponseInGetAllProductsToSeller>
+            .NewConfig()
+            .Map(dest => dest.VariantId, src => src.Id)
+            .Map(dest => dest.SizeId, src => src.SizeId)
+            .Map(dest => dest.ColorId, src => src.ColorId)
+            .Map(dest => dest.Quantity, src => src.Quantity)
+            .Map(dest => dest.Price, src => src.Price)
+            .Map(dest => dest.RegularPrice, src => src.RegularPrice)
+            .Map(dest => dest.SalePrice, src => src.SalePrice)
+            .Map(dest => dest.SKU, src => src.SKU)
+            .Map(dest => dest.Barcode, src => src.Barcode);
+
         TypeAdapterConfig<Product, GetAllProductsForSpecificSellerResponse>
             .NewConfig()
             .Map(dest => dest.ProductId, src => src.Id)
@@ -66,8 +77,7 @@ public static class Mapping
             .Map(dest => dest.MainImageUrl, src => src.MainImageUrl)
             .Map(dest => dest.MainVideoUrl, src => src.MainVideoUrl)
             .Map(dest => dest.ShippingType, src => src.ShippingType)
-            .Map(dest => dest.BrandName, src => src.Brand != null ? src.Brand.Name : string.Empty)
-            .Map(dest => dest.VariantCount, src => src.Variants != null ? src.Variants.Count : 0);
-
+            .Map(dest => dest.BrandName, src => src.Brand != null ? src.Brand.Name : null)
+            .Map(dest => dest.Variants, src => src.Variants);
     }
 }

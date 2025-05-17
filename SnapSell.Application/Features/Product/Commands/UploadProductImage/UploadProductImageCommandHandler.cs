@@ -2,6 +2,7 @@
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Net;
 using System.Security.Claims;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using SnapSell.Application.DTOs.media;
 using SnapSell.Application.Interfaces;
@@ -9,6 +10,7 @@ using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models;
 using SnapSell.Domain.Dtos;
+using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Application.Features.product.Commands.UploadProductImage;
 
@@ -16,12 +18,25 @@ internal sealed class UploadProductImageCommandHandler(
     IMediaService mediaService,
     IHttpContextAccessor httpContextAccessor,
     ISQLBaseRepo<Product> productRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<UploadProductImageCommand> validator)
     : IRequestHandler<UploadProductImageCommand, Result<UploadProductImageResponse>>
 {
     public async Task<Result<UploadProductImageResponse>> Handle(UploadProductImageCommand request,
         CancellationToken cancellationToken)
     {
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.GetErrorsDictionary();
+            return new Result<UploadProductImageResponse>()
+            {
+                Errors = errors,
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = "Validation failed"
+            };
+        }
         var currentUser = httpContextAccessor.HttpContext?.User;
         if (currentUser is null)
         {

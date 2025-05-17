@@ -1,40 +1,45 @@
-﻿using FluentValidation;
+﻿using System.Net;
+using FluentValidation;
 using MediatR;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Application.Behaviors;
 
-internal sealed class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? validator)
+public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
+    where TResponse : IResult
 {
+    private readonly IValidator<TRequest>[] _validators = validators.ToArray();
+
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (validator is null) return await next();
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        if (_validators.Length == 0) return await next();
 
-        if (validationResult.IsValid) return await next();
-        var errors = validationResult.Errors.GetErrorsDictionary();
+        var context = new ValidationContext<TRequest>(request);
 
-        if (typeof(TResponse).IsGenericType &&
-            typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
+        var validationFailures = _validators
+            .Select(validator => validator.Validate(context))
+            .Where(validationResult => validationResult.Errors.Count > 0)
+            .SelectMany(validationResult => validationResult.Errors)
+            .ToList();
+
+        if (validationFailures.Count > 0)
         {
-            Type resultType = typeof(TResponse).GetGenericArguments()[0];
+            var errorDictionary = validationFailures.GetErrorsDictionary();
+            var emptyResult = Activator.CreateInstance<TResponse>() ?? throw new InvalidOperationException(
+                $"Could not create an instance of {typeof(TResponse)}. Make sure it has a parameterless constructor.");
 
-            // Create the appropriate Result<T> via reflection
-            var method = typeof(Result<>)
-                .MakeGenericType(resultType)
-                .GetMethod("ValidationBehavoirFailure");
-
-            var result = method.Invoke(null, new object[] { errors, "Validation failed" });
-
-            return (TResponse)result!;
+            return (TResponse)(IResult)emptyResult.ToValidationErrors(
+                errors: errorDictionary,
+                statusCode: HttpStatusCode.BadRequest,
+                message: "Validation Process is failed to current request.");
         }
 
-        throw new ValidationException(validationResult.Errors);
+        return await next();
     }
 }

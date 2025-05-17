@@ -7,18 +7,34 @@ using System.Net;
 using System.Security.Claims;
 using Mapster;
 using SnapSell.Application.DTOs.payment;
+using FluentValidation;
+using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Application.Features.product.Queries.GetAllPaymentMethods;
 
 internal sealed class GetAllPaymentMethodsQueryHandler(
     ISQLBaseRepo<PaymentMethod> paymentMethodRepository,
-    IHttpContextAccessor httpContextAccessor)
+    IHttpContextAccessor httpContextAccessor,
+    IValidator<GetAllPaymentMethodsQuery> validator)
     : IRequestHandler<GetAllPaymentMethodsQuery,
         Result<List<GetAllPaymentMethodsResponse>>>
 {
     public async Task<Result<List<GetAllPaymentMethodsResponse>>> Handle(GetAllPaymentMethodsQuery request,
-        CancellationToken cancellationToken)
+    CancellationToken cancellationToken)
     {
+
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.GetErrorsDictionary();
+            return new Result<List<GetAllPaymentMethodsResponse>>()
+            {
+                Errors = errors,
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = "Validation failed"
+            };
+        }
         var currentUser = httpContextAccessor.HttpContext?.User;
         if (currentUser is null)
         {

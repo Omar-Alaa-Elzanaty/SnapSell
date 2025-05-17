@@ -7,6 +7,8 @@ using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models;
 using System.Net;
 using System.Security.Claims;
+using FluentValidation;
+using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
 
@@ -20,6 +22,19 @@ internal sealed class AddVariantsToProductCommandHandler(
     public async Task<Result<List<AddVariantsToProductResponse>>> Handle(AddVariantsToProductCommand request,
         CancellationToken cancellationToken)
     {
+        //var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        //if (!validationResult.IsValid)
+        //{
+        //    var errors = validationResult.Errors.GetErrorsDictionary();
+        //    return new Result<List<AddVariantsToProductResponse>>()
+        //    {
+        //        Errors = errors,
+        //        StatusCode = HttpStatusCode.BadRequest,
+        //        Message = "Validation failed"
+        //    };
+        //}
+
         var currentUser = httpContextAccessor.HttpContext?.User;
         if (currentUser is null)
         {

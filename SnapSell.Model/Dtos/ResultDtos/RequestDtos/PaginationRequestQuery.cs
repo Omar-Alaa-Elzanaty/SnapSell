@@ -1,4 +1,4 @@
-﻿namespace SnapSell.Domain.Dtos.RequestDtos
+﻿namespace SnapSell.Domain.Dtos.ResultDtos.RequestDtos
 {
     class PaginationRequestQuery
     {

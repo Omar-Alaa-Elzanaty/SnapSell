@@ -1,25 +1,25 @@
 ﻿using System.Net;
 using System.Security.Claims;
+using FluentValidation;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.DTOs.variant;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
+using SnapSell.Domain.Extnesions;
 using SnapSell.Domain.Models;
 
 namespace SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
 
 internal sealed class AddAdditionalInformationToProductCommandHandler(
-    IMediaService mediaService,
-    ILogger<AddAdditionalInformationToProductCommandHandler> logger,
     IHttpContextAccessor httpContextAccessor,
     ISQLBaseRepo<Product> productRepository,
     ISQLBaseRepo<Variant> variantsRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<AddAdditionalInformationToProductCommand> validator)
     : IRequestHandler<AddAdditionalInformationToProductCommand,
         Result<CreateProductAdditionalInformationResponse>>
 {
@@ -27,6 +27,19 @@ internal sealed class AddAdditionalInformationToProductCommandHandler(
         AddAdditionalInformationToProductCommand request,
         CancellationToken cancellationToken)
     {
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.GetErrorsDictionary();
+            return new Result<CreateProductAdditionalInformationResponse>()
+            {
+                Errors = errors,
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = "Validation failed"
+            };
+        }
+
         var currentUser = httpContextAccessor.HttpContext?.User;
         if (currentUser is null)
         {
