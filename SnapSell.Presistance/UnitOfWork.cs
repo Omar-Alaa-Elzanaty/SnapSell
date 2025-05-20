@@ -16,13 +16,11 @@ public class UnitOfWork : IUnitOfWork
 
     public UnitOfWork(
         SqlDbContext context,
-        IMongoBaseRepo<Product> productRepo,
         ISQLBaseRepo<CacheCode> cacheCodesRepo,
         ISQLBaseRepo<Product> productsRepository,
         ISQLBaseRepo<Variant> variants)
     {
         _context = context;
-        ProductsRepo = productRepo;
         CacheCodesRepo = cacheCodesRepo;
         ProductsRepository = productsRepository;
         Variants = variants;

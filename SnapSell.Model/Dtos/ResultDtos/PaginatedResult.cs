@@ -4,7 +4,7 @@ using System.Net;
 
 namespace SnapSell.Domain.Dtos.ResultDtos;
 
-public sealed class PaginatedResult<T>
+public sealed class PaginatedResult<T> : IResult<List<T>>
 {
     public bool IsSuccess => (int)StatusCode >= 200 && (int)StatusCode <= 299;
     public HttpStatusCode StatusCode { get; set; }
@@ -12,6 +12,18 @@ public sealed class PaginatedResult<T>
     public string? Message { get; set; }
     public CacheResponse? CacheCodes { get; set; }
     public Dictionary<string, List<string>>? Errors { get; set; }
+
+    public IResult ToValidationErrors(Dictionary<string, List<string>> errors, HttpStatusCode statusCode,
+        string message)
+    {
+        return new Result<T>
+        {
+            Errors = errors,
+            StatusCode = statusCode,
+            Message = message
+        };
+    }
+
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }
     public int TotalCount { get; set; }
@@ -19,7 +31,9 @@ public sealed class PaginatedResult<T>
     public bool HasPreviousPage => CurrentPage > 1;
     public bool HasNextPage => CurrentPage < TotalPages;
 
-    public PaginatedResult() { }
+    public PaginatedResult()
+    {
+    }
 
     public PaginatedResult(
         List<T> data,
@@ -48,6 +62,7 @@ public sealed class PaginatedResult<T>
         Errors = errors;
         Data = new List<T>();
     }
+
     public static PaginatedResult<T> Success(
         List<T> data,
         int count,

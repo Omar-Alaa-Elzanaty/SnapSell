@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -41,46 +42,56 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
         modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
     }
 
-    //public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    //{
-    //    var userId = contextAccessor.HttpContext is null || contextAccessor.HttpContext.User is null
-    //        ? null
-    //        : contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
 
-    //    foreach (var entity in ChangeTracker
-    //                 .Entries()
-    //                 .Where(x => x.Entity is IAuditable
-    //                             && (x.State == EntityState.Added ||
-    //                                 x.State == EntityState.Modified ||
-    //                                 x.State == EntityState.Deleted)))
-    //    {
-    //        IAuditable auditedEntity = (entity as IAuditable)!;
+            foreach (var entry in ChangeTracker.Entries<IAuditable>())
+            {
+                if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                    continue;
 
-    //        if (entity.State == EntityState.Added)
-    //        {
-    //            auditedEntity.CreatedAt = DateTime.UtcNow;
+                var now = DateTime.UtcNow;
 
-    //            if (userId != null)
-    //            {
-    //                auditedEntity.CreatedBy = userId;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            if (entity.State == EntityState.Deleted)
-    //            {
-    //                auditedEntity.IsDeleted = true;
-    //                entity.State = EntityState.Modified;
-    //            }
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = now;
+                    entry.Entity.CreatedBy = userId;
+                    entry.Entity.IsDeleted = false;
+                }
+                else if (entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Modified;
+                    entry.Entity.IsDeleted = true;
+                    entry.Entity.LastUpdatedAt = now;
+                    entry.Entity.LastUpdatedBy = userId;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastUpdatedAt = now;
+                    entry.Entity.LastUpdatedBy = userId;
+                }
+            }
 
-    //            auditedEntity.LastUpdatedAt = DateTime.UtcNow;
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            throw; 
+        }
+    }
 
-    //            if (userId != null)
-    //            {
-    //                auditedEntity.LastUpdatedBy = userId;
-    //            }
-    //        }
-    //    }
-    //    return await base.SaveChangesAsync(cancellationToken);
-    //}
+    private string? GetCurrentUserId()
+    {
+        try
+        {
+            return contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+        catch
+        {
+            return null; 
+        }
+    }
 }
