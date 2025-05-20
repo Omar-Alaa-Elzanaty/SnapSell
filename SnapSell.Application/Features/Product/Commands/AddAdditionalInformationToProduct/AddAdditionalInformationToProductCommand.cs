@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.DTOs.variant;
 using SnapSell.Domain.Dtos.ResultDtos;
 
@@ -12,3 +11,17 @@ public sealed record AddAdditionalInformationToProductCommand(
     int MinDeleveryDays,
     int MaxDeleveryDays,
     List<VariantDto?> Variants) : IRequest<Result<CreateProductAdditionalInformationResponse>>;
+
+public sealed record CreateProductAdditionalInformationResponse(
+    Guid ProductId,
+    string SellerId,
+    string EnglishName,
+    string ArabicName,
+    string EnglishDescription,
+    string ArabicDescription,
+    bool IsFeatured,
+    bool IsHidden,
+    int MinDeleveryDays,
+    int MaxDeleveryDays,
+    string? MainImageUrl,
+    List<VariantResponse> Variants);

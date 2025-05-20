@@ -1,10 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.DTOs.Brands;
-using SnapSell.Application.DTOs.categories;
-using SnapSell.Application.DTOs.colors;
 using SnapSell.Application.DTOs.media;
-using SnapSell.Application.DTOs.payment;
 using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
@@ -120,7 +116,7 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         [FromQuery] PaginatedRequest request,
         CancellationToken cancellationToken)
     {
-        var query = new GetAllProductsForSpecificSellerQuery(sellerId,request);
+        var query = new GetAllProductsForSpecificSellerQuery(sellerId, request);
 
         var result = await sender.Send(query, cancellationToken);
         return Ok(result);
