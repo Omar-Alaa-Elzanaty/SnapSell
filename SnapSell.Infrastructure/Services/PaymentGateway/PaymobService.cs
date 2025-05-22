@@ -1,7 +1,7 @@
 ﻿using Mapster;
 using Microsoft.Extensions.Configuration;
-using SnapSell.Application.Applications.Payments.Commnad.Callback;
-using SnapSell.Application.Applications.Payments.Commnad.Token;
+using SnapSell.Application.Features.Payments.Commnad.Callback;
+using SnapSell.Application.Features.Payments.Commnad.Token;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.PaymobDtos;
 using System.Net.Http.Headers;

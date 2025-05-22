@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using SnapSell.Application.DTOs.variant;
 
 namespace SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
 

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SnapSell.Application.DTOs.variant;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
@@ -27,4 +26,16 @@ public sealed record AddVariantsToProductResponse(Guid ProductId,
     int MaxDeleveryDays,
     string? MainImageUrl,
     string? MainVideoUrl,
-    List<VariantResponse> Variants);
+    List<VariantsInAddVariantsToProductResponse> Variants);
+
+public sealed record VariantsInAddVariantsToProductResponse(
+    Guid VariantId,
+    Guid? SizeId,
+    Guid? ColorId,
+    int Quantity,
+    decimal Price,
+    decimal RegularPrice,
+    decimal? SalePrice,
+    string? SKU,
+    string? Barcode
+);

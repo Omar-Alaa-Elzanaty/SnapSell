@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using SnapSell.Application.DTOs.Authentication;
 using SnapSell.Application.Interfaces.Authentication;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models;

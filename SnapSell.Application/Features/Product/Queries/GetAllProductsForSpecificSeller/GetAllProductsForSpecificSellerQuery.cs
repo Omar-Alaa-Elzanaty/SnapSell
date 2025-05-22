@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SnapSell.Application.DTOs.variant;
 using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
@@ -27,3 +26,14 @@ public sealed record GetAllProductsForSpecificSellerResponse(
     ShippingType? ShippingType,
     string BrandName,
     IReadOnlyList<VariantResponseInGetAllProductsToSeller> Variants);
+
+public sealed record VariantResponseInGetAllProductsToSeller(
+    Guid VariantId,
+    Guid? SizeId,
+    Guid? ColorId,
+    int Quantity,
+    decimal Price,
+    decimal RegularPrice,
+    decimal? SalePrice,
+    string? SKU,
+    string? Barcode);

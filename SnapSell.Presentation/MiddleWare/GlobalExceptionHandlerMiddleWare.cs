@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
 using Mapster;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.Exceptions;
+using SnapSell.Application.Common.Exceptions;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Extnesions;
 using System.Net;
