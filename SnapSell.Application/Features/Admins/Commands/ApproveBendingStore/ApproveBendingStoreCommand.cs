@@ -5,7 +5,7 @@ namespace SnapSell.Application.Features.Admins.Commands.ApproveBendingStore
 {
     public sealed record ApproveBendingStoreCommand : IRequest<Result<string>>
     {
-        public string StoreId { get; set; }
+        public string StoreId { get; init; }
     }
 
     internal class ApproveBendingStoreCommandHandler : IRequestHandler<ApproveBendingStoreCommand, Result<string>>
