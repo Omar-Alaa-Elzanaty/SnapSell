@@ -1,20 +1,17 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.DTOs.media;
 using SnapSell.Application.Interfaces;
+using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
+using SnapSell.Domain.Enums;
+using SnapSell.Domain.Extnesions;
 using System.Net;
 using System.Security.Claims;
-using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Enums;
-using SnapSell.Domain.Models;
-using FluentValidation;
-using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Application.Features.product.Commands.UploadProductVideo;
 
 internal sealed class UploadProductVideoCommandHandler(
-    ISQLBaseRepo<Product> productRepository,
     IHttpContextAccessor httpContextAccessor,
     IMediaService mediaService,
     IUnitOfWork unitOfWork,
@@ -50,7 +47,7 @@ internal sealed class UploadProductVideoCommandHandler(
                 return Result<UploeadProductVideoResponse>.Failure(
                     "User ID not found", HttpStatusCode.Unauthorized);
 
-            var product = await productRepository.GetByIdAsync(request.ProductId);
+            var product = await unitOfWork.ProductsRepository.GetByIdAsync(request.ProductId);
             if (product is null)
                 return Result<UploeadProductVideoResponse>.Failure(
                     $"No product with ID: {request.ProductId}", HttpStatusCode.NotFound);
@@ -63,38 +60,36 @@ internal sealed class UploadProductVideoCommandHandler(
                 return Result<UploeadProductVideoResponse>.Failure(
                     "No video file provided", HttpStatusCode.BadRequest);
 
-            var chunkDto = new VideoChunkDto
+            // IFormFile ==> MediaFileDto
+            using var memoryStream = new MemoryStream();
+            await request.Video.CopyToAsync(memoryStream, cancellationToken);
+            var fileBytes = memoryStream.ToArray();
+            var base64String = Convert.ToBase64String(fileBytes);
+
+            var mediaFileDto = new MediaFileDto
             {
-                UploadId = Guid.NewGuid().ToString(),
-                FileName = $"{product.Id}_{request.Video.FileName}",
-                ChunkNumber = 1,
-                TotalChunks = 1,
-                TotalFileSize = request.Video.Length,
-                Chunk = request.Video
+                FileName = request.Video.FileName,
+                Base64 = base64String
             };
 
-            var uploadResult = await mediaService.UploadChunkAsync(chunkDto);
+            var savedFileName = await mediaService.SaveAsync(mediaFileDto, MediaTypes.Video);
 
-            if (!uploadResult.IsComplete || string.IsNullOrEmpty(uploadResult.PublicUrl))
+            if (string.IsNullOrEmpty(savedFileName))
             {
-                var error = uploadResult.FailedUploads.FirstOrDefault();
                 return Result<UploeadProductVideoResponse>.Failure(
-                    error != default ? error.error : "Video processing failed",
-                    HttpStatusCode.BadRequest);
+                    "Video upload failed", HttpStatusCode.BadRequest);
             }
 
-            product.MainVideoUrl = uploadResult.SavedFileName;
-            product.LastUpdatedAt = DateTime.UtcNow;
-            product.LastUpdatedBy = userId;
+            product.MainVideoUrl = savedFileName;
 
             await unitOfWork.SaveAsync(cancellationToken);
             var response =
-                new UploeadProductVideoResponse(mediaService.GetUrl(uploadResult.SavedFileName, MediaTypes.Video));
+                new UploeadProductVideoResponse(mediaService.GetUrl(savedFileName, MediaTypes.Video));
 
             return Result<UploeadProductVideoResponse>.Success(
                 data: response,
-                "Product video uploaded successfully",
-                HttpStatusCode.Created);
+                message: "Product video uploaded successfully",
+                statusCode: HttpStatusCode.Created);
         }
         catch (Exception ex)
         {

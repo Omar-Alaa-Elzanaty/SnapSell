@@ -3,8 +3,7 @@ using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using SnapSell.Application.Behaviors;
-using SnapSell.Application.Comman.mappingConfig;
+using SnapSell.Application.Common.Behaviors;
 using System.Reflection;
 
 namespace SnapSell.Application.Extensions.Services
@@ -40,7 +39,6 @@ namespace SnapSell.Application.Extensions.Services
         private static IServiceCollection AddMapping(this IServiceCollection services)
         {
             var config = TypeAdapterConfig.GlobalSettings;
-            Mapping.Configure();
             config.Scan(Assembly.GetExecutingAssembly());
             services.AddSingleton(config);
             services.AddSingleton<IMapper, ServiceMapper>();

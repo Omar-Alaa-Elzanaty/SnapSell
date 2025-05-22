@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.DTOs.media;
-using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
 using SnapSell.Application.Features.colors.Queries;
@@ -36,7 +34,6 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         return HandleMediatorResult<List<GetAllCategoriesResponse>>(result);
     }
 
-
     [HttpGet("GetAllPaymentMethods/{userId}")]
     public async Task<IActionResult> GetAllPaymentMethods(string userId, CancellationToken cancellationToken)
     {
@@ -55,58 +52,37 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         return HandleMediatorResult<List<GetAllColorsResponse>>(result);
     }
 
-
     [HttpPost("CreateProduct")]
-    public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequest request,
+    public async Task<IActionResult> CreateProduct([FromForm] CreatProductCommand command,
         CancellationToken cancellationToken)
     {
-        var command = new CreatProductCommand(request.BrandId,
-            request.EnglishName,
-            request.ArabicName,
-            request.IsFeatured,
-            request.IsHidden,
-            request.ShippingType,
-            request.ProductStatus);
-
         var result = await sender.Send(command, cancellationToken);
         return HandleMediatorResult<CreateProductResponse>(result);
     }
 
     [HttpPost("UploadProductImage")]
     public async Task<IActionResult> UploadProductImage(
-        [FromForm] UploadProductImageRequest request,
+        [FromForm] UploadProductImageCommand command,
         CancellationToken cancellationToken)
     {
-        var command = new UploadProductImageCommand(request.ProductId, request.Image);
-
         var result = await sender.Send(command, cancellationToken);
         return HandleMediatorResult<UploadProductImageResponse>(result);
     }
 
     [HttpPost("CreateProductAdditionalInformation")]
     public async Task<IActionResult> CreateProductAdditionalInformation(
-        [FromBody] CreateProductAdditionalInformationRequest request,
+        [FromBody] AddAdditionalInformationToProductCommand command,
         CancellationToken cancellationToken)
     {
-        var command = new AddAdditionalInformationToProductCommand(
-            request.ProductId,
-            request.EnglishDescription,
-            request.ArabicDescription,
-            request.MinDeleveryDays,
-            request.MaxDeleveryDays,
-            request.Variants);
-
         var result = await sender.Send(command, cancellationToken);
         return HandleMediatorResult<CreateProductAdditionalInformationResponse>(result);
     }
 
     [HttpPost("UploadProductVideo")]
     [RequestSizeLimit(500 * 1024 * 1024)] // 500MB limit
-    public async Task<IActionResult> UploadProductVideo([FromForm] UploadVideoRequest request,
+    public async Task<IActionResult> UploadProductVideo([FromForm] UploadProductVideoCommand command,
         CancellationToken cancellationToken)
     {
-        var command = new UploadProductVideoCommand(request.ProductId, request.Video);
-
         var result = await sender.Send(command, cancellationToken);
         return HandleMediatorResult<UploeadProductVideoResponse>(result);
     }
@@ -119,6 +95,6 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         var query = new GetAllProductsForSpecificSellerQuery(sellerId, request);
 
         var result = await sender.Send(query, cancellationToken);
-        return Ok(result);
+        return HandleMediatorResult<GetAllProductsForSpecificSellerResponse>(result);
     }
 }

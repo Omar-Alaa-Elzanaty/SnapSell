@@ -1,5 +1,4 @@
-﻿
-namespace SnapSell.Domain.Models;
+﻿namespace SnapSell.Domain.Models;
 
 public sealed class Review : BaseEntity
 {

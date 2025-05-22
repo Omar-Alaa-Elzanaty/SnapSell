@@ -1,5 +1,5 @@
-﻿using SnapSell.Application.Applications.Payments.Commnad.Callback;
-using SnapSell.Application.Applications.Payments.Commnad.Token;
+﻿using SnapSell.Application.Features.Payments.Commnad.Callback;
+using SnapSell.Application.Features.Payments.Commnad.Token;
 using SnapSell.Domain.Dtos.PaymobDtos;
 
 namespace SnapSell.Application.Interfaces

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SnapSell.Application.DTOs.variant;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
@@ -25,3 +24,26 @@ public sealed record CreateProductAdditionalInformationResponse(
     int MaxDeleveryDays,
     string? MainImageUrl,
     List<VariantResponse> Variants);
+
+public sealed record VariantDto(
+    Guid? SizeId,
+    Guid? ColorId,
+    int Quantity,
+    decimal Price,
+    decimal RegularPrice,
+    decimal? SalePrice,
+    string? SKU,
+    string? Barcode);
+
+
+public sealed record VariantResponse(
+    Guid VariantId,
+    Guid? SizeId,
+    Guid? ColorId,
+    int Quantity,
+    decimal Price,
+    decimal RegularPrice,
+    decimal? SalePrice,
+    string? SKU,
+    string? Barcode
+);

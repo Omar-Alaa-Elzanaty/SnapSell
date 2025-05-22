@@ -4,7 +4,6 @@ using FluentValidation;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.DTOs.variant;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
