@@ -3,7 +3,6 @@ using System.Security.Claims;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;

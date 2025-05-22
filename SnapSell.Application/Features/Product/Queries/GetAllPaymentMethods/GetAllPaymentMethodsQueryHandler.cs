@@ -6,7 +6,6 @@ using SnapSell.Domain.Models;
 using System.Net;
 using System.Security.Claims;
 using Mapster;
-using SnapSell.Application.DTOs.payment;
 using FluentValidation;
 using SnapSell.Domain.Extnesions;
 

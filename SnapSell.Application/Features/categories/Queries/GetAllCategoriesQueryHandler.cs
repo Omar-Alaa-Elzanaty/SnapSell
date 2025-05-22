@@ -3,7 +3,6 @@ using System.Security.Claims;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.DTOs.categories;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models;

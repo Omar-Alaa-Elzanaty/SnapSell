@@ -1,14 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.DTOs.variant;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models;
 using System.Net;
 using System.Security.Claims;
-using FluentValidation;
-using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
 

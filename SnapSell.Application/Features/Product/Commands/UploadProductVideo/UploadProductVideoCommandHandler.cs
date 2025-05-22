@@ -5,7 +5,6 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Net;
 using System.Security.Claims;
-using SnapSell.Application.DTOs.Product;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models;

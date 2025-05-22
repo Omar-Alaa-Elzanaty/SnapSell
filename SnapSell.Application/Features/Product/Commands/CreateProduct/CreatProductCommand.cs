@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SnapSell.Application.DTOs.Product;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 
@@ -12,3 +11,13 @@ public sealed record CreatProductCommand(Guid BrandId,
     bool IsHidden,
     ShippingType ShippingType,
     ProductStatus ProductStatus) : IRequest<Result<CreateProductResponse>>;
+
+public sealed record CreateProductResponse(
+    Guid ProductId,
+    string SellerId,
+    string EnglishName,
+    string ArabicName,
+    bool IsFeatured,
+    bool IsHidden,
+    ShippingType ShippingType,
+    ProductStatus ProductStatus);

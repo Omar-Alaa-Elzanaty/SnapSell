@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.DTOs.Brands;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models;
