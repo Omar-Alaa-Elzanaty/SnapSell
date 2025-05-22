@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SnapSell.Application.Features.Payments.Commnad.Callback;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SnapSell.Presentation.EndPoints;
 
@@ -8,25 +10,15 @@ namespace SnapSell.Presentation.EndPoints;
 [ApiController]
 public abstract class ApiControllerBase(ICacheService cacheService) : ControllerBase
 {
-    protected async Task<ObjectResult> StatusCode<T>(Result<T> data)
+    protected async Task<ActionResult<Result<TResult>>> HandleMediatorResult<TResult>(Result<TResult> result)
     {
-        data.CacheCodes = await cacheService.GetCacheCodes();
+        result.CacheCodes = await cacheService.GetCacheCodes();
 
-        return StatusCode((int)data.StatusCode, data);
-    }
-
-    protected async Task<ObjectResult> StatusCode<T>(PaginatedResult<T> data)
-    {
-        data.CacheCodes = await cacheService.GetCacheCodes();
-
-        return StatusCode((int)data.StatusCode, data);
-    }
-    protected IActionResult HandleMediatorResult<TResult>(Result<TResult> result)
-    {
         return StatusCode((int)result.StatusCode, result);
     }
-    protected IActionResult HandleMediatorResult<TResult>(PaginatedResult<TResult> result)
+    protected async Task<ActionResult<PaginatedResult<TResult>>> HandleMediatorResult<TResult>(PaginatedResult<TResult> result)
     {
+        result.CacheCodes = await cacheService.GetCacheCodes();
         return StatusCode((int)result.StatusCode, result);
     }
 }
