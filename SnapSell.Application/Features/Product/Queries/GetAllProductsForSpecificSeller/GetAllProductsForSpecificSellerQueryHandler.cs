@@ -40,7 +40,7 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
                 .AsNoTracking();
 
             var sortExpression = $"{request.Pagination.SortBy ?? DefaultSortField} {request.Pagination.SortOrder}";
-            query = query.OrderBy(sortExpression);
+            query = SqlQuerableExtensions.OrderBy(query, sortExpression);
 
             var result = await query
                 .Select(p => p)

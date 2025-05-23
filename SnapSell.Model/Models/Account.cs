@@ -2,7 +2,7 @@
 
 namespace SnapSell.Domain.Models;
 
-public sealed class User: IdentityUser
+public sealed class Account: IdentityUser
 {
     public required string FullName { get; set; }
     public DateTime CreatedAt { get; set; }

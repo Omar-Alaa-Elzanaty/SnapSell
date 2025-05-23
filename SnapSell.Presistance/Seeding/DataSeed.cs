@@ -21,7 +21,7 @@ public class DataSeed
             await roleManager.CreateAsync(new IdentityRole(Roles.Client));
             var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-            var admin = new User()
+            var admin = new Account()
             {
                 FullName = "admin",
                 Email = "admin@gmail.com",

@@ -5,7 +5,7 @@ namespace SnapSell.Domain.Models;
 public sealed class Order : BaseEntity
 {
     public string UserId { get; set; }
-    public User User { get; set; }
+    public Account User { get; set; }
     public List<OrderItem> Items { get; set; } = [];
     public OrderAddress ShippingAddress { get; set; }
     public required Guid ShippingAddressId { get; set; }

@@ -9,7 +9,7 @@ namespace SnapSell.Application.Features.Authentication.Commands.RegisterCustomer
 
 internal sealed class RegisterCustomerCommandHandler(
     IAuthenticationService authenticationService,
-    UserManager<User> userManager,
+    UserManager<Account> userManager,
     RoleManager<IdentityRole> roleManager) : IRequestHandler<RegisterCustomerCommand, Result<RegisterCustomerResult>>
 {
     public readonly string DefaultCustomerRole = "Customer";
@@ -17,7 +17,7 @@ internal sealed class RegisterCustomerCommandHandler(
     public async Task<Result<RegisterCustomerResult>> Handle(RegisterCustomerCommand request,
         CancellationToken cancellationToken)
     {
-        var user = new User
+        var user = new Account
         {
             FullName = request.CutomerName,
             UserName = request.UserName,

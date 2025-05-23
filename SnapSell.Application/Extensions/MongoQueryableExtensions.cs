@@ -51,7 +51,7 @@ public static class MongoQueryableExtensions
         return await PaginatedResult<T>.SuccessAsync(items, (int)count, pageNumber, pageSize);
     }
 
-    public static IQueryable<T> MOrderBy<T>(this IQueryable<T> query, string sorting)
+    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, string sorting)
     {
         if (string.IsNullOrWhiteSpace(sorting))
         {
