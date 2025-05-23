@@ -100,7 +100,7 @@ public static class QuerableExtensions
         Expression expr = arg;
         foreach (string prop in props)
         {
-            PropertyInfo pi = type.GetProperty(prop, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            PropertyInfo pi = type.GetProperty(prop, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase)!;
             if (pi is null)
             {
                 throw new ArgumentException("Invalid sorting property!");
@@ -117,8 +117,8 @@ public static class QuerableExtensions
                    && method.GetGenericArguments().Length == 2
                    && method.GetParameters().Length == 2)
             .MakeGenericMethod(typeof(T), type)
-            .Invoke(null, [source, lambda]);
+            .Invoke(null, [source, lambda])!;
 
-        return (IOrderedQueryable<T>)result;
+        return (IOrderedQueryable<T>)result!;
     }
 }
