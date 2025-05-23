@@ -52,7 +52,7 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         return HandleMediatorResult<List<GetAllColorsResponse>>(result);
     }
 
-    [HttpPost("CreateProduct")]
+    [HttpPost("CreateProduct")]  
     public async Task<IActionResult> CreateProduct([FromForm] CreatProductCommand command,
         CancellationToken cancellationToken)
     {
