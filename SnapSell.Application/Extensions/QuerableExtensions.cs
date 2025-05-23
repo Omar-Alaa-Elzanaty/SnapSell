@@ -1,34 +1,32 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Linq.Expressions;
 using System.Reflection;
-using MongoDB.Driver.Linq;
 
 namespace SnapSell.Application.Extensions;
 
-public static class MongoQueryableExtensions
+public static class QuerableExtensions
 {
-    public static async Task<PaginatedResult<T>> ToMongoPaginatedListAsync<T>(
+    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(
         this IQueryable<T> source,
         int pageNumber,
         int pageSize,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         pageNumber = pageNumber == 0 ? 1 : pageNumber;
         pageSize = pageSize == 0 ? 10 : pageSize;
+        int count = await source.CountAsync(cancellationToken: cancellationToken);
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;
-
-        long count = await source.CountAsync(cancellationToken);
-
-        var items = await source
+        List<T> items = await source
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return await PaginatedResult<T>.SuccessAsync(items, (int)count, pageNumber, pageSize);
+        return await PaginatedResult<T>.SuccessAsync(items, count, pageNumber, pageSize);
     }
 
-    public static async Task<PaginatedResult<T>> ToMongoPaginatedListAsync<T>(
+    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(
         this IMongoCollection<T> collection,
         FilterDefinition<T> filter,
         SortDefinition<T> sort,
@@ -51,82 +49,75 @@ public static class MongoQueryableExtensions
         return await PaginatedResult<T>.SuccessAsync(items, (int)count, pageNumber, pageSize);
     }
 
-    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, string sorting)
+    public static IQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> query, string sorting)
     {
         if (string.IsNullOrWhiteSpace(sorting))
         {
             return query;
         }
 
-        var fields = sorting.Split(',', StringSplitOptions.RemoveEmptyEntries)
-            .Select(x => x.Trim());
-
+        var fields = sorting.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim());
         bool first = true;
         foreach (string field in fields)
         {
             bool ascending = true;
             int spaceIndex = field.IndexOf(' ');
             string key = field;
-
             if (spaceIndex >= 0)
             {
                 key = field.Substring(0, spaceIndex);
-                string direction = field.Substring(spaceIndex + 1).Trim().ToLower();
-
-                if (!string.IsNullOrWhiteSpace(direction))
+                string dir = field.Substring(spaceIndex + 1).Trim().ToLower();
+                if (!string.IsNullOrWhiteSpace(dir))
                 {
-                    ascending = direction switch
+                    switch (dir)
                     {
-                        "asc" => true,
-                        "desc" => false,
-                        _ => throw new ArgumentException("Invalid sorting direction")
-                    };
+                        case "asc":
+                            ascending = true;
+                            break;
+                        case "desc":
+                            ascending = false;
+                            break;
+                        default:
+                            throw new ArgumentException("Invalid sorting direction");
+                    }
                 }
             }
 
             query = ascending
                 ? ApplyOrder(query, key, first ? "OrderBy" : "ThenBy")
                 : ApplyOrder(query, key, first ? "OrderByDescending" : "ThenByDescending");
-
             first = false;
         }
 
         return query;
     }
 
-    private static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
+    static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
     {
         string[] props = property.Split('.');
         Type type = typeof(T);
         ParameterExpression arg = Expression.Parameter(type, "x");
         Expression expr = arg;
-
         foreach (string prop in props)
         {
-            PropertyInfo propertyInfo = type.GetProperty(
-                prop,
-                BindingFlags.IgnoreCase |
-                BindingFlags.Public |
-                BindingFlags.Instance)!;
-
-            if (propertyInfo is null)
-                throw new ArgumentException($"Property {prop} not found on type {type.Name}");
-
-            expr = Expression.Property(expr, propertyInfo);
-            type = propertyInfo.PropertyType;
+            PropertyInfo pi = type.GetProperty(prop, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (pi is null)
+            {
+                throw new ArgumentException("Invalid sorting property!");
+            }
+            expr = Expression.Property(expr, pi);
+            type = pi.PropertyType;
         }
-
         Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
         LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
 
-        object result = typeof(Queryable).GetMethods()
-            .Single(method =>
-                method.Name == methodName &&
-                method.IsGenericMethodDefinition &&
-                method.GetGenericArguments().Length == 2 &&
-                method.GetParameters().Length == 2)
+        object result = typeof(Queryable).GetMethods().Single(method
+                => method.Name == methodName
+                   && method.IsGenericMethodDefinition
+                   && method.GetGenericArguments().Length == 2
+                   && method.GetParameters().Length == 2)
             .MakeGenericMethod(typeof(T), type)
-            .Invoke(null, new object[] { source, lambda });
+            .Invoke(null, [source, lambda]);
 
         return (IOrderedQueryable<T>)result;
     }
