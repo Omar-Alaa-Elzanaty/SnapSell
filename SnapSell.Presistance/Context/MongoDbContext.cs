@@ -27,43 +27,54 @@ namespace SnapSell.Presistance.Context
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var userId = _contextAccessor.HttpContext is null || _contextAccessor.HttpContext?.User is null ?
-                null : _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            foreach (var entity in ChangeTracker
-            .Entries()
-                .Where(x => x.Entity is IAuditable
-                && (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)))
+            try
             {
-                IAuditable auditedEntity = (entity as IAuditable)!;
+                var userId = GetCurrentUserId();
 
-                if (entity.State == EntityState.Added)
+                foreach (var entry in ChangeTracker.Entries<IAuditable>())
                 {
-                    auditedEntity.CreatedAt = DateTime.UtcNow;
+                    if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                        continue;
 
-                    if (userId != null)
+                    var now = DateTime.UtcNow;
+
+                    if (entry.State == EntityState.Added)
                     {
-                        auditedEntity.CreatedBy = userId;
+                        entry.Entity.CreatedAt = now;
+                        entry.Entity.CreatedBy = userId;
+                        entry.Entity.IsDeleted = false;
+                    }
+                    else if (entry.State == EntityState.Deleted)
+                    {
+                        entry.State = EntityState.Modified;
+                        entry.Entity.IsDeleted = true;
+                        entry.Entity.LastUpdatedAt = now;
+                        entry.Entity.LastUpdatedBy = userId;
+                    }
+                    else if (entry.State == EntityState.Modified)
+                    {
+                        entry.Entity.LastUpdatedAt = now;
+                        entry.Entity.LastUpdatedBy = userId;
                     }
                 }
-                else
-                {
-                    if (entity.State == EntityState.Deleted)
-                    {
-                        auditedEntity.IsDeleted = true;
-                        entity.State = EntityState.Modified;
-                    }
 
-                    auditedEntity.LastUpdatedAt = DateTime.UtcNow;
-
-                    if (userId != null)
-                    {
-                        auditedEntity.LastUpdatedBy = userId;
-                    }
-                }
+                return await base.SaveChangesAsync(cancellationToken);
             }
-
-            return await base.SaveChangesAsync(cancellationToken);
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        private string? GetCurrentUserId()
+        {
+            try
+            {
+                return _contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

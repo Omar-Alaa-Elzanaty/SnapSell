@@ -35,7 +35,7 @@ public class SQLBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : cl
         _context.Update(entity);
     }
 
-    public IQueryable<T> Entites => _context.Set<T>();
+    public IQueryable<T> Entities => _context.Set<T>();
     public IQueryable<T> TheDbSet() => _context.Set<T>();
     public async Task<T?> GetByIdAsync(Guid id) => await _context.Set<T>().FindAsync(id);
 

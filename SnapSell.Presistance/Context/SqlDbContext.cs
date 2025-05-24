@@ -10,7 +10,7 @@ using SnapSell.Presistance.Extensions;
 namespace SnapSell.Presistance.Context;
 
 public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpContextAccessor contextAccessor)
-    : IdentityDbContext<User>(options)
+    : IdentityDbContext<Account>(options)
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
@@ -29,7 +29,8 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<User>().ToTable("Accounts").Property(x => x.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<Account>().ToTable("Accounts")
+            .Property(x => x.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
         modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");

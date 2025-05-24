@@ -52,10 +52,10 @@ namespace SnapSell.Test
                 _serviceProvider = _builder.Services.BuildServiceProvider();
             }
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<Account, IdentityRole>()
                     .AddRoles<IdentityRole>()
-                    .AddSignInManager<SignInManager<User>>()
-                    .AddUserManager<UserManager<User>>()
+                    .AddSignInManager<SignInManager<Account>>()
+                    .AddUserManager<UserManager<Account>>()
                     .AddEntityFrameworkStores<SqlDbContext>()
                     .AddDefaultTokenProviders();
 
@@ -82,9 +82,9 @@ namespace SnapSell.Test
             try
             {
                 var roleManger = _serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = _serviceProvider.GetRequiredService<UserManager<User>>();
+                var userManager = _serviceProvider.GetRequiredService<UserManager<Account>>();
 
-                var admin = new User()
+                var admin = new Account()
                 {
                     FullName = "admin",
                     Email = "admin@gmail.com",

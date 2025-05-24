@@ -5,40 +5,41 @@ using SnapSell.Application.Features.Authentication.Commands.RegisterSeller;
 using SnapSell.Application.Features.Authentication.Queries.CustomerLogIn;
 using SnapSell.Application.Features.Authentication.Queries.SellerLogin;
 using SnapSell.Application.Interfaces;
+using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
 public sealed class AccountController(ICacheService cacheService, ISender sender) : ApiControllerBase(cacheService)
 {
     [HttpPost("RegisterSeller")]
-    public async Task<IActionResult> RegisterSeller([FromForm] RegisterSellerCommand command,
+    public async Task<ActionResult<Result<RegisterSellerResult>>> RegisterSeller([FromForm] RegisterSellerCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return HandleMediatorResult<RegisterSellerResult>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpPost("RegisterCustomer")]
-    public async Task<IActionResult> RegisterCustomer([FromForm] RegisterCustomerCommand command,
+    public async Task<ActionResult<Result<RegisterCustomerResult>>> RegisterCustomer([FromForm] RegisterCustomerCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return HandleMediatorResult<RegisterCustomerResult>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpPost("LogInSeller")]
-    public async Task<IActionResult> LogInSeller([FromForm] SellerLoginQuery query,
+    public async Task<ActionResult<Result<SellerLogInResult>>> LogInSeller([FromForm] SellerLoginQuery query,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(query, cancellationToken);
-        return HandleMediatorResult<SellerLogInResult>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpPost("LogInCustomer")]
-    public async Task<IActionResult> LogInCustomer([FromForm] CustomerLogInQuery query,
+    public async Task<ActionResult<Result<CustomerLogInResult>>> LogInCustomer([FromForm] CustomerLogInQuery query,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(query, cancellationToken);
-        return HandleMediatorResult<CustomerLogInResult>(result);
+        return await HandleMediatorResult(result);
     }
 }

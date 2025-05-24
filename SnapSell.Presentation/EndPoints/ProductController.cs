@@ -11,90 +11,91 @@ using SnapSell.Application.Features.product.Queries.GetAllPaymentMethods;
 using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos;
+using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
 public sealed class ProductController(ICacheService cacheService, ISender sender) : ApiControllerBase(cacheService)
 {
     [HttpGet("GetAllBrands/{sellerId}")]
-    public async Task<IActionResult> GetAllBrands(string sellerId, CancellationToken cancellationToken)
+    public async Task<ActionResult<Result<List<GetAllBrandsResponse>>>> GetAllBrands(string sellerId, CancellationToken cancellationToken)
     {
         var query = new GetAllPrandsQuery(sellerId);
 
         var result = await sender.Send(query, cancellationToken);
-        return HandleMediatorResult<List<GetAllBrandsResponse>>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpGet("GetAllCategories/{userId}")]
-    public async Task<IActionResult> GetAllCategories(string userId, CancellationToken cancellationToken)
+    public async Task<ActionResult<Result<List<GetAllCategoriesResponse>>>> GetAllCategories(string userId, CancellationToken cancellationToken)
     {
         var query = new GetAllCategoriesQuery(userId);
 
         var result = await sender.Send(query, cancellationToken);
-        return HandleMediatorResult<List<GetAllCategoriesResponse>>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpGet("GetAllPaymentMethods/{userId}")]
-    public async Task<IActionResult> GetAllPaymentMethods(string userId, CancellationToken cancellationToken)
+    public async Task<ActionResult<Result<List<GetAllPaymentMethodsResponse>>>> GetAllPaymentMethods(string userId, CancellationToken cancellationToken)
     {
         var query = new GetAllPaymentMethodsQuery(userId);
 
         var result = await sender.Send(query, cancellationToken);
-        return HandleMediatorResult<List<GetAllPaymentMethodsResponse>>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpGet("GetAllColors/{userId}")]
-    public async Task<IActionResult> GetAllColors(string userId, CancellationToken cancellationToken)
+    public async Task<ActionResult<Result<List<GetAllColorsResponse>>>> GetAllColors(string userId, CancellationToken cancellationToken)
     {
         var query = new GetAllColorsQuery(userId);
 
         var result = await sender.Send(query, cancellationToken);
-        return HandleMediatorResult<List<GetAllColorsResponse>>(result);
+        return await HandleMediatorResult(result);
     }
 
-    [HttpPost("CreateProduct")]  
-    public async Task<IActionResult> CreateProduct([FromForm] CreatProductCommand command,
+    [HttpPost("CreateProduct")]
+    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct([FromForm] CreatProductCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return HandleMediatorResult<CreateProductResponse>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpPost("UploadProductImage")]
-    public async Task<IActionResult> UploadProductImage(
+    public async Task<ActionResult<Result<UploadProductImageResponse>>> UploadProductImage(
         [FromForm] UploadProductImageCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return HandleMediatorResult<UploadProductImageResponse>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpPost("CreateProductAdditionalInformation")]
-    public async Task<IActionResult> CreateProductAdditionalInformation(
+    public async Task<ActionResult<Result<CreateProductAdditionalInformationResponse>>> CreateProductAdditionalInformation(
         [FromBody] AddAdditionalInformationToProductCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return HandleMediatorResult<CreateProductAdditionalInformationResponse>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpPost("UploadProductVideo")]
     [RequestSizeLimit(500 * 1024 * 1024)] // 500MB limit
-    public async Task<IActionResult> UploadProductVideo([FromForm] UploadProductVideoCommand command,
+    public async Task<ActionResult<Result<UploeadProductVideoResponse>>> UploadProductVideo([FromForm] UploadProductVideoCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return HandleMediatorResult<UploeadProductVideoResponse>(result);
+        return await HandleMediatorResult(result);
     }
 
     [HttpGet("GetAllProductsForSpecificSeller/{sellerId}")]
-    public async Task<IActionResult> GetAllProductsForSpecificSeller(string sellerId,
+    public async Task<ActionResult<PaginatedResult<GetAllProductsForSpecificSellerResponse>>> GetAllProductsForSpecificSeller(string sellerId,
         [FromQuery] PaginatedRequest request,
         CancellationToken cancellationToken)
     {
         var query = new GetAllProductsForSpecificSellerQuery(sellerId, request);
 
         var result = await sender.Send(query, cancellationToken);
-        return HandleMediatorResult<GetAllProductsForSpecificSellerResponse>(result);
+        return await HandleMediatorResult(result);
     }
 }
