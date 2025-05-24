@@ -21,4 +21,5 @@ public record PaginatedRequest
 
     public string? SortBy { get; set; }
     public string SortOrder { get; set; } = "asc";
+    public string? KeyWord { get; set; }
 }

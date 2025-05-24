@@ -9,12 +9,12 @@ using System.Security.Claims;
 
 namespace SnapSell.Infrastructure.Services.Authentication;
 
-public sealed class AuthenticationService(IOptions<JwtSettings> jwtSettings, UserManager<User> userManager)
+public sealed class AuthenticationService(IOptions<JwtSettings> jwtSettings, UserManager<Account> userManager)
     : IAuthenticationService
 {
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
-    public async Task<string> GenerateTokenAsync(User user, bool isMobile = false)
+    public async Task<string> GenerateTokenAsync(Account user, bool isMobile = false)
     {
         if (user is null)
         {
@@ -54,7 +54,7 @@ public sealed class AuthenticationService(IOptions<JwtSettings> jwtSettings, Use
         return tokenHandler.WriteToken(token);
     }
 
-    public async Task<string> GenerateTokenAsync(User user, string role, bool isMobile = false)
+    public async Task<string> GenerateTokenAsync(Account user, string role, bool isMobile = false)
     {
         if (user is null)
         {

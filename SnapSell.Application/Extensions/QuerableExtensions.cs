@@ -1,13 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace SnapSell.Application.Extensions;
 
-public static class SqlQuerableExtensions
+public static class QuerableExtensions
 {
-    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(
+        this IQueryable<T> source,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken,
+        string? message = null)
     {
         pageNumber = pageNumber == 0 ? 1 : pageNumber;
         pageSize = pageSize == 0 ? 10 : pageSize;
@@ -18,7 +24,30 @@ public static class SqlQuerableExtensions
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return await PaginatedResult<T>.SuccessAsync(items, count, pageNumber, pageSize);
+        return await PaginatedResult<T>.SuccessAsync(items, count, pageNumber, pageSize, message);
+    }
+
+    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(
+        this IMongoCollection<T> collection,
+        FilterDefinition<T> filter,
+        SortDefinition<T> sort,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        pageNumber = pageNumber == 0 ? 1 : pageNumber;
+        pageSize = pageSize == 0 ? 10 : pageSize;
+        pageNumber = pageNumber <= 0 ? 1 : pageNumber;
+
+        var count = await collection.CountDocumentsAsync(filter: filter, cancellationToken: cancellationToken);
+
+        var items = await collection.Find(filter)
+            .Sort(sort)
+            .Skip((pageNumber - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return await PaginatedResult<T>.SuccessAsync(items, (int)count, pageNumber, pageSize);
     }
 
     public static IQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> query, string sorting)
@@ -72,7 +101,7 @@ public static class SqlQuerableExtensions
         Expression expr = arg;
         foreach (string prop in props)
         {
-            PropertyInfo pi = type.GetProperty(prop, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            PropertyInfo pi = type.GetProperty(prop, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase)!;
             if (pi is null)
             {
                 throw new ArgumentException("Invalid sorting property!");
@@ -89,8 +118,8 @@ public static class SqlQuerableExtensions
                    && method.GetGenericArguments().Length == 2
                    && method.GetParameters().Length == 2)
             .MakeGenericMethod(typeof(T), type)
-            .Invoke(null, [source, lambda]);
+            .Invoke(null, [source, lambda])!;
 
-        return (IOrderedQueryable<T>)result;
+        return (IOrderedQueryable<T>)result!;
     }
 }

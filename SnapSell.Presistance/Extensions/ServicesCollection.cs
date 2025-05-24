@@ -34,15 +34,15 @@ namespace SnapSell.Presistance.Extensions
         private static IServiceCollection AddSQLDbContext(this IServiceCollection services,IConfiguration configuration)
         {
             services.AddDbContext<SqlDbContext>(options =>
-                options.UseSqlServer(
+                options.UseLazyLoadingProxies().UseSqlServer(
                      configuration.GetConnectionString("DbConnection"),
                          sqlOptions => sqlOptions.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)
                 ));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<Account, IdentityRole>()
                     .AddRoles<IdentityRole>()
-                    .AddSignInManager<SignInManager<User>>()
-                    .AddUserManager<UserManager<User>>()
+                    .AddSignInManager<SignInManager<Account>>()
+                    .AddUserManager<UserManager<Account>>()
                     .AddEntityFrameworkStores<SqlDbContext>()
                     .AddDefaultTokenProviders();
 

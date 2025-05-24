@@ -47,7 +47,7 @@ internal sealed class UploadProductVideoCommandHandler(
                 return Result<UploeadProductVideoResponse>.Failure(
                     "User ID not found", HttpStatusCode.Unauthorized);
 
-            var product = await unitOfWork.ProductsRepository.GetByIdAsync(request.ProductId);
+            var product = await unitOfWork.ProductsRepo.GetByIdAsync(request.ProductId);
             if (product is null)
                 return Result<UploeadProductVideoResponse>.Failure(
                     $"No product with ID: {request.ProductId}", HttpStatusCode.NotFound);
