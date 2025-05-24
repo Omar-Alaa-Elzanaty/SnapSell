@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.Features.Payments.Commnad.Callback;
+using SnapSell.Application.Features.Payments.Command.Callback;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using static System.Runtime.InteropServices.JavaScript.JSType;

@@ -22,7 +22,7 @@ namespace SnapSell.Application.Features.Admins.Commands.ApproveBendingStore
 
         public async Task<Result<string>> Handle(ApprovePendingStoreCommand command, CancellationToken cancellationToken)
         {
-            var isStoreFound = await _unitOfWork.StoresRepo.Entites
+            var isStoreFound = await _unitOfWork.StoresRepo.Entities
                              .AnyAsync(x => x.Id == command.StoreId, cancellationToken: cancellationToken);
 
             if (!isStoreFound)
@@ -31,7 +31,7 @@ namespace SnapSell.Application.Features.Admins.Commands.ApproveBendingStore
             }
 
             await EntityFrameworkQueryableExtensions.ExecuteUpdateAsync(
-                _unitOfWork.StoresRepo.Entites.Where(x => x.Id == command.StoreId),
+                _unitOfWork.StoresRepo.Entities.Where(x => x.Id == command.StoreId),
                 x => x.SetProperty(x => x.Status, StoreStatusTypes.Verified),
                 cancellationToken
             );

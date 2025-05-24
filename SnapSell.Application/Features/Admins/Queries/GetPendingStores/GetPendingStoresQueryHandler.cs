@@ -18,7 +18,7 @@ namespace SnapSell.Application.Features.Admins.Queries.GetPendingStores
 
         public Task<PaginatedResult<GetBendingStoresQueryDto>> Handle(GetPendingStoresQuery query, CancellationToken cancellationToken)
         {
-            var pendingStores = _unitOfWork.StoresRepo.Entites
+            var pendingStores = _unitOfWork.StoresRepo.Entities
                                 .Where(x => x.Status == StoreStatusTypes.Pending)
                                 .ProjectToType<GetBendingStoresQueryDto>()
                                 .ToPaginatedListAsync(query.PageNumber, query.PageSize, cancellationToken);

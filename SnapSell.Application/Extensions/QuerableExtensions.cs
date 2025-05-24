@@ -12,7 +12,8 @@ public static class QuerableExtensions
         this IQueryable<T> source,
         int pageNumber,
         int pageSize,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        string? message = null)
     {
         pageNumber = pageNumber == 0 ? 1 : pageNumber;
         pageSize = pageSize == 0 ? 10 : pageSize;
@@ -23,7 +24,7 @@ public static class QuerableExtensions
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return await PaginatedResult<T>.SuccessAsync(items, count, pageNumber, pageSize);
+        return await PaginatedResult<T>.SuccessAsync(items, count, pageNumber, pageSize, message);
     }
 
     public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(

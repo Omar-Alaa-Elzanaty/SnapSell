@@ -25,7 +25,7 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
     {
         var userId = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (string.IsNullOrWhiteSpace(userId))
+        if (string.IsNullOrEmpty(userId))
             return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
                 "Authentication required", HttpStatusCode.Unauthorized);
 
@@ -35,34 +35,26 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
         try
         {
             var query = productRepository.TheDbSet()
-                .Where(p => !p.IsHidden && p.CreatedBy == userId)
-                .Include(p => p.Brand)
-                .Include(p => p.Variants)
-                .AsNoTracking();
+                .Where(p => !p.IsHidden && p.CreatedBy == userId);
 
             var sortField = request.Pagination.SortBy ?? DefaultSortField;
             var sortOrder = request.Pagination.SortOrder ?? DefaultOrderField;
             query = query.OrderBy($"{sortField} {sortOrder}");
 
-            var paginatedData = await query.ToPaginatedListAsync(
+
+            return await query
+                .ProjectToType<GetAllProductsForSpecificSellerResponse>()
+                .ToPaginatedListAsync(
                 request.Pagination.PageNumber,
                 request.Pagination.PageSize,
-                cancellationToken);
-
-            var responseItems = paginatedData.Data?.Items.Adapt<List<GetAllProductsForSpecificSellerResponse>>() ?? [];
-
-            return new PaginatedResult<GetAllProductsForSpecificSellerResponse>(
-                items: responseItems,
-                totalCount: paginatedData.Data!.Meta.TotalCount,
-                pageNumber: paginatedData.Data.Meta.CurrentPage,
-                pageSize: paginatedData.Data.Meta.PageSize,
-                message: "Products retrieved successfully");
+                cancellationToken,
+                "Products retrieved successfully");
         }
         catch (ArgumentException ex) when (ex.Message.Contains("sorting", StringComparison.OrdinalIgnoreCase))
         {
             return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
                 message:
-                $"Invalid sorting parameter: {ex.Message}, Allowwed is: IsFeatured , IsHidden, EnglishName, ArabicName.",
+                $"Invalid sorting parameter: {ex.Message}, Allowed is: IsFeatured , IsHidden, EnglishName, ArabicName.",
                 statusCode: HttpStatusCode.BadRequest);
         }
         catch (Exception ex)

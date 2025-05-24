@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnapSell.Application.Features.Payments.Commnad.CreatePayment
+namespace SnapSell.Application.Features.Payments.Command.CreatePayment
 {
     public class CreatePaymentCommandValidator
     {

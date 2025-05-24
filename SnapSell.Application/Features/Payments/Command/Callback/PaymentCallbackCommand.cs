@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace SnapSell.Application.Features.Payments.Commnad.Callback
+namespace SnapSell.Application.Features.Payments.Command.Callback
 {
     public class PaymentCallbackCommand:IRequest<Result<int>>
     {

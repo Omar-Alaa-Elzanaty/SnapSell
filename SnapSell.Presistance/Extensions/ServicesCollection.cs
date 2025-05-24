@@ -34,7 +34,7 @@ namespace SnapSell.Presistance.Extensions
         private static IServiceCollection AddSQLDbContext(this IServiceCollection services,IConfiguration configuration)
         {
             services.AddDbContext<SqlDbContext>(options =>
-                options.UseSqlServer(
+                options.UseLazyLoadingProxies().UseSqlServer(
                      configuration.GetConnectionString("DbConnection"),
                          sqlOptions => sqlOptions.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)
                 ));
