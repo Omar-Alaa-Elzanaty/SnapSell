@@ -31,5 +31,13 @@ public sealed class GetAllProductsForSpecificSellerQueryValidator
                                sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase))
             .WithMessage("SortOrder must be either 'asc' or 'desc' (case insensitive)");
 
+
+        RuleFor(x => x.Pagination.SortBy)
+            .Must(sortOrder => string.IsNullOrEmpty(sortOrder) ||
+                               sortOrder.Equals("IsFeatured", StringComparison.OrdinalIgnoreCase) ||
+                               sortOrder.Equals("IsHidden", StringComparison.OrdinalIgnoreCase) ||
+                               sortOrder.Equals("EnglishName", StringComparison.OrdinalIgnoreCase) ||
+                               sortOrder.Equals("ArabicName", StringComparison.OrdinalIgnoreCase))
+            .WithMessage("SortOrder must be : IsFeatured , IsHidden, EnglishName, ArabicName. (case insensitive)");
     }
 }
