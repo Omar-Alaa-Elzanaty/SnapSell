@@ -37,6 +37,7 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
             var query = productRepository.TheDbSet()
                 .Where(p => !p.IsHidden && p.CreatedBy == userId);
 
+
             var sortField = request.Pagination.SortBy ?? DefaultSortField;
             var sortOrder = request.Pagination.SortOrder ?? DefaultOrderField;
             query = query.OrderBy($"{sortField} {sortOrder}");
