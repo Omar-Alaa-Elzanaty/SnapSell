@@ -24,5 +24,12 @@ public sealed class GetAllProductsForSpecificSellerQueryValidator
             .WithMessage("Page size must be greater than 0")
             .LessThanOrEqualTo(20)
             .WithMessage("Page size cannot exceed 100");
+
+        RuleFor(x => x.Pagination.SortOrder)
+            .Must(sortOrder => string.IsNullOrEmpty(sortOrder) ||
+                               sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase) ||
+                               sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase))
+            .WithMessage("SortOrder must be either 'asc' or 'desc' (case insensitive)");
+
     }
 }
