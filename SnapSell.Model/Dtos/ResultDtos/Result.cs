@@ -13,6 +13,10 @@ public class Result<T> : IResult<T>
     public CacheResponse? CacheCodes { get; set; }
     public Dictionary<string, List<string>>? Errors { get; set; }
 
+    public Result()
+    {
+    }
+
     public static Result<T> Success()
     {
         return new()
