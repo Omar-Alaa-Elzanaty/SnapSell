@@ -17,6 +17,7 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
     : IRequestHandler<GetAllProductsForSpecificSellerQuery, PaginatedResult<GetAllProductsForSpecificSellerResponse>>
 {
     private const string DefaultSortField = "EnglishName";
+    private const string DefaultOrderField = "asc";
 
     public async Task<PaginatedResult<GetAllProductsForSpecificSellerResponse>> Handle(
         GetAllProductsForSpecificSellerQuery request,
@@ -39,29 +40,30 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
                 .Include(p => p.Variants)
                 .AsNoTracking();
 
-            var sortExpression = $"{request.Pagination.SortBy ?? DefaultSortField} {request.Pagination.SortOrder}";
-            query = query.OrderBy(sortExpression);
+            var sortField = request.Pagination.SortBy ?? DefaultSortField;
+            var sortOrder = request.Pagination.SortOrder ?? DefaultOrderField;
+            query = query.OrderBy($"{sortField} {sortOrder}");
 
-            var result = await query
-                .Select(p => p)
-                .ToPaginatedListAsync(
-                    request.Pagination.PageNumber,
-                    request.Pagination.PageSize,
-                    cancellationToken);
+            var paginatedData = await query.ToPaginatedListAsync(
+                request.Pagination.PageNumber,
+                request.Pagination.PageSize,
+                cancellationToken);
 
-            var mappedData = result.Data.Adapt<List<GetAllProductsForSpecificSellerResponse>>();
-            return new PaginatedResult<GetAllProductsForSpecificSellerResponse>(mappedData, result.TotalCount,
-                result.CurrentPage, result.PageSize)
-            {
-                StatusCode = HttpStatusCode.OK,
-                Message = "Products retrieved successfully"
-            };
+            var responseItems = paginatedData.Data?.Items.Adapt<List<GetAllProductsForSpecificSellerResponse>>() ?? [];
+
+            return new PaginatedResult<GetAllProductsForSpecificSellerResponse>(
+                items: responseItems,
+                totalCount: paginatedData.Data!.Meta.TotalCount,
+                pageNumber: paginatedData.Data.Meta.CurrentPage,
+                pageSize: paginatedData.Data.Meta.PageSize,
+                message: "Products retrieved successfully");
         }
         catch (ArgumentException ex) when (ex.Message.Contains("sorting", StringComparison.OrdinalIgnoreCase))
         {
             return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
-                $"Invalid sorting parameter: {ex.Message}, Allowwed is: ASC , DESC.",
-                HttpStatusCode.BadRequest);
+                message:
+                $"Invalid sorting parameter: {ex.Message}, Allowwed is: IsFeatured , IsHidden, EnglishName, ArabicName.",
+                statusCode: HttpStatusCode.BadRequest);
         }
         catch (Exception ex)
         {
