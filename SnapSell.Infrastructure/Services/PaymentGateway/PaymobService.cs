@@ -16,13 +16,13 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
         private readonly IApiRequestHandleService _apiService;
         private readonly IConfiguration _config;
 
-        public PaymobService(HttpClient httpClient,
+        public PaymobService(IHttpClientFactory httpClientFactory,
             IApiRequestHandleService apiRequestHandleService,
             IConfiguration config)
         {
 
             _apiService = apiRequestHandleService;
-            _apiService.HttpClient = httpClient;
+            _apiService.HttpClient = httpClientFactory.CreateClient("PaymobService");
             _config = config;
         }
 

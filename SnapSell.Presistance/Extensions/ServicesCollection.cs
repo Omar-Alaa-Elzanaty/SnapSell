@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Models;
@@ -17,7 +18,7 @@ namespace SnapSell.Presistance.Extensions
             services
                 .AddServices(configuration)
                 .AddSQLDbContext(configuration);
-                //.AddMongoDbContext(configuration);
+                .AddMongoDbContext(configuration);
 
             return services;
         }
@@ -49,15 +50,15 @@ namespace SnapSell.Presistance.Extensions
             return services;
         }
 
-        //private static IServiceCollection AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
-        //{
+        private static IServiceCollection AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
+        {
 
-        //    var mongoSetting = new MongoClient(configuration["MongoSetting:Connection"]);
+            var mongoSetting = new MongoClient(configuration["MongoSetting:Connection"]);
 
-        //    services.AddDbContext<MongoDbContext>(options =>
-        //            options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
+            services.AddDbContext<MongoDbContext>(options =>
+                    options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
 
-        //    return services;
-        //}
+            return services;
+        }
     }
 }
