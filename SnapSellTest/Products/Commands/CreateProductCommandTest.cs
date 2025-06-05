@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using SnapSell.Application.Features.product.Commands.CreateProduct;
+using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models;
 using System;
@@ -28,6 +29,7 @@ namespace SnapSell.Test.Products.Commands
             //Arrange
             var unitOfWork = GetUnitOfWork();
             var userManager = _serviceProvider.GetRequiredService<UserManager<Account>>();
+            var mediaService = _serviceProvider.GetRequiredService<IMediaService>();
             var httpContext = new DefaultHttpContext();
 
             var user = new Account()
@@ -55,10 +57,7 @@ namespace SnapSell.Test.Products.Commands
             await unitOfWork.SaveAsync();
 
             //Act
-
-            var validator = new CreatProductCommandValidator();
-
-            var handler = new CreatProductCommandHandler(unitOfWork, httpContextAccessor.Object, validator);
+            var handler = new CreatProductCommandHandler(unitOfWork, mediaService);
 
             var result = await handler.Handle(new CreatProductCommand(
                 brand.Id,
@@ -67,7 +66,15 @@ namespace SnapSell.Test.Products.Commands
                 false,
                 false,
                 ShippingType.Free,
-                ProductStatus.New), default);
+                ProductStatus.New,
+                null,
+                null,
+                "descripition",
+                null,
+                1,
+                3,
+                null,
+                null), default);
 
             //Assert
 

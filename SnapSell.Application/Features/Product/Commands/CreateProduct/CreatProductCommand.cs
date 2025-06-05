@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 
@@ -17,6 +18,7 @@ public sealed record CreatProductCommand(Guid BrandId,
     string ArabicDescription,
     int MinDeleveryDays,
     int MaxDeleveryDays,
+    MediaFileDto Image,
     List<CreatProductVariantDto?> Variants) : IRequest<Result<CreateProductResponse>>;
 
 public sealed record CreateProductResponse(
