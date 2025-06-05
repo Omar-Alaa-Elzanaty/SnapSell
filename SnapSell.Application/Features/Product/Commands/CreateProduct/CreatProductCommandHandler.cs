@@ -17,48 +17,13 @@ internal sealed class CreatProductCommandHandler(
     public async Task<Result<CreateProductResponse>> Handle(CreatProductCommand request,
         CancellationToken cancellationToken)
     {
-        var imageUrl = await UploadMedia(request.ImageData, MediaTypes.Image);
-        var videoUrl = await UploadMedia(request.VideoData, MediaTypes.Video);
 
         var product = request.Adapt<Product>();
-        product.MainImageUrl = imageUrl;
-        product.MainVideoUrl = videoUrl;
+        product.MainImageUrl = await mediaService.SaveAsync(request.Image, MediaTypes.Image); ;
 
-<<<<<<< HEAD
         await unitOfWork.ProductsRepo.AddAsync(product);
         await AddProductVariants(request.Variants, product.Id);
-=======
-        var currentUser = httpContextAccessor.HttpContext?.User;
-        if (currentUser is null)
-        {
-            return Result<CreateProductResponse>.Failure(
-                message: "Current user is null",
-                HttpStatusCode.Unauthorized);
-        }
 
-        var userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
-        {
-            return Result<CreateProductResponse>.Failure(
-                message: "User ID not found in claims",
-                HttpStatusCode.Unauthorized);
-        }
-
-        var product = new Product
-        {
-            ArabicName = request.ArabicName,
-            EnglishName = request.EnglishName,
-            IsFeatured = request.IsFeatured,
-            IsHidden = request.IsHidden,
-            CreatedBy = userId,
-            CreatedAt = DateTime.UtcNow,
-            BrandId = request.BrandId,
-            ProductStatus = request.ProductStatus,
-            ShippingType = request.ShippingType
-        };
-
-        await unitOfWork.ProductsRepo.AddAsync(product);
->>>>>>> 4adf6c296988be8df97d93b91e5022cbacb5e466
         await unitOfWork.SaveAsync(cancellationToken);
 
         var response = product.Adapt<CreateProductResponse>() with
@@ -73,16 +38,7 @@ internal sealed class CreatProductCommandHandler(
             statusCode: HttpStatusCode.Created);
     }
 
-    private async Task<string?> UploadMedia(byte[] image, MediaTypes mediaTypes)
-    {
-        var fileName = await mediaService.SaveAsync(new MediaFileDto
-        {
-            FileName = mediaTypes == MediaTypes.Image ? $"{Guid.NewGuid()}.png" : $"{Guid.NewGuid()}.mp4",
-            Base64 = Convert.ToBase64String(image)
-        }, MediaTypes.Image);
 
-        return fileName;
-    }
 
     private async Task AddProductVariants(List<CreatProductVariantDto?> variants, Guid productId)
     {
