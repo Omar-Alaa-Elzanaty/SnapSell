@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Mongo2Go;
+using MongoDB.Driver;
 using Moq;
 using SnapSell.Application.Extensions.Services;
 using SnapSell.Application.Interfaces;
@@ -20,10 +22,11 @@ using SnapSell.Presistance.Repos;
 
 namespace SnapSell.Test
 {
-    internal class TestBase : IDisposable
+    public class TestBase : IDisposable
     {
         protected WebApplicationBuilder _builder;
         protected IServiceProvider _serviceProvider;
+        protected MongoDbRunner _mongoDbRunner;
 
         public TestBase()
         {
@@ -36,6 +39,7 @@ namespace SnapSell.Test
                 .AddInfrastructure(_builder.Configuration)
                 .AddMemoryCache();
 
+            AddMongoDbContext(_builder.Services, _builder.Configuration);
             SeedDateAsync().GetAwaiter();
         }
 
@@ -60,8 +64,18 @@ namespace SnapSell.Test
                     .AddDefaultTokenProviders();
 
             services.AddScoped(typeof(ISQLBaseRepo<>), typeof(SQLBaseRepo<>))
-                    .AddScoped(typeof(IMongoBaseRepo<>), typeof(MongoBaseRepo<>))
                     .AddScoped<IUnitOfWork, UnitOfWork>();
+        }
+
+        private void AddMongoDbContext(IServiceCollection services, IConfiguration configuration)
+        {
+            _mongoDbRunner = MongoDbRunner.Start();
+            var mongoSetting = new MongoClient(_mongoDbRunner.ConnectionString);
+
+            services.AddDbContext<MongoDbContext>(options =>
+                    options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
+
+            services.AddScoped(typeof(IMongoBaseRepo<>), typeof(MongoBaseRepo<>));
         }
 
         protected static SqliteConnection CreateDatabaseAndGetConnection(IHttpContextAccessor contextAccessor = null)
@@ -76,6 +90,7 @@ namespace SnapSell.Test
 
             return connection;
         }
+
 
         private async Task SeedDateAsync()
         {
@@ -102,9 +117,9 @@ namespace SnapSell.Test
             }
         }
 
-        ~TestBase()
+        public IUnitOfWork GetUnitOfWork()
         {
-            Dispose();
+            return _serviceProvider.GetRequiredService<IUnitOfWork>();
         }
 
         public void Dispose()
@@ -114,6 +129,13 @@ namespace SnapSell.Test
             context.Database.EnsureDeleted();
             context.Dispose();
             GC.SuppressFinalize(this);
+
+            _mongoDbRunner.Dispose();
+        }
+
+        ~TestBase()
+        {
+            Dispose();
         }
     }
 }

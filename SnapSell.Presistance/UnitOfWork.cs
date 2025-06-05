@@ -15,6 +15,7 @@ public class UnitOfWork : IUnitOfWork
     public ISQLBaseRepo<Variant> VariantsRepo { get; set; }
     public ISQLBaseRepo<Store> StoresRepo { get; set; }
     public ISQLBaseRepo<Client> ClientsRepo { get; set; }
+    public ISQLBaseRepo<Brand> BrandsRepo { get; set; }
 
     public UnitOfWork(
         SqlDbContext context,
@@ -23,7 +24,8 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Product> productsRepo,
         ISQLBaseRepo<Variant> variants,
         ISQLBaseRepo<Store> stores,
-        ISQLBaseRepo<Client> clients)
+        ISQLBaseRepo<Client> clients,
+        ISQLBaseRepo<Brand> brands)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -32,6 +34,7 @@ public class UnitOfWork : IUnitOfWork
         _mongoDbContext = mongoDbContext;
         StoresRepo = stores;
         ClientsRepo = clients;
+        BrandsRepo = brands;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

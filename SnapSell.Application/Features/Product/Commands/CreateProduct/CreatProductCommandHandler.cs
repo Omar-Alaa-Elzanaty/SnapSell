@@ -13,7 +13,6 @@ using SnapSell.Domain.Models;
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
 internal sealed class CreatProductCommandHandler(
-    ISQLBaseRepo<Product> productRepository,
     IUnitOfWork unitOfWork,
     IHttpContextAccessor httpContextAccessor,
     IValidator<CreatProductCommand> validator)
@@ -64,7 +63,7 @@ internal sealed class CreatProductCommandHandler(
             ShippingType = request.ShippingType
         };
 
-        await productRepository.AddAsync(product);
+        await unitOfWork.ProductsRepo.AddAsync(product);
         await unitOfWork.SaveAsync(cancellationToken);
 
         var response = new CreateProductResponse(
