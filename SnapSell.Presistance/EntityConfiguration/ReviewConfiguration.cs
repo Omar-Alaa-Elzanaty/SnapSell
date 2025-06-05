@@ -14,11 +14,6 @@ public sealed class ReviewConfiguration : AuditableEntityConfiguration<Review>
 
         builder.HasKey(x => x.Id);
 
-        builder.HasOne(x => x.User)
-            .WithMany(x => x.Reviews)
-            .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         builder.HasOne(x => x.Product)
             .WithMany(x => x.Reviews)
             .HasForeignKey(x => x.ProductId)

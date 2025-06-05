@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.Features.Payments.Command.Callback;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SnapSell.Presentation.EndPoints;
 
@@ -16,7 +14,9 @@ public abstract class ApiControllerBase(ICacheService cacheService) : Controller
 
         return StatusCode((int)result.StatusCode, result);
     }
-    protected async Task<ActionResult<PaginatedResult<TResult>>> HandleMediatorResult<TResult>(PaginatedResult<TResult> result)
+
+    protected async Task<ActionResult<PaginatedResult<TResult>>> HandleMediatorResult<TResult>(
+        PaginatedResult<TResult> result)
     {
         result.CacheCodes = await cacheService.GetCacheCodes();
         return StatusCode((int)result.StatusCode, result);

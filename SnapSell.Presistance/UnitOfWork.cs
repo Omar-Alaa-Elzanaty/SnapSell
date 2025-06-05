@@ -8,7 +8,6 @@ namespace SnapSell.Presistance;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly SqlDbContext _context;
-    private readonly MongoDbContext _mongoDbContext;
 
     public ISQLBaseRepo<Product> ProductsRepo { get; private set; }
     public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
@@ -18,7 +17,6 @@ public class UnitOfWork : IUnitOfWork
 
     public UnitOfWork(
         SqlDbContext context,
-        MongoDbContext mongoDbContext,
         ISQLBaseRepo<CacheCode> cacheCodesRepo,
         ISQLBaseRepo<Product> productsRepo,
         ISQLBaseRepo<Variant> variants,
@@ -29,15 +27,13 @@ public class UnitOfWork : IUnitOfWork
         CacheCodesRepo = cacheCodesRepo;
         ProductsRepo = productsRepo;
         VariantsRepo = variants;
-        _mongoDbContext = mongoDbContext;
         StoresRepo = stores;
         ClientsRepo = clients;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.SaveChangesAsync(cancellationToken) +
-               await _mongoDbContext.SaveChangesAsync(cancellationToken);
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 
     public void Dispose()

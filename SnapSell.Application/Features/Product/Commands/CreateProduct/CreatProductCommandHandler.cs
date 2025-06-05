@@ -1,85 +1,76 @@
-﻿using System.Net;
-using System.Security.Claims;
-using FluentValidation;
+﻿using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using SnapSell.Application.Interfaces;
-using SnapSell.Application.Interfaces.Repos;
+using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Extnesions;
+using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models;
-
+using System.Net;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
 internal sealed class CreatProductCommandHandler(
-    ISQLBaseRepo<Product> productRepository,
     IUnitOfWork unitOfWork,
-    IHttpContextAccessor httpContextAccessor,
-    IValidator<CreatProductCommand> validator)
+    IMediaService mediaService)
     : IRequestHandler<CreatProductCommand, Result<CreateProductResponse>>
 {
     public async Task<Result<CreateProductResponse>> Handle(CreatProductCommand request,
         CancellationToken cancellationToken)
     {
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        var imageUrl = await UploadMedia(request.ImageData, MediaTypes.Image);
+        var videoUrl = await UploadMedia(request.VideoData, MediaTypes.Video);
 
-        if (!validationResult.IsValid)
-        {
-            var errors = validationResult.Errors.GetErrorsDictionary();
-            return new Result<CreateProductResponse>()
-            {
-                Errors = errors,
-                StatusCode = HttpStatusCode.BadRequest,
-                Message = "Validation failed"
-            };
-        }
+        var product = request.Adapt<Product>();
+        product.MainImageUrl = imageUrl;
+        product.MainVideoUrl = videoUrl;
 
-        var currentUser = httpContextAccessor.HttpContext?.User;
-        if (currentUser is null)
-        {
-            return Result<CreateProductResponse>.Failure(
-                message: "Current user is null",
-                HttpStatusCode.Unauthorized);
-        }
-
-        var userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
-        {
-            return Result<CreateProductResponse>.Failure(
-                message: "User ID not found in claims",
-                HttpStatusCode.Unauthorized);
-        }
-
-        var product = new Product
-        {
-            ArabicName = request.ArabicName,
-            EnglishName = request.EnglishName,
-            IsFeatured = request.IsFeatured,
-            IsHidden = request.IsHidden,
-            CreatedBy = userId,
-            CreatedAt = DateTime.UtcNow,
-            BrandId = request.BrandId,
-            ProductStatus = request.ProductStatus,
-            ShippingType = request.ShippingType
-        };
-
-        await productRepository.AddAsync(product);
+        await unitOfWork.ProductsRepo.AddAsync(product);
+        await AddProductVariants(request.Variants, product.Id);
         await unitOfWork.SaveAsync(cancellationToken);
 
-        var response = new CreateProductResponse(
-            ProductId: product.Id,
-            SellerId: userId,
-            EnglishName: product.EnglishName,
-            ArabicName: product.ArabicName,
-            IsFeatured: product.IsFeatured,
-            IsHidden: product.IsHidden,
-            ShippingType: request.ShippingType,
-            ProductStatus: request.ProductStatus);
+        var response = product.Adapt<CreateProductResponse>() with
+        {
+            MainImageUrl = mediaService.GetUrl(product.MainImageUrl, MediaTypes.Image),
+            MainVideoUrl = mediaService.GetUrl(product.MainVideoUrl, MediaTypes.Video)
+        };
 
         return Result<CreateProductResponse>.Success(
             data: response,
-            message: "Product Created Successfully.",
+            message: "Product Created Successfully",
             statusCode: HttpStatusCode.Created);
+    }
+
+    private async Task<string?> UploadMedia(byte[] image, MediaTypes mediaTypes)
+    {
+        var fileName = await mediaService.SaveAsync(new MediaFileDto
+        {
+            FileName = mediaTypes == MediaTypes.Image ? $"{Guid.NewGuid()}.png" : $"{Guid.NewGuid()}.mp4",
+            Base64 = Convert.ToBase64String(image)
+        }, MediaTypes.Image);
+
+        return fileName;
+    }
+
+    private async Task AddProductVariants(List<CreatProductVariantDto?> variants, Guid productId)
+    {
+        if (variants?.Count > 0)
+        {
+            var productVariants = variants
+                .Where(v => v is not null)
+                .Select(v => new Variant()
+                {
+                    ProductId = productId,
+                    Size = v!.Size,
+                    Color = v.Color,
+                    Quantity = v.Quantity,
+                    Price = v.Price,
+                    RegularPrice = v.RegularPrice,
+                    SalePrice = v.SalePrice,
+                    SKU = v.SKU,
+                    CreatedAt = DateTime.UtcNow
+                }).ToList();
+
+            await unitOfWork.VariantsRepo.AddRange(productVariants);
+        }
     }
 }

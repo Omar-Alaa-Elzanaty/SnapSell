@@ -1,6 +1,6 @@
 ﻿namespace SnapSell.Domain.Models;
 
-public sealed class Brand:BaseEntity
+public class Brand:BaseEntity
 {
     public string Name { get; set; }
 }

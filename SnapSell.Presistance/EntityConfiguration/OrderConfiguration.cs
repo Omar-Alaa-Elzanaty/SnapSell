@@ -14,9 +14,9 @@ public class OrderConfiguration : AuditableEntityConfiguration<Order>
 
         builder.HasKey(x => x.Id);
 
-        builder.HasOne(x => x.User)
+        builder.HasOne(x => x.Client)
             .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.UserId)
+            .HasForeignKey(x => x.ClientId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.ShippingAddress)
@@ -33,7 +33,7 @@ public class OrderConfiguration : AuditableEntityConfiguration<Order>
             .HasColumnType("decimal(18,2)");
 
         builder.Property(x => x.OrderStatus)
-            .HasConversion<string>()
+            .HasConversion<int>()
             .HasMaxLength(50);
     }
 }

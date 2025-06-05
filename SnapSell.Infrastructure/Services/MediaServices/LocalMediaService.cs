@@ -16,18 +16,11 @@ public sealed class MediaService(
 
     public void Delete(string filePath)
     {
-        try
-        {
-            var fullPath = Path.Combine(_mediaBasePath, filePath.TrimStart('/'));
+        var fullPath = Path.Combine(_mediaBasePath, filePath.TrimStart('/'));
 
-            if (File.Exists(fullPath))
-            {
-                File.Delete(fullPath);
-            }
-        }
-        catch (Exception ex)
+        if (File.Exists(fullPath))
         {
-            throw;
+            File.Delete(fullPath);
         }
     }
 
@@ -42,40 +35,26 @@ public sealed class MediaService(
 
     public async Task<string?> SaveAsync(MediaFileDto media, MediaTypes mediaType)
     {
-        try
-        {
-            var folder = GetMediaFolder(mediaType);
-            var fullFolderPath = Path.Combine(_mediaBasePath, folder);
-            Directory.CreateDirectory(fullFolderPath);
+        var folder = GetMediaFolder(mediaType);
+        var fullFolderPath = Path.Combine(_mediaBasePath, folder);
+        Directory.CreateDirectory(fullFolderPath);
 
-            var fileExtension = Path.GetExtension(media.FileName);
-            var fileName = $"{Guid.NewGuid()}{fileExtension}";
-            var fullPath = Path.Combine(fullFolderPath, fileName);
+        var fileExtension = Path.GetExtension(media.FileName);
+        var fileName = $"{Guid.NewGuid()}{fileExtension}";
+        var fullPath = Path.Combine(fullFolderPath, fileName);
 
-            await File.WriteAllBytesAsync(fullPath, Convert.FromBase64String(media.Base64));
-            return fileName;
-        }
-        catch (Exception ex)
-        {
-            return null;
-        }
+        await File.WriteAllBytesAsync(fullPath, Convert.FromBase64String(media.Base64));
+        return fileName;
     }
 
     public async Task<string?> UpdateAsync(MediaFileDto media, MediaTypes mediaType, string oldUrl)
     {
-        try
-        {
-            if (media == null)
-                return oldUrl;
+        if (media == null)
+            return oldUrl;
 
-            if (!string.IsNullOrEmpty(oldUrl))
-                Delete(oldUrl);
+        if (!string.IsNullOrEmpty(oldUrl))
+            Delete(oldUrl);
 
-            return await SaveAsync(media, mediaType);
-        }
-        catch (Exception ex)
-        {
-            return null;
-        }
+        return await SaveAsync(media, mediaType);
     }
 }

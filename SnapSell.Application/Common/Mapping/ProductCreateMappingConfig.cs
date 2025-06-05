@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
 using SnapSell.Application.Features.product.Commands.CreateProduct;
 using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Domain.Models;
@@ -17,6 +18,9 @@ public class ProductMappingConfig : IRegister
             .Map(dest => dest.ProductId, src => src.Id)
             .Map(dest => dest.BrandName, src => src.Brand != null ? src.Brand.Name : null)
             .Map(dest => dest.Variants, src => src.Variants);
+
+        config.NewConfig<Product, CreateProductAdditionalInformationResponse>()
+            .Map(dest => dest.ProductId, src => src.Id);
 
 
     }

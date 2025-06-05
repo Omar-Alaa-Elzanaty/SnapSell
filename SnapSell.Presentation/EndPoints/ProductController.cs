@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
-using SnapSell.Application.Features.colors.Queries;
 using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
 using SnapSell.Application.Features.product.Commands.CreateProduct;
-using SnapSell.Application.Features.product.Commands.UploadProductImage;
-using SnapSell.Application.Features.product.Commands.UploadProductVideo;
 using SnapSell.Application.Features.product.Queries.GetAllPaymentMethods;
 using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Application.Interfaces;
@@ -44,26 +41,9 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
         return await HandleMediatorResult(result);
     }
 
-    [HttpGet("GetAllColors/{userId}")]
-    public async Task<ActionResult<Result<List<GetAllColorsResponse>>>> GetAllColors(string userId, CancellationToken cancellationToken)
-    {
-        var query = new GetAllColorsQuery(userId);
-
-        var result = await sender.Send(query, cancellationToken);
-        return await HandleMediatorResult(result);
-    }
-
     [HttpPost("CreateProduct")]
-    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct([FromForm] CreatProductCommand command,
-        CancellationToken cancellationToken)
-    {
-        var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
-    }
-
-    [HttpPost("UploadProductImage")]
-    public async Task<ActionResult<Result<UploadProductImageResponse>>> UploadProductImage(
-        [FromForm] UploadProductImageCommand command,
+    [RequestSizeLimit(500 * 1024 * 1024)] // 500MB limit
+    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct([FromBody] CreatProductCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
@@ -73,15 +53,6 @@ public sealed class ProductController(ICacheService cacheService, ISender sender
     [HttpPost("CreateProductAdditionalInformation")]
     public async Task<ActionResult<Result<CreateProductAdditionalInformationResponse>>> CreateProductAdditionalInformation(
         [FromBody] AddAdditionalInformationToProductCommand command,
-        CancellationToken cancellationToken)
-    {
-        var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
-    }
-
-    [HttpPost("UploadProductVideo")]
-    [RequestSizeLimit(500 * 1024 * 1024)] // 500MB limit
-    public async Task<ActionResult<Result<UploeadProductVideoResponse>>> UploadProductVideo([FromForm] UploadProductVideoCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);

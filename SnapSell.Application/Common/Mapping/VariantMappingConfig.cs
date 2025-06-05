@@ -18,5 +18,6 @@ public class VariantMappingConfig : IRegister
 
         config.NewConfig<Variant, VariantResponseInGetAllProductsToSeller>()
             .Map(dest => dest.VariantId, src => src.Id);
+
     }
 }

@@ -15,8 +15,6 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Brand> Brands { get; set; }
-    public DbSet<Color> Colors { get; set; }
-    public DbSet<Size> Sizes { get; set; }
     public DbSet<Variant> Variants { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
@@ -45,54 +43,38 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        try
-        {
-            var userId = GetCurrentUserId();
+        var userId = GetCurrentUserId() ?? "Unkown";
 
-            foreach (var entry in ChangeTracker.Entries<IAuditable>())
+        foreach (var entry in ChangeTracker.Entries<IAuditable>())
+        {
+            if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                continue;
+
+            var now = DateTime.UtcNow;
+
+            if (entry.State == EntityState.Added)
             {
-                if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
-                    continue;
-
-                var now = DateTime.UtcNow;
-
-                if (entry.State == EntityState.Added)
-                {
-                    entry.Entity.CreatedAt = now;
-                    entry.Entity.CreatedBy = userId;
-                    entry.Entity.IsDeleted = false;
-                }
-                else if (entry.State == EntityState.Deleted)
-                {
-                    entry.State = EntityState.Modified;
-                    entry.Entity.IsDeleted = true;
-                    entry.Entity.LastUpdatedAt = now;
-                    entry.Entity.LastUpdatedBy = userId;
-                }
-                else if (entry.State == EntityState.Modified)
-                {
-                    entry.Entity.LastUpdatedAt = now;
-                    entry.Entity.LastUpdatedBy = userId;
-                }
+                entry.Entity.CreatedAt = now;
+                entry.Entity.CreatedBy = userId;
+                entry.Entity.IsDeleted = false;
             }
+            else if (entry.State == EntityState.Deleted)
+            {
+                entry.State = EntityState.Modified;
+                entry.Entity.IsDeleted = true;
+                entry.Entity.LastUpdatedAt = now;
+                entry.Entity.LastUpdatedBy = userId;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.LastUpdatedAt = now;
+                entry.Entity.LastUpdatedBy = userId;
+            }
+        }
 
-            return await base.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            throw; 
-        }
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
-    private string? GetCurrentUserId()
-    {
-        try
-        {
-            return contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        }
-        catch
-        {
-            return null; 
-        }
-    }
+    private string? GetCurrentUserId() =>
+        contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }

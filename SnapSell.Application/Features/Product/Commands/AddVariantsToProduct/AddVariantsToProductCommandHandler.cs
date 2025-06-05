@@ -1,17 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Models;
 using System.Net;
 using System.Security.Claims;
 
 namespace SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
 
 internal sealed class AddVariantsToProductCommandHandler(
-    ISQLBaseRepo<Product> productRepository,
-    ISQLBaseRepo<Variant> variantRepository,
     IUnitOfWork unitOfWork,
     IHttpContextAccessor httpContextAccessor)
     : IRequestHandler<AddVariantsToProductCommand, Result<List<AddVariantsToProductResponse>>>
@@ -19,19 +15,6 @@ internal sealed class AddVariantsToProductCommandHandler(
     public async Task<Result<List<AddVariantsToProductResponse>>> Handle(AddVariantsToProductCommand request,
         CancellationToken cancellationToken)
     {
-        //var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    var errors = validationResult.Errors.GetErrorsDictionary();
-        //    return new Result<List<AddVariantsToProductResponse>>()
-        //    {
-        //        Errors = errors,
-        //        StatusCode = HttpStatusCode.BadRequest,
-        //        Message = "Validation failed"
-        //    };
-        //}
-
         var currentUser = httpContextAccessor.HttpContext?.User;
         if (currentUser is null)
         {

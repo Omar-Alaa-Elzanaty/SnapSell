@@ -17,10 +17,7 @@ public sealed class AddVariantsToProductCommandValidator : AbstractValidator<Var
         RuleFor(x => x.Quantity)
             .GreaterThanOrEqualTo(0).WithMessage("Quantity cannot be negative");
 
-        RuleFor(x => x.SKU)
+        RuleFor(x => x.Sku)
             .MaximumLength(50).WithMessage("SKU must not exceed 50 characters");
-
-        RuleFor(x => x.Barcode)
-            .MaximumLength(50).WithMessage("Barcode must not exceed 50 characters");
     }
 }

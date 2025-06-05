@@ -21,16 +21,6 @@ public sealed class VariantConfiguration : AuditableEntityConfiguration<Variant>
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(x => x.Size)
-            .WithMany()
-            .HasForeignKey(x => x.SizeId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(x => x.Color)
-            .WithMany()
-            .HasForeignKey(x => x.ColorId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         builder.Property(x => x.Price)
             .HasColumnType("decimal(18,2)");
 

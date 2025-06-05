@@ -13,7 +13,6 @@ public sealed record AddAdditionalInformationToProductCommand(
 
 public sealed record CreateProductAdditionalInformationResponse(
     Guid ProductId,
-    string SellerId,
     string EnglishName,
     string ArabicName,
     string EnglishDescription,
@@ -26,14 +25,13 @@ public sealed record CreateProductAdditionalInformationResponse(
     List<VariantResponse> Variants);
 
 public sealed record VariantDto(
-    Guid? SizeId,
-    Guid? ColorId,
+    string? Size,
+    string? Color,
     int Quantity,
     decimal Price,
     decimal RegularPrice,
     decimal? SalePrice,
-    string? SKU,
-    string? Barcode);
+    string? Sku);
 
 
 public sealed record VariantResponse(
@@ -44,6 +42,6 @@ public sealed record VariantResponse(
     decimal Price,
     decimal RegularPrice,
     decimal? SalePrice,
-    string? SKU,
+    string? Sku,
     string? Barcode
 );
