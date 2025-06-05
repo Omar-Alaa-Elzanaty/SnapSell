@@ -17,7 +17,7 @@ namespace SnapSell.Presistance.Extensions
         {
             services
                 .AddServices(configuration)
-                .AddSQLDbContext(configuration);
+                .AddSQLDbContext(configuration)
                 .AddMongoDbContext(configuration);
 
             return services;
