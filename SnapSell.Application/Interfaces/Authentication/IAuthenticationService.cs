@@ -1,4 +1,4 @@
-﻿using SnapSell.Domain.Models;
+﻿using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Interfaces.Authentication;
 

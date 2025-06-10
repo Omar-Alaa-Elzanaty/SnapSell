@@ -1,13 +1,19 @@
 ﻿using FluentValidation.Results;
 using SnapSell.Domain.Extnesions;
 using System.Net;
+using System.Text.Json.Serialization;
 
 namespace SnapSell.Domain.Dtos.ResultDtos;
 
 public class Result<T> : IResult<T>
 {
     public bool IsSuccess => (int)StatusCode >= 200 && (int)StatusCode <= 299;
+
+    [JsonIgnore]
     public HttpStatusCode StatusCode { get; set; }
+
+    [JsonPropertyName("statusCode")]
+    public int StatusCodeNumber => (int)StatusCode;
     public T? Data { get; set; }
     public string? Message { get; set; }
     public CacheResponse? CacheCodes { get; set; }

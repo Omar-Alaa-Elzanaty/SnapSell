@@ -583,10 +583,6 @@ namespace SnapSell.Presistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.PrimitiveCollection<string>("AdditionalImageUrls")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ArabicDescription")
                         .HasColumnType("nvarchar(max)");
 
@@ -597,6 +593,9 @@ namespace SnapSell.Presistance.Migrations
 
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("CostPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -612,6 +611,9 @@ namespace SnapSell.Presistance.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("HasVariants")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -635,9 +637,6 @@ namespace SnapSell.Presistance.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("MainImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("MainVideoUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -647,10 +646,22 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<int>("MinDeleveryDays")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ProductStatus")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("SalePrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ShippingType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sku")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StoreId")
@@ -663,6 +674,44 @@ namespace SnapSell.Presistance.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("SnapSell.Domain.Models.ProductImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsMainImage")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.ProductPaymentMethod", b =>
@@ -804,7 +853,11 @@ namespace SnapSell.Presistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("CoastPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Color")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -813,6 +866,9 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -835,16 +891,13 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("RegularPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("SKU")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal?>("SalePrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sku")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1016,6 +1069,17 @@ namespace SnapSell.Presistance.Migrations
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("SnapSell.Domain.Models.ProductImage", b =>
+                {
+                    b.HasOne("SnapSell.Domain.Models.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("SnapSell.Domain.Models.ProductPaymentMethod", b =>
                 {
                     b.HasOne("SnapSell.Domain.Models.PaymentMethod", "PaymentMethod")
@@ -1101,6 +1165,8 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.Product", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("ProductPaymentMethods");
 
                     b.Navigation("Reviews");

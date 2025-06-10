@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Presistance.EntityConfiguration;
 
@@ -13,11 +13,6 @@ public sealed class ReviewConfiguration : AuditableEntityConfiguration<Review>
         builder.ToTable("Reviews");
 
         builder.HasKey(x => x.Id);
-
-        builder.HasOne(x => x.Product)
-            .WithMany(x => x.Reviews)
-            .HasForeignKey(x => x.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.Score)
             .HasColumnType("decimal(2,1)");

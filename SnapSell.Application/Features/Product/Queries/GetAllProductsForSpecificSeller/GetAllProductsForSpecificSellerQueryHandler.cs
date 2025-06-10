@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using SnapSell.Application.Extensions;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.MongoDbEntities;
 using System.Security.Claims;
 
 namespace SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;

@@ -13,9 +13,7 @@ namespace SnapSell.Presentation.EndPoints
     {
         private readonly IMediator _mediator;
 
-        public AdminController(
-            ICacheService cacheService,
-            IMediator mediator) : base(cacheService)
+        public AdminController(IMediator mediator) 
         {
             _mediator = mediator;
         }

@@ -4,38 +4,27 @@ using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
 using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
 using SnapSell.Application.Features.product.Commands.CreateProduct;
-using SnapSell.Application.Features.product.Queries.GetAllPaymentMethods;
 using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
-using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
-public sealed class ProductController(ICacheService cacheService, ISender sender) : ApiControllerBase(cacheService)
+//[Authorize(Roles = "Seller")]
+public sealed class ProductController(ISender sender) : ApiControllerBase
 {
-    [HttpGet("GetAllBrands/{sellerId}")]
-    public async Task<ActionResult<Result<List<GetAllBrandsResponse>>>> GetAllBrands(string sellerId, CancellationToken cancellationToken)
+    [HttpGet("GetAllBrands")]
+    public async Task<ActionResult<Result<List<GetAllBrandsResponse>>>> GetAllBrands(CancellationToken cancellationToken)
     {
-        var query = new GetAllPrandsQuery(sellerId);
-
+        var query = new GetAllPrandsQuery();
         var result = await sender.Send(query, cancellationToken);
         return await HandleMediatorResult(result);
     }
 
-    [HttpGet("GetAllCategories/{userId}")]
-    public async Task<ActionResult<Result<List<GetAllCategoriesResponse>>>> GetAllCategories(string userId, CancellationToken cancellationToken)
+    [HttpGet("GetAllCategories")]
+    public async Task<ActionResult<Result<List<GetAllCategoriesResponse>>>> GetAllCategories(CancellationToken cancellationToken)
     {
-        var query = new GetAllCategoriesQuery(userId);
-
-        var result = await sender.Send(query, cancellationToken);
-        return await HandleMediatorResult(result);
-    }
-
-    [HttpGet("GetAllPaymentMethods/{userId}")]
-    public async Task<ActionResult<Result<List<GetAllPaymentMethodsResponse>>>> GetAllPaymentMethods(string userId, CancellationToken cancellationToken)
-    {
-        var query = new GetAllPaymentMethodsQuery(userId);
+        var query = new GetAllCategoriesQuery();
 
         var result = await sender.Send(query, cancellationToken);
         return await HandleMediatorResult(result);

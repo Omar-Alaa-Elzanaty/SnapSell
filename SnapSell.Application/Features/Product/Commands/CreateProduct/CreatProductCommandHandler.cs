@@ -1,11 +1,11 @@
 ﻿using Mapster;
 using MediatR;
 using SnapSell.Application.Interfaces;
-using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
-using SnapSell.Domain.Models;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
+using SnapSell.Domain.Models.MongoDbEntities;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
@@ -17,93 +17,71 @@ internal sealed class CreatProductCommandHandler(
     public async Task<Result<CreateProductResponse>> Handle(CreatProductCommand request,
         CancellationToken cancellationToken)
     {
-        var imageUrl = await UploadMedia(request.ImageData, MediaTypes.Image);
-        var videoUrl = await UploadMedia(request.VideoData, MediaTypes.Video);
+        var existingCategories = await unitOfWork.CategoryRepo.TheDbSet()
+            .Where(c => request.CategoryIds.Contains(c.Id))
+            .ToListAsync(cancellationToken);
+
+        var allCategoriesExist = request.CategoryIds.All(id => existingCategories.Select(x => x.Id).Contains(id));
+        if (!allCategoriesExist)
+        {
+            return Result<CreateProductResponse>.Failure(
+                message: "One or more categories do not exist",
+                statusCode: HttpStatusCode.BadRequest);
+        }
+
+        var existingBrand = await unitOfWork.BrandsRepo.TheDbSet()
+            .SingleOrDefaultAsync(x => x.Id == request.BrandId, cancellationToken);
+        if (existingBrand is null)
+        {
+            return Result<CreateProductResponse>.Failure(
+                message: $"The Brand Id you Entered is not Valid : {request.BrandId}.",
+                statusCode: HttpStatusCode.BadRequest);
+        }
+
 
         var product = request.Adapt<Product>();
-        product.MainImageUrl = imageUrl;
-        product.MainVideoUrl = videoUrl;
+        product.CategoryIds = request.CategoryIds;
 
-<<<<<<< HEAD
-        await unitOfWork.ProductsRepo.AddAsync(product);
-        await AddProductVariants(request.Variants, product.Id);
-=======
-        var currentUser = httpContextAccessor.HttpContext?.User;
-        if (currentUser is null)
+        product.Images = new List<ProductImage>();
+        foreach (var image in request.Images)
         {
-            return Result<CreateProductResponse>.Failure(
-                message: "Current user is null",
-                HttpStatusCode.Unauthorized);
+            var imageUrl = await mediaService.SaveAsync(image, MediaTypes.Image);
+            product.Images.Add(new ProductImage
+            {
+                ProductId = product.Id,
+                ImageUrl = imageUrl!,
+                IsMainImage = image.IsMain
+            });
         }
 
-        var userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
+        if (request.HasVariants)
         {
-            return Result<CreateProductResponse>.Failure(
-                message: "User ID not found in claims",
-                HttpStatusCode.Unauthorized);
+            product.Variants = request.Variants.Adapt<List<Variant>>();
+            foreach (var variant in product.Variants)
+            {
+                variant.ProductId = product.Id;
+            }
+        }
+        else
+        {
+            product.Price = request.Price;
+            product.SalePrice = request.SalePrice;
+            product.CostPrice = request.CostPrice;
+            product.Quantity = request.Quantity;
+            product.Sku = request.Sku;
         }
 
-        var product = new Product
-        {
-            ArabicName = request.ArabicName,
-            EnglishName = request.EnglishName,
-            IsFeatured = request.IsFeatured,
-            IsHidden = request.IsHidden,
-            CreatedBy = userId,
-            CreatedAt = DateTime.UtcNow,
-            BrandId = request.BrandId,
-            ProductStatus = request.ProductStatus,
-            ShippingType = request.ShippingType
-        };
+        await unitOfWork.ProductsRepo.InsertOneAsync(product, cancellationToken);
 
-        await unitOfWork.ProductsRepo.AddAsync(product);
->>>>>>> 4adf6c296988be8df97d93b91e5022cbacb5e466
-        await unitOfWork.SaveAsync(cancellationToken);
-
-        var response = product.Adapt<CreateProductResponse>() with
+        var response = product.Adapt<CreateProductResponse>();
+        foreach (var image in response.Images)
         {
-            MainImageUrl = mediaService.GetUrl(product.MainImageUrl, MediaTypes.Image),
-            MainVideoUrl = mediaService.GetUrl(product.MainVideoUrl, MediaTypes.Video)
-        };
+            image.ImageUrl = mediaService.GetUrl(image.ImageUrl, MediaTypes.Image)!;
+        }
 
         return Result<CreateProductResponse>.Success(
             data: response,
             message: "Product Created Successfully",
             statusCode: HttpStatusCode.Created);
-    }
-
-    private async Task<string?> UploadMedia(byte[] image, MediaTypes mediaTypes)
-    {
-        var fileName = await mediaService.SaveAsync(new MediaFileDto
-        {
-            FileName = mediaTypes == MediaTypes.Image ? $"{Guid.NewGuid()}.png" : $"{Guid.NewGuid()}.mp4",
-            Base64 = Convert.ToBase64String(image)
-        }, MediaTypes.Image);
-
-        return fileName;
-    }
-
-    private async Task AddProductVariants(List<CreatProductVariantDto?> variants, Guid productId)
-    {
-        if (variants?.Count > 0)
-        {
-            var productVariants = variants
-                .Where(v => v is not null)
-                .Select(v => new Variant()
-                {
-                    ProductId = productId,
-                    Size = v!.Size,
-                    Color = v.Color,
-                    Quantity = v.Quantity,
-                    Price = v.Price,
-                    RegularPrice = v.RegularPrice,
-                    SalePrice = v.SalePrice,
-                    SKU = v.SKU,
-                    CreatedAt = DateTime.UtcNow
-                }).ToList();
-
-            await unitOfWork.VariantsRepo.AddRange(productVariants);
-        }
     }
 }

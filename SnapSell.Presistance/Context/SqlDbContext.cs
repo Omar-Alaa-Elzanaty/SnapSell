@@ -1,18 +1,18 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SnapSell.Domain.Models;
 using SnapSell.Domain.Models.Interfaces;
+using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Presistance.Extensions;
+using System.Security.Claims;
 
 namespace SnapSell.Presistance.Context;
 
 public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpContextAccessor contextAccessor)
     : IdentityDbContext<Account>(options)
 {
-    public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Variant> Variants { get; set; }
@@ -20,7 +20,6 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<OrderAddress> OrderAddresses { get; set; }
     public DbSet<ShoppingBag> ShoppingBags { get; set; }
-    public DbSet<PaymentMethod> PaymentMethods { get; set; }
     public DbSet<Review> Reviews { get; set; }
 
     //public DbSet<CacheCode> CacheCodes { get; set; }
@@ -43,7 +42,7 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var userId = GetCurrentUserId() ?? "Unkown";
+        var userId = contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         foreach (var entry in ChangeTracker.Entries<IAuditable>())
         {
@@ -74,7 +73,4 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
 
         return await base.SaveChangesAsync(cancellationToken);
     }
-
-    private string? GetCurrentUserId() =>
-        contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 }

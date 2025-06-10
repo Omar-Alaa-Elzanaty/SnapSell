@@ -14,7 +14,7 @@ using SnapSell.Application.Extensions.Services;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Constants;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Infrastructure.Extnesions;
 using SnapSell.Presistance;
 using SnapSell.Presistance.Context;
@@ -39,7 +39,7 @@ namespace SnapSell.Test
                 .AddInfrastructure(_builder.Configuration)
                 .AddMemoryCache();
 
-            AddMongoDbContext(_builder.Services, _builder.Configuration);
+            //AddMongoDbContext(_builder.Services, _builder.Configuration);
             SeedDateAsync().GetAwaiter();
         }
 
@@ -63,20 +63,20 @@ namespace SnapSell.Test
                     .AddEntityFrameworkStores<SqlDbContext>()
                     .AddDefaultTokenProviders();
 
-            services.AddScoped(typeof(ISQLBaseRepo<>), typeof(SQLBaseRepo<>))
+            services.AddScoped(typeof(ISQLBaseRepo<>), typeof(SqlBaseRepo<>))
                     .AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
-        private void AddMongoDbContext(IServiceCollection services, IConfiguration configuration)
-        {
-            _mongoDbRunner = MongoDbRunner.Start();
-            var mongoSetting = new MongoClient(_mongoDbRunner.ConnectionString);
+        //private void AddMongoDbContext(IServiceCollection services, IConfiguration configuration)
+        //{
+        //    _mongoDbRunner = MongoDbRunner.Start();
+        //    var mongoSetting = new MongoClient(_mongoDbRunner.ConnectionString);
 
-            services.AddDbContext<MongoDbContext>(options =>
-                    options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
+        //    services.AddDbContext<MongoDbContext>(options =>
+        //            options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
 
-            services.AddScoped(typeof(IMongoBaseRepo<>), typeof(MongoBaseRepo<>));
-        }
+        //    services.AddScoped(typeof(IMongoBaseRepo<>), typeof(MongoBaseRepo<>));
+        //}
 
         protected static SqliteConnection CreateDatabaseAndGetConnection(IHttpContextAccessor contextAccessor = null)
         {

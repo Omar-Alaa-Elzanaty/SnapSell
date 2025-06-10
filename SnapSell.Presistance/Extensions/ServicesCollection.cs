@@ -2,10 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.Interfaces;
+using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Presistance.Context;
 using SnapSell.Presistance.Repos;
 
@@ -17,7 +23,7 @@ namespace SnapSell.Presistance.Extensions
         {
             services
                 .AddServices(configuration)
-                .AddSQLDbContext(configuration);
+                .AddSqlDbContext(configuration)
                 .AddMongoDbContext(configuration);
 
             return services;
@@ -25,14 +31,14 @@ namespace SnapSell.Presistance.Extensions
 
         private static IServiceCollection AddServices(this IServiceCollection services ,IConfiguration configuration)
         {
-            services.AddScoped(typeof(ISQLBaseRepo<>), typeof(SQLBaseRepo<>))
+            services.AddScoped(typeof(ISQLBaseRepo<>), typeof(SqlBaseRepo<>))
                     .AddScoped<IUnitOfWork, UnitOfWork>()
                     .AddScoped(typeof(IMongoBaseRepo<>),typeof(MongoBaseRepo<>));
 
             return services;
         }
 
-        private static IServiceCollection AddSQLDbContext(this IServiceCollection services,IConfiguration configuration)
+        private static IServiceCollection AddSqlDbContext(this IServiceCollection services,IConfiguration configuration)
         {
             services.AddDbContext<SqlDbContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(
@@ -49,16 +55,40 @@ namespace SnapSell.Presistance.Extensions
 
             return services;
         }
-
-        private static IServiceCollection AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
         {
+            // Register the Guid serializer globally (only once)
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
-            var mongoSetting = new MongoClient(configuration["MongoSetting:Connection"]);
 
-            services.AddDbContext<MongoDbContext>(options =>
-                    options.UseMongoDB(mongoSetting, configuration["MongoSetting:Database"]!));
+            // 1. Bind configuration
+            services.Configure<MongoDbSettings>(configuration.GetSection(MongoDbSettings.SectionName));
+
+            // 2. Register settings interface
+            services.AddSingleton<IMongoDbSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+
+            // 3. Register MongoClient (thread-safe singleton)
+            services.AddSingleton<IMongoClient>(sp =>
+                new MongoClient(sp.GetRequiredService<IMongoDbSettings>().ConnectionString));
+
+            // 4. Register MongoDbContext (scoped)
+            services.AddScoped<MongoDbContext>();
+
+            // 5. Register each Mongo collection manually
+            services.AddMongoCollection<Product>();
 
             return services;
         }
+
+        public static IServiceCollection AddMongoCollection<T>(this IServiceCollection services) where T : class
+        {
+            return services.AddScoped<IMongoCollection<T>>(sp =>
+            {
+                var context = sp.GetRequiredService<MongoDbContext>();
+                return context.GetCollection<T>();
+            });
+        }
+
     }
 }

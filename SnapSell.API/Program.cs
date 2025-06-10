@@ -6,7 +6,6 @@ using SnapSell.Infrastructure.Extnesions;
 using SnapSell.Infrastructure.Services.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
 using SnapSell.Presistance.Extensions;
-using SnapSell.Presistance.Seeding;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,10 +21,12 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services
-       .AddInfrastructure(builder.Configuration)
-       .AddPresistance(builder.Configuration)
-       .AddApplication()
-       .DepedencyInjectionService(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddPresistance(builder.Configuration)
+    .AddApplication()
+    .DepedencyInjectionService(builder.Configuration);
+
+builder.Services.AddHttpContextAccessor();
 
 var logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
@@ -68,6 +69,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-DataSeed.SeedDate(app.Services.CreateScope().ServiceProvider).Wait();
+//DataSeed.SeedDate(app.Services.CreateScope().ServiceProvider).Wait();
 
 app.Run();

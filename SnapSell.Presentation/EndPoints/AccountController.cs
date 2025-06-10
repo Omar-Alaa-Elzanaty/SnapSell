@@ -4,12 +4,11 @@ using SnapSell.Application.Features.Authentication.Commands.RegisterCustomer;
 using SnapSell.Application.Features.Authentication.Commands.RegisterSeller;
 using SnapSell.Application.Features.Authentication.Queries.CustomerLogIn;
 using SnapSell.Application.Features.Authentication.Queries.SellerLogin;
-using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
-public sealed class AccountController(ICacheService cacheService, ISender sender) : ApiControllerBase(cacheService)
+public sealed class AccountController(ISender sender) : ApiControllerBase
 {
     [HttpPost("RegisterSeller")]
     public async Task<ActionResult<Result<RegisterSellerResult>>> RegisterSeller([FromForm] RegisterSellerCommand command,

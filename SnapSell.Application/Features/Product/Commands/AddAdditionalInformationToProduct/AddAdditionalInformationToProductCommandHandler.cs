@@ -4,7 +4,7 @@ using MediatR;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.MongoDbEntities;
 
 namespace SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
 
@@ -29,31 +29,30 @@ internal sealed class AddAdditionalInformationToProductCommandHandler(
 
         product.ArabicDescription = request.EnglishDescription;
         product.EnglishDescription = request.ArabicDescription;
-        product.MinDeleveryDays = request.MinDeleveryDays;
-        product.MaxDeleveryDays = request.MaxDeleveryDays;
+        //product.MinDeleveryDays = request.MinDeleveryDays;
+        //product.MaxDeleveryDays = request.MaxDeleveryDays;
 
-        var variantEntities = new List<Variant>();
-        foreach (var variantDto in request.Variants)
-        {
-            if (variantDto is null) continue;
+        //var variantEntities = new List<Variant>();
+        //foreach (var variantDto in request.Variants)
+        //{
+        //    if (variantDto is null) continue;
 
-            var variant = new Variant
-            {
-                ProductId = request.ProductId,
-                Color = variantDto.Color,
-                Size = variantDto.Size,
-                Quantity = variantDto.Quantity,
-                Price = variantDto.Price,
-                RegularPrice = variantDto.RegularPrice,
-                SalePrice = variantDto.SalePrice,
-                SKU = variantDto.Sku ?? GenerateSku(),
-            };
+        //    var variant = new Variant
+        //    {
+        //        ProductId = request.ProductId,
+        //        Color = variantDto.Color,
+        //        Size = variantDto.Size,
+        //        Quantity = variantDto.Quantity,
+        //        Price = variantDto.Price,
+        //        SalePrice = variantDto.SalePrice,
+        //        Sku = variantDto.Sku ?? GenerateSku(),
+        //    };
 
-            variantEntities.Add(variant);
-        }
+        //    variantEntities.Add(variant);
+        //}
 
         productRepository.UpdateAsync(product);
-        await variantsRepository.AddRange(variantEntities);
+        //await variantsRepository.AddRange(variantEntities);
         await unitOfWork.SaveAsync(cancellationToken);
 
         var response = product.Adapt<CreateProductAdditionalInformationResponse>();

@@ -3,7 +3,7 @@ using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Application.Features.categories.Queries;
 
-public sealed record GetAllCategoriesQuery(string UserId) : IRequest<Result<List<GetAllCategoriesResponse>>>;
+public sealed record GetAllCategoriesQuery() : IRequest<Result<List<GetAllCategoriesResponse>>>;
 
 public sealed record GetAllCategoriesResponse(
     Guid CategoryId,

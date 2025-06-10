@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Models;
 using System.Net;
 using SnapSell.Application.Interfaces.Authentication;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Features.Authentication.Commands.RegisterCustomer;
 

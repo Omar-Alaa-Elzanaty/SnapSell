@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Presistance.EntityConfiguration;
 

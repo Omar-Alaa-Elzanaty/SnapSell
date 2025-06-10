@@ -1,6 +1,7 @@
 ﻿using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Presistance.Context;
 
 namespace SnapSell.Presistance;
@@ -9,7 +10,8 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly SqlDbContext _context;
 
-    public ISQLBaseRepo<Product> ProductsRepo { get; private set; }
+    public IMongoBaseRepo<Product> ProductsRepo { get; private set; }
+    public ISQLBaseRepo<Category> CategoryRepo { get; private set; }
     public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
     public ISQLBaseRepo<Variant> VariantsRepo { get; set; }
     public ISQLBaseRepo<Store> StoresRepo { get; set; }
@@ -19,11 +21,12 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(
         SqlDbContext context,
         ISQLBaseRepo<CacheCode> cacheCodesRepo,
-        ISQLBaseRepo<Product> productsRepo,
+        IMongoBaseRepo<Product> productsRepo,
         ISQLBaseRepo<Variant> variants,
         ISQLBaseRepo<Store> stores,
         ISQLBaseRepo<Client> clients,
-        ISQLBaseRepo<Brand> brands)
+        ISQLBaseRepo<Brand> brands,
+        ISQLBaseRepo<Category> categoryRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -32,6 +35,7 @@ public class UnitOfWork : IUnitOfWork
         StoresRepo = stores;
         ClientsRepo = clients;
         BrandsRepo = brands;
+        CategoryRepo = categoryRepo;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

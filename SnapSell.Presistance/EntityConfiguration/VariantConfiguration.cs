@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.MongoDbEntities;
 
 namespace SnapSell.Presistance.EntityConfiguration;
 public sealed class VariantConfiguration : AuditableEntityConfiguration<Variant>
@@ -16,15 +16,15 @@ public sealed class VariantConfiguration : AuditableEntityConfiguration<Variant>
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
 
-        builder.HasOne(x => x.Product)
-            .WithMany(x => x.Variants)
-            .HasForeignKey(x => x.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
+        //builder.HasOne(x => x.Product)
+        //    .WithMany(x => x.Variants)
+        //    .HasForeignKey(x => x.ProductId)
+        //    .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.Price)
             .HasColumnType("decimal(18,2)");
 
-        builder.Property(x => x.RegularPrice)
+        builder.Property(x => x.Price)
             .HasColumnType("decimal(18,2)");
 
         builder.Property(x => x.SalePrice)

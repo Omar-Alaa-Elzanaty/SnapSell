@@ -1,12 +1,14 @@
 ﻿using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
         //IBaseRepo<T> Repository<T>() where T : class;
-        ISQLBaseRepo<Product> ProductsRepo { get; }
+        IMongoBaseRepo<Product> ProductsRepo { get; }
+        ISQLBaseRepo<Category> CategoryRepo { get; }
         ISQLBaseRepo<CacheCode> CacheCodesRepo { get; } 
         ISQLBaseRepo<Variant> VariantsRepo { get; set; }
         ISQLBaseRepo<Store> StoresRepo { get; set; }

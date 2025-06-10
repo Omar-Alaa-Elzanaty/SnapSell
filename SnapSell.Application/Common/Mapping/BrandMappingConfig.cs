@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using SnapSell.Application.Features.brands.Queries;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Common.Mapping;
 
