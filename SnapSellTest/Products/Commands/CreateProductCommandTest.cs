@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using SnapSell.Application.Features.product.Commands.CreateProduct;
+using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models;
 using System;
