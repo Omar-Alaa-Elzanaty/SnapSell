@@ -16,9 +16,13 @@ public sealed class CreatProductVariantDtoValidator : AbstractValidator<CreatPro
             .NotNull().WithMessage("Price is required")
             .GreaterThan(0).WithMessage("Price must be greater than 0");
 
+        RuleFor(x => x.CostPrice)
+            .NotNull().WithMessage("CoastPrice is required")
+            .GreaterThan(0).WithMessage("CoastPrice must be greater than 0");
+
         RuleFor(x => x.SalePrice)
             .LessThan(x => x.Price)
-            .When(x => x.SalePrice.HasValue)
+            .When(x => x.SalePrice > x.Price)
             .WithMessage("Sale price must be less than price");
 
         RuleFor(x => x.Quantity)

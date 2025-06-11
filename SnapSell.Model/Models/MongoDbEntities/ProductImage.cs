@@ -13,12 +13,8 @@ namespace SnapSell.Domain.Models.MongoDbEntities;
 //}
 
 
-public class ProductImage:BaseEntity
+public class ProductImage
 {
     public string ImageUrl { get; set; } = null!;
     public bool IsMainImage { get; set; }
-
-    [BsonIgnore]
-    [BsonRepresentation(BsonType.String)]
-    public Guid ProductId { get; set; }
 }

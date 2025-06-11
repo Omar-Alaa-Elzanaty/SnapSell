@@ -11,18 +11,7 @@ public class ProductMappingConfig : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<Product, CreateProductResponse>()
-            .Map(dest => dest.ProductId, src => src.Id)
-            .Ignore(dest => dest.Images) // prevent auto mapping
-            .AfterMapping((src, dest) =>
-            {
-                dest.Images = src.Images.Select(img => new ProductImageResponse
-                {
-                    ProductId = src.Id,
-                    ImageUrl = img.ImageUrl,
-                    IsMainImage = img.IsMainImage
-                }).ToList();
-            });
-
+            .Map(dest => dest.ProductId, src => src.Id);
 
         config.NewConfig<Product, GetAllProductsForSpecificSellerResponse>()
             .Map(dest => dest.ProductId, src => src.Id);

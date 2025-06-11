@@ -1,5 +1,4 @@
 ﻿using SnapSell.Domain.Enums;
-using SnapSell.Domain.Models.MongoDbEntities;
 
 namespace SnapSell.Domain.Models.SqlEntities
 {
@@ -14,7 +13,5 @@ namespace SnapSell.Domain.Models.SqlEntities
         public StoreStatusTypes Status { get; set; } = StoreStatusTypes.Pending;
         public virtual DeliverPeriodTypes DeliverPeriodTypes { get; set; }
         public string? LogoUrl { get; set; }
-
-        public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
     }
 }

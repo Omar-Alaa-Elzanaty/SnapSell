@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Net;
-using System.Security.Claims;
 using Mapster;
 using SnapSell.Domain.Models.SqlEntities;
 

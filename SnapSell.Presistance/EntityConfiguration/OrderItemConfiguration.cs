@@ -19,18 +19,6 @@ public sealed class OrderItemConfiguration : AuditableEntityConfiguration<OrderI
             .HasForeignKey(x => x.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(x => x.Product)
-            .WithMany()
-            .HasForeignKey(x => x.ProductId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(x => x.Variant)
-            .WithMany()
-            .HasForeignKey(x => x.VariantId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
-
         builder.Property(x => x.ProductVariantUnitPrice)
             .HasColumnType("decimal(18,2)");
 

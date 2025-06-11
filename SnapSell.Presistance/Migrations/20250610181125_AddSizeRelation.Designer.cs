@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SnapSell.Presistance.Context;
 
@@ -11,9 +12,11 @@ using SnapSell.Presistance.Context;
 namespace SnapSell.Presistance.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    partial class SqlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250610181125_AddSizeRelation")]
+    partial class AddSizeRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -637,7 +640,7 @@ namespace SnapSell.Presistance.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("ParentSizeId")
+                    b.Property<Guid>("ParentSizeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -816,7 +819,8 @@ namespace SnapSell.Presistance.Migrations
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.Size", "ParentSize")
                         .WithMany()
                         .HasForeignKey("ParentSizeId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ParentSize");
                 });

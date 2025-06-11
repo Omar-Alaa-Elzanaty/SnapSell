@@ -38,13 +38,14 @@ namespace SnapSell.Domain.Models.MongoDbEntities;
 
 
 [CollectionName("Products")]
-public class Product : BaseEntity
+public class Product:BaseEntity
 {
+
     [BsonElement("englishName")]
-    public required string EnglishName { get; set; }
+    public string EnglishName { get; set; }
 
     [BsonElement("arabicName")]
-    public required string ArabicName { get; set; }
+    public string ArabicName { get; set; }
 
     [BsonElement("englishDescription")]
     public string? EnglishDescription { get; set; }
@@ -57,11 +58,11 @@ public class Product : BaseEntity
     public List<Guid> CategoryIds { get; set; } = new();
 
     [BsonElement("variants")]
-    public virtual List<Variant> Variants { get; set; } = new();
+    public List<Variant> Variants { get; set; } = new();
 
     [BsonElement("paymentMethodIds")]
     [BsonRepresentation(BsonType.String)]
-    public List<Guid> PaymentMethodIds { get; set; } = new();
+    public List<PaymentMethod> PaymentMethods { get; set; } = new();
 
     [BsonElement("isFeatured")]
     public bool IsFeatured { get; set; }
@@ -86,7 +87,7 @@ public class Product : BaseEntity
     public int MaxDeliveryDays { get; set; }
 
     [BsonElement("images")]
-    public virtual List<ProductImage> Images { get; set; } = new();
+    public List<ProductImage> Images { get; set; } = new();
 
     [BsonElement("mainVideoUrl")]
     public string? MainVideoUrl { get; set; }

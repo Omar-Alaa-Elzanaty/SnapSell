@@ -9,5 +9,4 @@ public class Review : BaseEntity
     public double Score { get; set; }
     public string? Content { get; set; }
     public Guid ProductId { get; set; }
-    public virtual Product Product { get; set; }
 }

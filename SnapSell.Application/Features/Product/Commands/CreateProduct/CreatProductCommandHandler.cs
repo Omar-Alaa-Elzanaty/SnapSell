@@ -17,7 +17,7 @@ internal sealed class CreatProductCommandHandler(
     public async Task<Result<CreateProductResponse>> Handle(CreatProductCommand request,
         CancellationToken cancellationToken)
     {
-        var existingCategories = await unitOfWork.CategoryRepo.TheDbSet()
+        var existingCategories = await unitOfWork.CategoryRepo.Entities
             .Where(c => request.CategoryIds.Contains(c.Id))
             .ToListAsync(cancellationToken);
 
@@ -29,7 +29,7 @@ internal sealed class CreatProductCommandHandler(
                 statusCode: HttpStatusCode.BadRequest);
         }
 
-        var existingBrand = await unitOfWork.BrandsRepo.TheDbSet()
+        var existingBrand = await unitOfWork.BrandsRepo.Entities
             .SingleOrDefaultAsync(x => x.Id == request.BrandId, cancellationToken);
         if (existingBrand is null)
         {
@@ -48,17 +48,25 @@ internal sealed class CreatProductCommandHandler(
             var imageUrl = await mediaService.SaveAsync(image, MediaTypes.Image);
             product.Images.Add(new ProductImage
             {
-                ProductId = product.Id,
                 ImageUrl = imageUrl!,
                 IsMainImage = image.IsMain
             });
         }
 
+        var sizes = await unitOfWork.SizesRepo.Entities.Select(x=>x.Id).ToListAsync(cancellationToken);
         if (request.HasVariants)
         {
             product.Variants = request.Variants.Adapt<List<Variant>>();
             foreach (var variant in product.Variants)
             {
+                if (!sizes.Contains(variant.SizeId))
+                {
+                    return Result<CreateProductResponse>.Failure(
+                        $"Invalid size ID: {variant.SizeId}",
+                        HttpStatusCode.BadRequest);
+                }
+
+                variant.Id = Guid.NewGuid();
                 variant.ProductId = product.Id;
             }
         }

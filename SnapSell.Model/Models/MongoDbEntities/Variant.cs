@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Domain.Models.MongoDbEntities;
 
@@ -18,25 +17,29 @@ namespace SnapSell.Domain.Models.MongoDbEntities;
 //    public bool IsDefault { get; set; }
 //}
 
-public class Variant : BaseEntity
+public class Variant
 {
+    [BsonElement("id")]
+    [BsonRepresentation(BsonType.String)]
+    public Guid Id { get; set; }
+
     [BsonElement("productId")]
     [BsonRepresentation(BsonType.String)]
     public Guid ProductId { get; set; }
 
-    [BsonElement("size")]
+    [BsonElement("sizeId")]
     [BsonRepresentation(BsonType.String)]
-    public virtual Size Size { get; set; }
+    public Guid SizeId { get; set; }
 
     [BsonElement("color")]
     public string Color { get; set; } = string.Empty;
 
     [BsonElement("quantity")]
-    public int Quantity { get; set; }
+    public int? Quantity { get; set; }
 
     [BsonElement("price")]
     [BsonRepresentation(BsonType.Decimal128)]
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
     [BsonElement("salePrice")]
     [BsonRepresentation(BsonType.Decimal128)]
@@ -44,7 +47,7 @@ public class Variant : BaseEntity
 
     [BsonElement("costPrice")]
     [BsonRepresentation(BsonType.Decimal128)]
-    public decimal CostPrice { get; set; }
+    public decimal? CostPrice { get; set; }
 
     [BsonElement("sku")]
     public string? Sku { get; set; }

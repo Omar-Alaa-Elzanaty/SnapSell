@@ -19,8 +19,8 @@ public sealed record CreatProductCommand(
     List<MediaFileDto> Images,
     string EnglishDescription,
     string ArabicDescription,
-    int MinDeleveryDays,
-    int MaxDeleveryDays,
+    int MinDeliveryDays,
+    int MaxDeliveryDays,
     decimal? Price,
     decimal? SalePrice,
     decimal? CostPrice,
@@ -37,23 +37,22 @@ public sealed class CreateProductResponse
     public bool IsHidden { get; set; }
     public ShippingType ShippingType { get; set; }
     public ProductStatus ProductStatus { get; set; }
-    private List<PaymentMethod> PaymentMethods { get; set; }
+    public List<PaymentMethod> PaymentMethods { get; set; } = [];
     public List<ProductImageResponse> Images { get; set; } = [];
     public string EnglishDescription { get; set; }
     public string ArabicDescription { get; set; }
-    public int MinDeleveryDays { get; set; }
-    public int MaxDeleveryDays { get; set; }
+    public int MinDeliveryDays { get; set; }
+    public int MaxDeliveryDays { get; set; }
     public decimal? Price { get; set; }
     public decimal? SalePrice { get; set; }
     public decimal? CostPrice { get; set; }
-    private int? Quantity { get; set; }
+    public int? Quantity { get; set; }
     public string? Sku { get; set; }
     public List<CreateProductVariantResponse>? Variants { get; set; }
 }
 
 public sealed class ProductImageResponse
 {
-    public Guid ProductId { get; set; }
     public string? ImageUrl { get; set; }
     public bool IsMainImage { get; set; }
 }
@@ -61,25 +60,20 @@ public sealed class ProductImageResponse
 public sealed record CreatProductVariantDto(
     Guid SizeId,
     string Color,
-    int Quantity,
-    decimal Price,
+    int? Quantity,
+    decimal? Price,
     decimal? SalePrice,
-    decimal CoastPrice,
+    decimal? CostPrice,
     string? Sku,
     bool IsDefault);
 
 public sealed record CreateProductVariantResponse(
     Guid Id,
-    SizeDto Size,
+    Guid SizeId,
     string? Color,
-    int Quantity,
-    decimal Price,
+    int? Quantity,
+    decimal? Price,
     decimal? SalePrice,
-    decimal CoastPrice,
+    decimal? CostPrice,
     string? Sku,
     bool IsDefault);
-
-public sealed record SizeDto(
-    Guid Id,
-    string Name,
-    Guid ParentSizeId);

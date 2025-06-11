@@ -9,7 +9,6 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Models.Interfaces;
 using SnapSell.Domain.Models.MongoDbEntities;
 using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Presistance.Context;
@@ -57,31 +56,23 @@ namespace SnapSell.Presistance.Extensions
         }
         public static IServiceCollection AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            // Register the Guid serializer globally (only once)
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
-
-            // 1. Bind configuration
             services.Configure<MongoDbSettings>(configuration.GetSection(MongoDbSettings.SectionName));
 
-            // 2. Register settings interface
             services.AddSingleton<IMongoDbSettings>(sp =>
                 sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
-            // 3. Register MongoClient (thread-safe singleton)
             services.AddSingleton<IMongoClient>(sp =>
                 new MongoClient(sp.GetRequiredService<IMongoDbSettings>().ConnectionString));
 
-            // 4. Register MongoDbContext (scoped)
             services.AddScoped<MongoDbContext>();
-
-            // 5. Register each Mongo collection manually
             services.AddMongoCollection<Product>();
 
             return services;
         }
 
-        public static IServiceCollection AddMongoCollection<T>(this IServiceCollection services) where T : class
+        public static IServiceCollection AddMongoCollection<T>(this IServiceCollection services) where T : BaseEntity
         {
             return services.AddScoped<IMongoCollection<T>>(sp =>
             {

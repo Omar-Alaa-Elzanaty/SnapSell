@@ -1,16 +1,18 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
 using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
 using SnapSell.Application.Features.product.Commands.CreateProduct;
 using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
+using SnapSell.Application.Features.product.Queries.GetSizes;
 using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
-//[Authorize(Roles = "Seller")]
+[Authorize(Roles = "Seller")]
 public sealed class ProductController(ISender sender) : ApiControllerBase
 {
     [HttpGet("GetAllBrands")]
@@ -26,6 +28,14 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
     {
         var query = new GetAllCategoriesQuery();
 
+        var result = await sender.Send(query, cancellationToken);
+        return await HandleMediatorResult(result);
+    }
+
+    [HttpGet("GetAllSizes")]
+    public async Task<ActionResult<Result<IReadOnlyList<GetAllSizesResponse>>>> GetAllSizess(CancellationToken cancellationToken)
+    {
+        var query = new GetAllSizesQuery();
         var result = await sender.Send(query, cancellationToken);
         return await HandleMediatorResult(result);
     }

@@ -1,4 +1,5 @@
 ﻿{
   "Welcome": "مرحبًا بك في SnapSell",
-  "StoreNotFound": "المتجر غير موجود."
+  "StoreNotFound": "المتجر غير موجود.",
+  "BrandIdIsRequired" : ""
 }

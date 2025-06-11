@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SnapSell.Presistance.Context;
 
@@ -11,9 +12,11 @@ using SnapSell.Presistance.Context;
 namespace SnapSell.Presistance.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    partial class SqlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250610153219_RemoveProducts")]
+    partial class RemoveProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -617,32 +620,24 @@ namespace SnapSell.Presistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdatedBy")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParentSizeId")
+                    b.Property<Guid>("ParentSizeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentSizeId");
 
                     b.ToTable("Sizes");
                 });
@@ -809,16 +804,6 @@ namespace SnapSell.Presistance.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Size", b =>
-                {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Size", "ParentSize")
-                        .WithMany()
-                        .HasForeignKey("ParentSizeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("ParentSize");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Store", b =>

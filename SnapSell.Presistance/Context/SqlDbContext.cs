@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SnapSell.Domain.Models.Interfaces;
-using SnapSell.Domain.Models.MongoDbEntities;
 using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Presistance.Extensions;
 using System.Security.Claims;
@@ -15,12 +14,13 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
 {
     public DbSet<Category> Categories { get; set; }
     public DbSet<Brand> Brands { get; set; }
-    public DbSet<Variant> Variants { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<OrderAddress> OrderAddresses { get; set; }
     public DbSet<ShoppingBag> ShoppingBags { get; set; }
     public DbSet<Review> Reviews { get; set; }
+
+    public DbSet<Size> Sizes { get; set; }
 
     //public DbSet<CacheCode> CacheCodes { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

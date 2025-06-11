@@ -21,11 +21,10 @@ public class Order : BaseEntity
 public class OrderItem : BaseEntity
 {
     public Guid ProductId { get; set; }
-    public virtual Product Product { get; set; }
+    public Guid? VariantId { get; set; }
+
     public required Guid OrderId { get; set; }
     public virtual Order Order { get; set; }
-    public Guid? VariantId { get; set; }
-    public virtual Variant Variant { get; set; }
     public int Quantity { get; set; }
     public decimal ProductVariantUnitPrice { get; set; }
     public decimal TotalPrice => Quantity * ProductVariantUnitPrice;

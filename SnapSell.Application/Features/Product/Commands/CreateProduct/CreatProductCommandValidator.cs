@@ -1,11 +1,20 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
 public sealed class CreatProductCommandValidator : AbstractValidator<CreatProductCommand>
 {
-    public CreatProductCommandValidator()
+    private static readonly PaymentMethod[] AllowedPaymentMethods =
+    {
+        PaymentMethod.PurchaseCard,
+        PaymentMethod.CashOnDelivery,
+        PaymentMethod.Fawry,
+        PaymentMethod.Forsa,
+        PaymentMethod.PayTabsAman
+    };
+    public CreatProductCommandValidator(IStringLocalizer<CreatProductCommandValidator> stringLocalizer)
     {
         RuleFor(c => c.BrandId)
             .NotEmpty().WithMessage("BrandId is required");
@@ -28,14 +37,14 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
             .Must(x => Enum.IsDefined(typeof(ProductStatus), x))
             .WithMessage("Invalid product status.");
 
-        RuleFor(x => x.MinDeleveryDays)
+        RuleFor(x => x.MinDeliveryDays)
             .GreaterThanOrEqualTo(0).WithMessage("Minimum delivery days must be 0 or more");
 
-        RuleFor(x => x.MaxDeleveryDays)
-            .GreaterThanOrEqualTo(x => x.MinDeleveryDays)
-            .When(x => x.MinDeleveryDays >= 0)
+        RuleFor(x => x.MaxDeliveryDays)
+            .GreaterThanOrEqualTo(x => x.MinDeliveryDays)
+            .When(x => x.MaxDeliveryDays >= 0)
             .WithMessage("Maximum delivery days must be greater than or equal to minimum delivery days");
-        
+
         RuleFor(x => x.Images)
             .NotEmpty().WithMessage("At least one image is required")
             .Must(images => images.Count <= 10).WithMessage("Maximum 10 images allowed")
@@ -51,7 +60,7 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
 
             RuleFor(x => x.SalePrice)
                 .LessThan(x => x.Price)
-                .When(x => x.SalePrice.HasValue)
+                .When(x => x.SalePrice > x.Price)
                 .WithMessage("Sale price must be less than price");
 
             RuleFor(x => x.Quantity)
@@ -62,6 +71,10 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
                 .NotEmpty().WithMessage("SKU is required for non-variant products")
                 .MaximumLength(50).WithMessage("SKU must not exceed 50 characters");
 
+            RuleFor(x => x.CostPrice)
+                .NotNull().WithMessage("CoastPrice is required for non-variant products")
+                .GreaterThanOrEqualTo(0).WithMessage("CoastPrice must be 0 or more");
+
             RuleFor(x => x.Variants)
                 .NotNull().WithMessage("Variants must not be null when HasVariants is false")
                 .Must(v => !v.Any())
@@ -71,7 +84,7 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
         When(x => x.HasVariants, () =>
         {
             RuleFor(x => x.Variants)
-                .Null().When(x=>x.HasVariants == false)
+                .Null().When(x => x.HasVariants == false)
                 .NotNull().WithMessage("Variants are required for variant products")
                 .NotEmpty().WithMessage("At least one variant is required for variant products")
                 .Must(variants => variants.Count <= 50).WithMessage("Maximum 50 variants allowed")
@@ -83,6 +96,9 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
 
             RuleFor(x => x.SalePrice)
                 .Null().WithMessage("SalePrice must be null for variant products");
+
+            RuleFor(x => x.CostPrice)
+                .Null().WithMessage("CoastPrice must be null for variant products");
 
             RuleFor(x => x.Quantity)
                 .Null().WithMessage("Quantity must be null for variant products");

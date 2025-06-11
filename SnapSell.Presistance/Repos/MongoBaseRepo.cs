@@ -1,14 +1,21 @@
-﻿using MongoDB.Driver;
-using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Presistance.Context;
-using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
+using MongoDB.Driver;
+using SnapSell.Application.Interfaces.Repos;
+using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Presistance.Context;
+using SnapSell.Presistance.Extensions;
+using System.Linq.Expressions;
+using Microsoft.AspNetCore.Http;
 
 namespace SnapSell.Presistance.Repos;
 
-public class MongoBaseRepo<T>(MongoDbContext dbContext, IMongoCollection<T> collection, string collectionName = null)
+public class MongoBaseRepo<T>(IHttpContextAccessor httpContextAccessor,
+    MongoDbContext dbContext, 
+    IMongoCollection<T> collection, 
+    string collectionName = null)
     : IMongoBaseRepo<T>
-    where T : class
+    where T : BaseEntity
 {
     private readonly IMongoCollection<T> _collection = dbContext.GetCollection<T>(collectionName);
     public IMongoCollection<T> Collection { get; } = collection;
@@ -17,6 +24,7 @@ public class MongoBaseRepo<T>(MongoDbContext dbContext, IMongoCollection<T> coll
     // Create operations
     public virtual async Task InsertOneAsync(T entity, CancellationToken cancellationToken = default)
     {
+        entity.ApplyAuditableEntities(EntityState.Added, httpContextAccessor);
         await _collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
     }
 

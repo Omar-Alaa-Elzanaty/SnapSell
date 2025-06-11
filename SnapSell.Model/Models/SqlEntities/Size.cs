@@ -7,5 +7,6 @@ public class Size:BaseEntity
     [BsonElement("name")]
     public string? Name { get; set; }
     [BsonElement("parentSizeId")]
-    public Guid ParentSizeId { get; set; }
+    public Guid? ParentSizeId { get; set; }
+    public virtual Size? ParentSize { get; set; }
 }

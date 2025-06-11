@@ -1,4 +1,5 @@
 {
   "Welcome": "Welcome to SnapSell",
-  "StoreNotFound": "Store not found."
+  "StoreNotFound": "Store not found.",
+  "BrandIdIsRequired": "BrandId is required"
 }

@@ -17,6 +17,7 @@ public class UnitOfWork : IUnitOfWork
     public ISQLBaseRepo<Store> StoresRepo { get; set; }
     public ISQLBaseRepo<Client> ClientsRepo { get; set; }
     public ISQLBaseRepo<Brand> BrandsRepo { get; set; }
+    public ISQLBaseRepo<Size> SizesRepo { get; set; }
 
     public UnitOfWork(
         SqlDbContext context,
@@ -26,7 +27,8 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Store> stores,
         ISQLBaseRepo<Client> clients,
         ISQLBaseRepo<Brand> brands,
-        ISQLBaseRepo<Category> categoryRepo)
+        ISQLBaseRepo<Category> categoryRepo,
+        ISQLBaseRepo<Size> sizesRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -36,6 +38,7 @@ public class UnitOfWork : IUnitOfWork
         ClientsRepo = clients;
         BrandsRepo = brands;
         CategoryRepo = categoryRepo;
+        SizesRepo = sizesRepo;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

@@ -14,6 +14,7 @@ namespace SnapSell.Application.Interfaces
         ISQLBaseRepo<Store> StoresRepo { get; set; }
         ISQLBaseRepo<Client> ClientsRepo { get; set; }
         ISQLBaseRepo<Brand> BrandsRepo { get; set; }
+        ISQLBaseRepo<Size> SizesRepo { get; set; }
         Task<int> SaveAsync(CancellationToken cancellationToken = default);
     }
 }

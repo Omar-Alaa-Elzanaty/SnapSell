@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
 using SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
+using SnapSell.Application.Features.product.Commands.CreateProduct;
 using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Domain.Models.MongoDbEntities;
 
@@ -18,6 +19,8 @@ public class VariantMappingConfig : IRegister
 
         config.NewConfig<Variant, VariantResponseInGetAllProductsToSeller>()
             .Map(dest => dest.VariantId, src => src.Id);
+
+        config.NewConfig<Variant, CreateProductVariantResponse>();
 
     }
 }
