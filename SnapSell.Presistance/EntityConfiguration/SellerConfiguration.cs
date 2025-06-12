@@ -4,13 +4,13 @@ using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Presistance.EntityConfiguration
 {
-    public class ClientConfiguration : IEntityTypeConfiguration<Client>
+    internal class SellerConfiguration : IEntityTypeConfiguration<Seller>
     {
-        public void Configure(EntityTypeBuilder<Client> builder)
+        public void Configure(EntityTypeBuilder<Seller> builder)
         {
             builder.HasOne(x => x.Account)
                 .WithOne()
-                .HasForeignKey<Client>(x => x.Id);
+                .HasForeignKey<Seller>(x => x.Id);
         }
     }
 }

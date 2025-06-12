@@ -33,7 +33,7 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
     }
 
     [HttpGet("GetAllSizes")]
-    public async Task<ActionResult<Result<IReadOnlyList<GetAllSizesResponse>>>> GetAllSizess(CancellationToken cancellationToken)
+    public async Task<ActionResult<Result<IReadOnlyList<GetAllSizesResponse>>>> GetAllSizes(CancellationToken cancellationToken)
     {
         var query = new GetAllSizesQuery();
         var result = await sender.Send(query, cancellationToken);
