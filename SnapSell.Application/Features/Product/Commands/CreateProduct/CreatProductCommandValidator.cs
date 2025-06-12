@@ -6,14 +6,6 @@ namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
 public sealed class CreatProductCommandValidator : AbstractValidator<CreatProductCommand>
 {
-    private static readonly PaymentMethod[] AllowedPaymentMethods =
-    {
-        PaymentMethod.PurchaseCard,
-        PaymentMethod.CashOnDelivery,
-        PaymentMethod.Fawry,
-        PaymentMethod.Forsa,
-        PaymentMethod.PayTabsAman
-    };
     public CreatProductCommandValidator(IStringLocalizer<CreatProductCommandValidator> stringLocalizer)
     {
         RuleFor(c => c.BrandId)
@@ -28,14 +20,18 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
 
         RuleFor(x => x.ArabicName)
             .NotEmpty().WithMessage("Arabic name is required");
-
         RuleFor(x => x.ShippingType)
-            .Must(x => Enum.IsDefined(typeof(ShippingType), x))
-            .WithMessage("Invalid shipping type.");
+            .Must(value => value == 1 || value == 2)
+            .WithMessage("ShippingType must be 1 (Paid) or 2 (Free).");
 
         RuleFor(x => x.ProductStatus)
-            .Must(x => Enum.IsDefined(typeof(ProductStatus), x))
-            .WithMessage("Invalid product status.");
+            .Must(value => value == 1 || value == 2)
+            .WithMessage("ProductStatus must be 1 (Used) or 2 (New).");
+
+        RuleForEach(x => x.PaymentMethods)
+            .Must(value => value >= 1 && value <= 5)
+            .WithMessage(
+                "PaymentMethod must be one of the following: 1 (PurchaseCard), 2 (CashOnDelivery), 3 (Fawry), 4 (Forsa), 5 (PayTabsAman).");
 
         RuleFor(x => x.MinDeliveryDays)
             .GreaterThanOrEqualTo(0).WithMessage("Minimum delivery days must be 0 or more");
@@ -51,7 +47,6 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
             .Must(images => images.Count(img => img.IsMain) == 1)
             .WithMessage("Exactly one image must be marked as main.");
 
-        // Conditional Validation based on HasVariants
         When(x => x.HasVariants == false, () =>
         {
             RuleFor(x => x.Price)

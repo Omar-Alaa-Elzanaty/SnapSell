@@ -3,20 +3,6 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SnapSell.Domain.Models.MongoDbEntities;
 
-//public class Variant : BaseEntity
-//{
-//    public Guid ProductId { get; set; }
-//    public virtual Product Product { get; set; }
-//    public Size Size { get; set; }
-//    public string Color { get; set; }
-//    public int Quantity { get; set; }
-//    public decimal Price { get; set; }
-//    public decimal CoastPrice { get; set; }
-//    public decimal? SalePrice { get; set; }
-//    public string? Sku { get; set; }
-//    public bool IsDefault { get; set; }
-//}
-
 public class Variant
 {
     [BsonElement("id")]

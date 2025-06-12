@@ -11,8 +11,7 @@ namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
 internal sealed class CreatProductCommandHandler(
     IUnitOfWork unitOfWork,
-    IMediaService mediaService)
-    : IRequestHandler<CreatProductCommand, Result<CreateProductResponse>>
+    IMediaService mediaService) : IRequestHandler<CreatProductCommand, Result<CreateProductResponse>>
 {
     public async Task<Result<CreateProductResponse>> Handle(CreatProductCommand request,
         CancellationToken cancellationToken)
@@ -53,7 +52,7 @@ internal sealed class CreatProductCommandHandler(
             });
         }
 
-        var sizes = await unitOfWork.SizesRepo.Entities.Select(x=>x.Id).ToListAsync(cancellationToken);
+        var sizes = await unitOfWork.SizesRepo.Entities.Select(x => x.Id).ToListAsync(cancellationToken);
         if (request.HasVariants)
         {
             product.Variants = request.Variants.Adapt<List<Variant>>();
@@ -62,8 +61,8 @@ internal sealed class CreatProductCommandHandler(
                 if (!sizes.Contains(variant.SizeId))
                 {
                     return Result<CreateProductResponse>.Failure(
-                        $"Invalid size ID: {variant.SizeId}",
-                        HttpStatusCode.BadRequest);
+                        message: $"Invalid size ID: {variant.SizeId}",
+                        statusCode: HttpStatusCode.BadRequest);
                 }
 
                 variant.Id = Guid.NewGuid();

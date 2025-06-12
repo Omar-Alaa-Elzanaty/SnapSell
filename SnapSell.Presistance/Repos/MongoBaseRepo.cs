@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace SnapSell.Presistance.Repos;
 
-public class MongoBaseRepo<T>(IHttpContextAccessor httpContextAccessor,
-    MongoDbContext dbContext, 
-    IMongoCollection<T> collection, 
+public class MongoBaseRepo<T>(
+    IHttpContextAccessor httpContextAccessor,
+    MongoDbContext dbContext,
+    IMongoCollection<T> collection,
     string collectionName = null)
     : IMongoBaseRepo<T>
     where T : BaseEntity
@@ -21,7 +22,7 @@ public class MongoBaseRepo<T>(IHttpContextAccessor httpContextAccessor,
     public IMongoCollection<T> Collection { get; } = collection;
 
     public IQueryable<T> Entities => _collection.AsQueryable();
-    // Create operations
+
     public virtual async Task InsertOneAsync(T entity, CancellationToken cancellationToken = default)
     {
         entity.ApplyAuditableEntities(EntityState.Added, httpContextAccessor);
@@ -36,7 +37,6 @@ public class MongoBaseRepo<T>(IHttpContextAccessor httpContextAccessor,
         await _collection.InsertManyAsync(entities, cancellationToken: cancellationToken);
     }
 
-    // Read operations
     public virtual async Task<T> FindByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
@@ -71,7 +71,6 @@ public class MongoBaseRepo<T>(IHttpContextAccessor httpContextAccessor,
         return await _collection.Find(filter).ToListAsync(cancellationToken);
     }
 
-    // Update operations
     public virtual async Task<bool> UpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update,
         CancellationToken cancellationToken = default)
     {
@@ -88,14 +87,12 @@ public class MongoBaseRepo<T>(IHttpContextAccessor httpContextAccessor,
 
     public virtual async Task<bool> UpdateOneAsync(T entity, CancellationToken cancellationToken = default)
     {
-        // This assumes your entity has an Id property mapped to _id
         var id = GetIdValue(entity);
         var filter = Builders<T>.Filter.Eq("_id", id);
         var result = await _collection.ReplaceOneAsync(filter, entity, cancellationToken: cancellationToken);
         return result.ModifiedCount > 0;
     }
 
-    // Delete operations
     public virtual async Task<bool> DeleteAsync(FilterDefinition<T> filter,
         CancellationToken cancellationToken = default)
     {
@@ -117,7 +114,6 @@ public class MongoBaseRepo<T>(IHttpContextAccessor httpContextAccessor,
         return result.DeletedCount > 0;
     }
 
-    // Utility operations
     public virtual async Task<long> CountAsync(FilterDefinition<T> filter,
         CancellationToken cancellationToken = default)
     {
@@ -144,7 +140,6 @@ public class MongoBaseRepo<T>(IHttpContextAccessor httpContextAccessor,
 
     private object GetIdValue(T entity)
     {
-        // Check for common ID property names (case insensitive)
         var idProperty = typeof(T).GetProperties()
             .FirstOrDefault(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase) ||
                                  p.Name.Equals("_id", StringComparison.OrdinalIgnoreCase));

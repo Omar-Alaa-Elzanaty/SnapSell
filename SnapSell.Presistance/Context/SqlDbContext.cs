@@ -28,6 +28,7 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Account>().ToTable("Accounts")
             .Property(x => x.Id).ValueGeneratedOnAdd();
+
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
         modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
         modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");

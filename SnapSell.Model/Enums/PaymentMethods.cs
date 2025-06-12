@@ -2,9 +2,9 @@
 
 public enum PaymentMethod
 {
-    PurchaseCard,       // كروت مشتريات
-    CashOnDelivery,     // الدفع عند الاستلام
-    Fawry,              // فاليـو
-    Forsa,              // فرصة
-    PayTabsAman         // PayTabs Aman
+    PurchaseCard = 1, // كروت مشتريات
+    CashOnDelivery = 2, // الدفع عند الاستلام
+    Fawry = 3, // فاليـو
+    Forsa = 4, // فرصة
+    PayTabsAman = 5 // PayTabs Aman
 }
