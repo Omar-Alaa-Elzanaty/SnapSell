@@ -19,7 +19,7 @@ namespace SnapSell.Infrastructure.Services.MailServices
             {
                 var sendResponse = await _fluentEmail
                                         .Create()
-                                        .SetFrom(request.From, "PSolve")
+                                        .SetFrom(request.From, "SnapSell")
                                         .To(request.To)
                                         .Subject(request.Subject)
                                         .UsingTemplate(request.Body, request.BodyData)

@@ -35,7 +35,7 @@ internal sealed class RegisterSellerCommandHandler(
         if (!result.Succeeded)
         {
             return Result<RegisterSellerResult>.Failure(
-                message: "Creation Of user proess is failed",
+                message: "Creation Of user process is failed",
                 statusCode: HttpStatusCode.BadRequest);
         }
 
