@@ -1,5 +1,7 @@
 ﻿{
   "Welcome": "مرحبًا بك في SnapSell",
   "StoreNotFound": "المتجر غير موجود.",
-  "BrandIdIsRequired" : ""
+  "BrandIdIsRequired": "",
+  "EmailOtpSent": "تم إرسال رمز التحقق إلى بريدك الإلكتروني.",
+  "InvalidOtp": "رمز التحقق غير صالح. يرجى المحاولة مرة أخرى."
 }

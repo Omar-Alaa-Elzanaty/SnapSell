@@ -2,10 +2,10 @@
 
 namespace SnapSell.Domain.Models.SqlEntities
 {
-    public class Store
+    public class Store : BaseEntity
     {
         public Guid SellerId { get; set; }
-        public Seller Seller { get; set; } 
+        public Seller Seller { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int MinimumDeliverPeriod { get; set; }

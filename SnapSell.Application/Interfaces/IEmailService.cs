@@ -8,5 +8,6 @@ namespace SnapSell.Application.Interfaces
 {
     public interface IEmailService
     {
+        public Task<bool> SendEmailConfirmationOtp(string email, string otp);
     }
 }
