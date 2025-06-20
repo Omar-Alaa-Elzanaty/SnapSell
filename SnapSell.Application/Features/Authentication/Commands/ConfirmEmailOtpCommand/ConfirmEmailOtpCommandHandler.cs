@@ -44,7 +44,7 @@ namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpC
 
             if (user is null)
             {
-                return Result<ConfirmEmailOtpCommandResponse>.Success();
+                return Result<ConfirmEmailOtpCommandResponse>.Success(new ConfirmEmailOtpCommandResponse());
             }
 
             var roles = await _userManager.GetRolesAsync(user);
