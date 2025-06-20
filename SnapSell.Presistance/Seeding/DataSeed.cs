@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Domain.Constants;
-using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Context;
 
 namespace SnapSell.Presistance.Seeding;

@@ -7,15 +7,28 @@ using Mapster;
 namespace SnapSell.Application.Features.product.Queries.GetSizes;
 
 internal sealed class GetAllSizesQueryHandler(IUnitOfWork unitOfWork)
-    : IRequestHandler<GetAllSizesQuery, Result<IReadOnlyList<GetAllSizesResponse>>>
+    : IRequestHandler<GetAllSizesQuery, Result<IReadOnlyList<GetAllSizesGroupedResponse>>>
 {
-    public async Task<Result<IReadOnlyList<GetAllSizesResponse>>> Handle(GetAllSizesQuery request,
+    public async Task<Result<IReadOnlyList<GetAllSizesGroupedResponse>>> Handle(GetAllSizesQuery request,
         CancellationToken cancellationToken)
     {
         var sizes = await unitOfWork.SizesRepo.GetAllAsync();
-        return Result<IReadOnlyList<GetAllSizesResponse>>.Success(
-            data: sizes.Adapt<IReadOnlyList<GetAllSizesResponse>>(),
+
+        var sizeDtos = sizes.Adapt<List<GetAllSizesResponse>>();
+        var sizesInMemory = sizeDtos.ToDictionary(s => s.Id);
+
+        var grouped = sizeDtos
+            .Where(s => s.ParentSizeId != null)
+            .GroupBy(s => s.ParentSizeId!.Value)
+            .Select(group =>
+            {
+                var parent = sizesInMemory.GetValueOrDefault(group.Key);
+                return new GetAllSizesGroupedResponse(parent, group.ToList());
+            }).ToList();
+
+        return Result<IReadOnlyList<GetAllSizesGroupedResponse>>.Success(
+            data: grouped,
             message: "Brands returned Successfully.",
-            HttpStatusCode.OK);
+            statusCode: HttpStatusCode.OK);
     }
 }

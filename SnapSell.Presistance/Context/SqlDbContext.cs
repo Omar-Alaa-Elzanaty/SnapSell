@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SnapSell.Domain.Models.Interfaces;
 using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Extensions;
 using System.Security.Claims;
 
@@ -22,6 +23,7 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<Seller> Sellers { get; set; }
     public DbSet<Client> Clients { get; set; }
     public DbSet<Size> Sizes { get; set; }
+    public DbSet<Store> Stores { get; set; }
 
     //public DbSet<CacheCode> CacheCodes { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

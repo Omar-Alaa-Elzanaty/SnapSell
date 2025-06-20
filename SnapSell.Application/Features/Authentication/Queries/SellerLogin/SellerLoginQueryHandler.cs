@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SnapSell.Application.Interfaces.Authentication;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Application.Features.Authentication.Queries.SellerLogin;
 

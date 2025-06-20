@@ -158,91 +158,6 @@ namespace SnapSell.Presistance.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Account", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("Accounts", (string)null);
-                });
-
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Brand", b =>
                 {
                     b.Property<Guid>("Id")
@@ -321,30 +236,102 @@ namespace SnapSell.Presistance.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Client", b =>
+            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("About")
-                        .IsRequired()
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Client");
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("Accounts", (string)null);
+
+                    b.HasDiscriminator().HasValue("Account");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Order", b =>
@@ -649,14 +636,30 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Store", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte>("DeliverPeriodTypes")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogoUrl")
@@ -672,12 +675,37 @@ namespace SnapSell.Presistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Store");
+                    b.HasIndex("SellerId")
+                        .IsUnique();
+
+                    b.ToTable("Stores");
+                });
+
+            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", b =>
+                {
+                    b.HasBaseType("SnapSell.Domain.Models.SqlEntities.Identitiy.Account");
+
+                    b.Property<string>("About")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Client");
+                });
+
+            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Identitiy.Seller", b =>
+                {
+                    b.HasBaseType("SnapSell.Domain.Models.SqlEntities.Identitiy.Account");
+
+                    b.HasDiscriminator().HasValue("Seller");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -691,7 +719,7 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Account", null)
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -700,7 +728,7 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Account", null)
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -715,7 +743,7 @@ namespace SnapSell.Presistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Account", null)
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -724,7 +752,7 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Account", null)
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -741,17 +769,6 @@ namespace SnapSell.Presistance.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Client", b =>
-                {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Account", "Account")
-                        .WithOne()
-                        .HasForeignKey("SnapSell.Domain.Models.SqlEntities.Client", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Order", b =>
                 {
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.OrderAddress", "BillingAddress")
@@ -759,7 +776,7 @@ namespace SnapSell.Presistance.Migrations
                         .HasForeignKey("BillingAddressId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Client", "Client")
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -780,7 +797,7 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.OrderAddress", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Client", null)
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", null)
                         .WithMany("Addresses")
                         .HasForeignKey("ClientId");
                 });
@@ -798,11 +815,11 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Review", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Client", null)
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", null)
                         .WithMany("Reviews")
                         .HasForeignKey("ClientId");
 
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Account", "User")
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -823,16 +840,21 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Store", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Account", "Account")
-                        .WithOne()
-                        .HasForeignKey("SnapSell.Domain.Models.SqlEntities.Store", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Seller", "Seller")
+                        .WithOne("Store")
+                        .HasForeignKey("SnapSell.Domain.Models.SqlEntities.Store", "SellerId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Client", b =>
+            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Order", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", b =>
                 {
                     b.Navigation("Addresses");
 
@@ -841,9 +863,10 @@ namespace SnapSell.Presistance.Migrations
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Order", b =>
+            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Identitiy.Seller", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("Store")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -9,9 +9,7 @@ using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Features.brands.Queries;
 
-internal sealed class GetAllPrandsQueryHandler(
-    ISQLBaseRepo<Brand> brandaRepository,
-    IHttpContextAccessor httpContextAccessor)
+internal sealed class GetAllPrandsQueryHandler(ISQLBaseRepo<Brand> brandaRepository)
     : IRequestHandler<GetAllPrandsQuery, Result<List<GetAllBrandsResponse>>>
 {
     public async Task<Result<List<GetAllBrandsResponse>>> Handle(GetAllPrandsQuery request,

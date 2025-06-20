@@ -1,21 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SnapSell.Domain.Models.SqlEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SnapSell.Presistance.EntityConfiguration
+namespace SnapSell.Presistance.EntityConfiguration;
+
+public class StoreConfiguration : AuditableEntityConfiguration<Store>
 {
-    public class StoreConfiguration : IEntityTypeConfiguration<Store>
+    public override void Configure(EntityTypeBuilder<Store> builder)
     {
-        public void Configure(EntityTypeBuilder<Store> builder)
-        {
-            builder.HasOne(x => x.Account)
-                .WithOne()
-                .HasForeignKey<Store>(x => x.Id);
-        }
+        builder.HasOne(s => s.Seller)
+            .WithOne(seller => seller.Store)
+            .HasForeignKey<Store>(s => s.SellerId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

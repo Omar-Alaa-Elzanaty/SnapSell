@@ -11,6 +11,7 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Models.MongoDbEntities;
 using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Context;
 using SnapSell.Presistance.Repos;
 
@@ -54,7 +55,9 @@ namespace SnapSell.Presistance.Extensions
 
             return services;
         }
-        public static IServiceCollection AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
+
+        private static IServiceCollection AddMongoDbContext(this IServiceCollection services, 
+            IConfiguration configuration)
         {
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
@@ -72,7 +75,7 @@ namespace SnapSell.Presistance.Extensions
             return services;
         }
 
-        public static IServiceCollection AddMongoCollection<T>(this IServiceCollection services) where T : BaseEntity
+        private static IServiceCollection AddMongoCollection<T>(this IServiceCollection services) where T : BaseEntity
         {
             return services.AddScoped<IMongoCollection<T>>(sp =>
             {
@@ -80,6 +83,5 @@ namespace SnapSell.Presistance.Extensions
                 return context.GetCollection<T>();
             });
         }
-
     }
 }

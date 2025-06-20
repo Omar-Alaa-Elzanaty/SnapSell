@@ -27,13 +27,12 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
     public async Task<ActionResult<Result<List<GetAllCategoriesResponse>>>> GetAllCategories(CancellationToken cancellationToken)
     {
         var query = new GetAllCategoriesQuery();
-
         var result = await sender.Send(query, cancellationToken);
         return await HandleMediatorResult(result);
     }
 
     [HttpGet("GetAllSizes")]
-    public async Task<ActionResult<Result<IReadOnlyList<GetAllSizesResponse>>>> GetAllSizes(CancellationToken cancellationToken)
+    public async Task<ActionResult<Result<IReadOnlyList<GetAllSizesGroupedResponse>>>> GetAllSizes(CancellationToken cancellationToken)
     {
         var query = new GetAllSizesQuery();
         var result = await sender.Send(query, cancellationToken);
@@ -64,7 +63,6 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var query = new GetAllProductsForSpecificSellerQuery(sellerId, request);
-
         var result = await sender.Send(query, cancellationToken);
         return await HandleMediatorResult(result);
     }

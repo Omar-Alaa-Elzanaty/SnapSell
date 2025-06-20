@@ -8,14 +8,14 @@ namespace SnapSell.Presentation.EndPoints;
 [ApiController]
 public abstract class ApiControllerBase : ControllerBase
 {
-    protected async Task<ActionResult<Result<TResult>>> HandleMediatorResult<TResult>(Result<TResult> result)
+    protected Task<ActionResult<Result<TResult>>> HandleMediatorResult<TResult>(Result<TResult> result)
     {
-        return StatusCode((int)result.StatusCode, result);
+        return Task.FromResult<ActionResult<Result<TResult>>>(StatusCode((int)result.StatusCode, result));
     }
 
-    protected async Task<ActionResult<PaginatedResult<TResult>>> HandleMediatorResult<TResult>(
+    protected Task<ActionResult<PaginatedResult<TResult>>> HandleMediatorResult<TResult>(
         PaginatedResult<TResult> result)
     {
-        return StatusCode((int)result.StatusCode, result);
+        return Task.FromResult<ActionResult<PaginatedResult<TResult>>>(StatusCode((int)result.StatusCode, result));
     }
 }

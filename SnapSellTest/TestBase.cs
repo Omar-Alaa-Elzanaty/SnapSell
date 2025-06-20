@@ -14,7 +14,7 @@ using SnapSell.Application.Extensions.Services;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Constants;
-using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Infrastructure.Extnesions;
 using SnapSell.Presistance;
 using SnapSell.Presistance.Context;
@@ -40,7 +40,7 @@ namespace SnapSell.Test
                 .AddMemoryCache();
 
             //AddMongoDbContext(_builder.Services, _builder.Configuration);
-            SeedDateAsync().GetAwaiter();
+            //SeedDateAsync().GetAwaiter();
         }
 
         private void AddSQLLiteDbContext(IServiceCollection services, IConfiguration configuration, IHttpContextAccessor contextAccessor = null)
@@ -92,30 +92,30 @@ namespace SnapSell.Test
         }
 
 
-        private async Task SeedDateAsync()
-        {
-            try
-            {
-                var roleManger = _serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = _serviceProvider.GetRequiredService<UserManager<Account>>();
+        //private async Task SeedDateAsync()
+        //{
+        //    try
+        //    {
+        //        var roleManger = _serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        //        var userManager = _serviceProvider.GetRequiredService<UserManager<Account>>();
 
-                var admin = new Account()
-                {
-                    FullName = "admin",
-                    Email = "admin@gmail.com",
-                    UserName = "admin"
-                };
+        //        var admin = new Account()
+        //        {
+        //            FullName = "admin",
+        //            Email = "admin@gmail.com",
+        //            UserName = "admin"
+        //        };
 
-                await userManager.CreateAsync(admin, "123@Abc");
+        //        await userManager.CreateAsync(admin, "123@Abc");
 
-                await roleManger.CreateAsync(new(Roles.Admin));
-                await roleManger.CreateAsync(new(Roles.Client));
-            }
-            catch
-            {
+        //        await roleManger.CreateAsync(new(Roles.Admin));
+        //        await roleManger.CreateAsync(new(Roles.Client));
+        //    }
+        //    catch
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
         public IUnitOfWork GetUnitOfWork()
         {

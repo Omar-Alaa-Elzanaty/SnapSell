@@ -4,6 +4,7 @@ using SnapSell.Application.Features.Authentication.Commands.RegisterCustomer;
 using SnapSell.Application.Features.Authentication.Commands.RegisterSeller;
 using SnapSell.Application.Features.Authentication.Queries.CustomerLogIn;
 using SnapSell.Application.Features.Authentication.Queries.SellerLogin;
+using SnapSell.Application.Features.store.Commands.CreateStore;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
@@ -39,6 +40,14 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(query, cancellationToken);
+        return await HandleMediatorResult(result);
+    }
+    
+    [HttpPost("CreateStore")]
+    public async Task<ActionResult<Result<CreateStoreResponse>>> CreateStore([FromBody] CreateStoreCommand command,
+        CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(command, cancellationToken);
         return await HandleMediatorResult(result);
     }
 }

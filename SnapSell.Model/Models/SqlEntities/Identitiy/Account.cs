@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace SnapSell.Domain.Models.SqlEntities;
+namespace SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 public class Account: IdentityUser
 {

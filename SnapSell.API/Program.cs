@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Serilog;
 using SnapSell.API;
@@ -22,8 +21,8 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services
-    .AddInfrastructure(builder.Configuration)
     .AddPresistance(builder.Configuration)
+    .AddInfrastructure(builder.Configuration)
     .AddApplication()
     .DepedencyInjectionService(builder.Configuration);
 

@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
-namespace SnapSell.Presistance.EntityConfiguration
+namespace SnapSell.Presistance.EntityConfiguration;
+
+public class ClientConfiguration : IEntityTypeConfiguration<Client>
 {
-    public class ClientConfiguration : IEntityTypeConfiguration<Client>
+    public void Configure(EntityTypeBuilder<Client> builder)
     {
-        public void Configure(EntityTypeBuilder<Client> builder)
-        {
-            builder.HasOne(x => x.Account)
-                .WithOne()
-                .HasForeignKey<Client>(x => x.Id);
-        }
+        
+        builder.HasMany(c => c.Orders)
+            .WithOne(o => o.Client)
+            .HasForeignKey(o => o.ClientId);
     }
 }

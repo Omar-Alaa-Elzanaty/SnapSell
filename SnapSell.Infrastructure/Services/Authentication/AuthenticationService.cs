@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using SnapSell.Application.Interfaces.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Infrastructure.Services.Authentication;
 
