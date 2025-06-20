@@ -1,5 +1,8 @@
 {
   "Welcome": "Welcome to SnapSell",
   "StoreNotFound": "Store not found.",
-  "BrandIdIsRequired": "BrandId is required"
+  "BrandIdIsRequired": "BrandId is required",
+  "EmailOtpSent": "An OTP has been sent to your email address.",
+  "InvalidOtp": "Invalid OTP. Please try again.",
+  "EmailOtpFailed": "Failed to send OTP to your email address. Please try again."
 }

@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpCommand;
 using SnapSell.Application.Features.Authentication.Commands.RegisterCustomer;
 using SnapSell.Application.Features.Authentication.Commands.RegisterSeller;
+using SnapSell.Application.Features.Authentication.Commands.SendConfirmationEmailOtp;
 using SnapSell.Application.Features.Authentication.Queries.CustomerLogIn;
 using SnapSell.Application.Features.Authentication.Queries.SellerLogin;
 using SnapSell.Application.Features.store.Commands.CreateStore;
@@ -42,12 +44,28 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         var result = await sender.Send(query, cancellationToken);
         return await HandleMediatorResult(result);
     }
-    
-    [HttpPost("CreateStore")]
-    public async Task<ActionResult<Result<CreateStoreResponse>>> CreateStore([FromBody] CreateStoreCommand command,
+
+    [HttpPost("SendEmailConfirmationOtp")]
+    public async Task<ActionResult<Result<string>>> SendEmailConfirmationOtp(SendConfirmationEmailOtpCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
         return await HandleMediatorResult(result);
     }
+
+    [HttpPost("ConfirmEmail")]
+    public async Task<ActionResult<Result<ConfirmEmailOtpCommandResponse>>>ConfirmEmail(ConfirmEmailOtpCommand command,
+        CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(command, cancellationToken);
+        return await HandleMediatorResult(result);
+    }
+    [HttpPost("CreateStore")]
+    public async Task<ActionResult<Result<CreateStoreResponse>>> CreateStore([FromForm] CreateStoreCommand command,
+        CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(command, cancellationToken);
+        return await HandleMediatorResult(result);
+    }
+
 }

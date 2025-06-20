@@ -35,7 +35,7 @@ public sealed class GlobalExceptionHandlerMiddleWare(RequestDelegate next)
         {
             Message = ex.Message,
             StatusCode = (HttpStatusCode)context.Response.StatusCode,
-            Errors = ValidationExtenstion.GetErrorsDictionary(ex.Errors.Adapt<List<ValidationFailure>>())
+            Errors = ValidationExtension.GetErrorsDictionary(ex.Errors.Adapt<List<ValidationFailure>>())
         };
 
         var jsonOptions = new JsonSerializerOptions()
