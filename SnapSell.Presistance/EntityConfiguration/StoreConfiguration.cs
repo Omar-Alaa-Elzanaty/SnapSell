@@ -13,9 +13,9 @@ namespace SnapSell.Presistance.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<Store> builder)
         {
-            builder.HasOne(x => x.Account)
+            builder.HasOne(x => x.Seller)
                 .WithOne()
-                .HasForeignKey<Store>(x => x.Id);
+                .HasForeignKey<Store>(x => x.SellerId);
         }
     }
 }
