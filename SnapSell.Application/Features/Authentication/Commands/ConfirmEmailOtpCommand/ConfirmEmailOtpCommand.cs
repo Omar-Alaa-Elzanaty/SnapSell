@@ -11,9 +11,9 @@ namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpC
     public class ConfirmEmailOtpCommandResponse
     {
         public ConfirmOtpStoreInfoDto? Store { get; set; }
-        public List<string> Roles { get; set; }
-        public string UserName { get; set; }
-        public string FullName { get; set; }
+        public List<string>? Roles { get; set; }
+        public string? UserName { get; set; }
+        public string? FullName { get; set; }
     }
 
     public class ConfirmOtpStoreInfoDto
