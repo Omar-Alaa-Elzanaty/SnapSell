@@ -18,7 +18,7 @@ namespace SnapSell.Presentation.EndPoints
             _mediator = mediator;
         }
         [HttpPut("ApprovePendingStore/{storeId}")]
-        public async Task<ActionResult<Result<string>>> ApprovePendingStore(string storeId, CancellationToken cancellationToken)
+        public async Task<ActionResult<Result<string>>> ApprovePendingStore(Guid storeId, CancellationToken cancellationToken)
         {
             return await HandleMediatorResult(await _mediator.Send(new ApprovePendingStoreCommand(storeId), cancellationToken));
         }
