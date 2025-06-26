@@ -18,7 +18,7 @@ public sealed record GetAllProductsForSpecificSellerResponse(
     string? ArabicDescription,
     bool IsFeatured,
     bool IsHidden,
-    ProductStatus? ProductStatus,
+    ProductTypes? ProductStatus,
     int MinDeliveryDays,
     int MaxDeliveryDays,
     string? MainImageUrl,

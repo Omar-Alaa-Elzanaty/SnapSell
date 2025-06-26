@@ -21,13 +21,13 @@ namespace SnapSell.Infrastructure.Services.MailServices
         {
             _emailSender = emailSender;
             _host = webHostEnvironment;
-            _filePath = config.GetSection("EmailTemplates");
+            _filePath = config.GetSection("Emails");
             _email = config.GetSection("Jwt:Audience").Value!;
         }
 
         public async Task<bool> SendEmailConfirmationOtp(string email, string otp)
         {
-            var content = File.ReadAllText(_host.WebRootPath + _filePath["EmailConfirmationTemplate"]);
+            var content = File.ReadAllText(_host.WebRootPath + _filePath["EmailConfirmation"]);
 
             return await _emailSender.SendMailUsingRazorTemplateAsync(new EmailRequestDto
             {

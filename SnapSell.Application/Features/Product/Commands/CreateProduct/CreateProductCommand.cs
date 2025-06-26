@@ -5,18 +5,19 @@ using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
-public sealed record CreatProductCommand(
+public sealed record CreateProductCommand(
     Guid BrandId,
     List<Guid> CategoryIds,
     string EnglishName,
     string ArabicName,
     bool IsFeatured,
     bool IsHidden,
+    ProductStatus ProductStatus,
     bool HasVariants,
     int ShippingType,
-    int ProductStatus,
+    ProductTypes ProductType,
     List<int> PaymentMethods,
-    List<MediaFileDto> Images,
+    List<ProductImageDto> Images,
     string EnglishDescription,
     string ArabicDescription,
     int MinDeliveryDays,
@@ -28,6 +29,10 @@ public sealed record CreatProductCommand(
     string? Sku,
     List<CreatProductVariantDto>? Variants) : IRequest<Result<CreateProductResponse>>;
 
+public class ProductImageDto : MediaFileDto
+{
+    public bool IsMain { get; set; }
+}
 public sealed class CreateProductResponse
 {
     public Guid ProductId { get; set; }
@@ -36,7 +41,7 @@ public sealed class CreateProductResponse
     public bool IsFeatured { get; set; }
     public bool IsHidden { get; set; }
     public ShippingType ShippingType { get; set; }
-    public ProductStatus ProductStatus { get; set; }
+    public ProductTypes ProductStatus { get; set; }
     public List<PaymentMethod> PaymentMethods { get; set; } = [];
     public List<ProductImageResponse> Images { get; set; } = [];
     public string EnglishDescription { get; set; }

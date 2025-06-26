@@ -2,9 +2,9 @@
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
-public sealed class CreatProductVariantDtoValidator : AbstractValidator<CreatProductVariantDto>
+public sealed class CreateProductVariantDtoValidator : AbstractValidator<CreatProductVariantDto>
 {
-    public CreatProductVariantDtoValidator()
+    public CreateProductVariantDtoValidator()
     {
         RuleFor(x => x.SizeId).NotEmpty().WithMessage("SizeId Is Required.");
 

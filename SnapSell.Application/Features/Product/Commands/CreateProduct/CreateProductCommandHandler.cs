@@ -9,11 +9,11 @@ using SnapSell.Domain.Models.MongoDbEntities;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
-internal sealed class CreatProductCommandHandler(
+internal sealed class CreateProductCommandHandler(
     IUnitOfWork unitOfWork,
-    IMediaService mediaService) : IRequestHandler<CreatProductCommand, Result<CreateProductResponse>>
+    IMediaService mediaService) : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
 {
-    public async Task<Result<CreateProductResponse>> Handle(CreatProductCommand request,
+    public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request,
         CancellationToken cancellationToken)
     {
         var existingCategories = await unitOfWork.CategoryRepo.Entities
@@ -44,10 +44,9 @@ internal sealed class CreatProductCommandHandler(
         product.Images = new List<ProductImage>();
         foreach (var image in request.Images)
         {
-            var imageUrl = await mediaService.SaveAsync(image, MediaTypes.Image);
             product.Images.Add(new ProductImage
             {
-                ImageUrl = imageUrl!,
+                ImageUrl = await mediaService.SaveAsync(image, MediaTypes.Image)??"",
                 IsMainImage = image.IsMain
             });
         }

@@ -41,7 +41,7 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
 
     [HttpPost("CreateProduct")]
     [RequestSizeLimit(500 * 1024 * 1024)] // 500MB limit
-    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct([FromBody] CreatProductCommand command,
+    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct([FromBody] CreateProductCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);

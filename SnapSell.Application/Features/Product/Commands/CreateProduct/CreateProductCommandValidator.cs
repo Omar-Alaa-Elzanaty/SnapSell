@@ -4,9 +4,9 @@ using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
-public sealed class CreatProductCommandValidator : AbstractValidator<CreatProductCommand>
+public sealed class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
-    public CreatProductCommandValidator(IStringLocalizer<CreatProductCommandValidator> stringLocalizer)
+    public CreateProductCommandValidator(IStringLocalizer<CreateProductCommandValidator> stringLocalizer)
     {
         RuleFor(c => c.BrandId)
             .NotEmpty().WithMessage("BrandId is required");
@@ -25,7 +25,11 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
             .WithMessage("ShippingType must be 1 (Paid) or 2 (Free).");
 
         RuleFor(x => x.ProductStatus)
-            .Must(value => value == 1 || value == 2)
+            .Must(value => value == ProductStatus.Published || value == ProductStatus.Draft)
+            .WithMessage("ProductStatus must be 1 (Published) or 2 (Draft).");
+
+        RuleFor(x => x.ProductType)
+            .Must(value => value == ProductTypes.Used || value == ProductTypes.New)
             .WithMessage("ProductStatus must be 1 (Used) or 2 (New).");
 
         RuleForEach(x => x.PaymentMethods)
@@ -103,7 +107,7 @@ public sealed class CreatProductCommandValidator : AbstractValidator<CreatProduc
 
             RuleForEach(x => x.Variants)
                 .NotNull().WithMessage("Variant cannot be null")
-                .SetValidator(new CreatProductVariantDtoValidator()!);
+                .SetValidator(new CreateProductVariantDtoValidator()!);
         });
     }
 }

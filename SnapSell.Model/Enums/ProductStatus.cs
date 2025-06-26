@@ -1,7 +1,8 @@
-﻿namespace SnapSell.Domain.Enums;
-
-public enum ProductStatus
+﻿namespace SnapSell.Domain.Enums
 {
-    Used = 1,
-    New = 2
+    public enum ProductStatus : byte
+    {
+        Published = 1,
+        Draft = 2
+    }
 }
