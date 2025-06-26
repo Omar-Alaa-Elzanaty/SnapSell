@@ -4,6 +4,7 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Net;
 using System.Security.Claims;
+using SnapSell.Application.Abstractions.Interfaces;
 
 namespace SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
 

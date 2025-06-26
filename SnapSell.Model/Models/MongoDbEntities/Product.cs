@@ -12,9 +12,12 @@ public class Product:BaseEntity
 
     [BsonElement("englishName")]
     public string EnglishName { get; set; }
-
+        
     [BsonElement("arabicName")]
     public string ArabicName { get; set; }
+    
+    [BsonElement("storeId")]
+    public Guid StoreId { get; set; }
 
     [BsonElement("englishDescription")]
     public string? EnglishDescription { get; set; }

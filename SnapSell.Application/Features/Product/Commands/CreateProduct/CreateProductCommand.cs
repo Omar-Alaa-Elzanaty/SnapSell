@@ -36,6 +36,7 @@ public class ProductImageDto : MediaFileDto
 public sealed class CreateProductResponse
 {
     public Guid ProductId { get; set; }
+    public Guid StoreId { get; set; }
     public string EnglishName { get; set; }
     public string ArabicName { get; set; }
     public bool IsFeatured { get; set; }

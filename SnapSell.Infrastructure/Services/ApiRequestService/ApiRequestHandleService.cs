@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SnapSell.Application.Abstractions.Interfaces;
 
 namespace SnapSell.Infrastructure.Services.ApiRequestService
 {

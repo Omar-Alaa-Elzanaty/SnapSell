@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Net;
 using Mapster;
+using SnapSell.Application.Abstractions.Interfaces;
 
 namespace SnapSell.Application.Features.product.Queries.GetSizes;
 

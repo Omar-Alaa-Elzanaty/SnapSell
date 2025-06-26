@@ -4,7 +4,7 @@ using MediatR;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Extnesions;
 
-namespace SnapSell.Application.Common.Behaviors;
+namespace SnapSell.Application.Abstractions.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>

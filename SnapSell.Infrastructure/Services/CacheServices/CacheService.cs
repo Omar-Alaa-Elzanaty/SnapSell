@@ -4,6 +4,7 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.Interfaces;
 using System.Security.Claims;
+using SnapSell.Application.Abstractions.Interfaces;
 
 namespace SnapSell.Infrastructure.Services.CacheServices
 {

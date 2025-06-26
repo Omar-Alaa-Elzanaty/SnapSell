@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Mongo2Go;
 using MongoDB.Driver;
 using Moq;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Extensions.Services;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;

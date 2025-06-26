@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Extensions;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;

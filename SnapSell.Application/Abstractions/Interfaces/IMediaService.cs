@@ -1,7 +1,7 @@
 ﻿using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Enums;
 
-namespace SnapSell.Application.Interfaces;
+namespace SnapSell.Application.Abstractions.Interfaces;
 
 public interface IMediaService
 {

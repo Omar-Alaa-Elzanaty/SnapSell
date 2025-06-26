@@ -5,6 +5,7 @@ using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 using System.Net;
+using SnapSell.Application.Abstractions.Interfaces;
 
 namespace SnapSell.Application.Features.Admins.Commands.ApproveBendingStore;
 

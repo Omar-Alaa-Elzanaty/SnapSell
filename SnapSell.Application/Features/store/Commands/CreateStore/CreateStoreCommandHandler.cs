@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Constants;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models.SqlEntities;

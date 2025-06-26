@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SnapSell.Application.Interfaces.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using SnapSell.Application.Abstractions.Interfaces.Authentication;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Infrastructure.Services.Authentication;
