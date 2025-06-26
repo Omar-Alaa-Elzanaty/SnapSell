@@ -23,7 +23,7 @@ public sealed class AdminController : ApiControllerBase
     }
 
     [HttpGet("GetPendingStores")]
-    public async Task<ActionResult<PaginatedResult<GetBendingStoresQueryDto>>> GetPendingStores([FromQuery] GetPendingStoresQuery query, CancellationToken cancellationToken)
+    public async Task<ActionResult<PaginatedResult<GetBendingStoresQueryDto>>> GetPendingStores([FromBody] GetPendingStoresQuery query, CancellationToken cancellationToken)
     {
         return await HandleMediatorResult(await _mediator.Send(query, cancellationToken));
     }

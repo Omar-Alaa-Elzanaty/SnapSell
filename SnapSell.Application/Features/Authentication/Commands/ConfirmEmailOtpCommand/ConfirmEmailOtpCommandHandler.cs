@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using SnapSell.Application.Abstractions.Interfaces;
-using SnapSell.Application.Interfaces;
-using SnapSell.Application.Interfaces.Authentication;
+using SnapSell.Application.Abstractions.Interfaces.Authentication;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
 

@@ -33,7 +33,7 @@ public sealed class SellerController(ISender sender) : ApiControllerBase
 
     [HttpPost("CreateProduct")]
     [RequestSizeLimit(500 * 1024 * 1024)]
-    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct([FromBody] CreatProductCommand command,
+    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct([FromBody] CreateProductCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);

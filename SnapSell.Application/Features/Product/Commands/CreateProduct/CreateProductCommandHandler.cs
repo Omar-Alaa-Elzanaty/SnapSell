@@ -37,15 +37,6 @@ internal sealed class CreateProductCommandHandler(
                 statusCode: HttpStatusCode.BadRequest);
         }
 
-        var existingStore = await unitOfWork.StoresRepo.Entities
-            .SingleOrDefaultAsync(x => x.Id == request.StoreId, cancellationToken);
-        if (existingStore is null)
-        {
-            return Result<CreateProductResponse>.Failure(
-                message: $"The StoreId you Entered is not Valid: {request.BrandId} or does not belong to current user.",
-                statusCode: HttpStatusCode.BadRequest);
-        }
-
         var product = request.Adapt<Product>();
         product.CategoryIds = request.CategoryIds;
 
