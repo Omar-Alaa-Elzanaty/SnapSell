@@ -1,6 +1,6 @@
 ﻿using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
-namespace SnapSell.Application.Interfaces.Authentication;
+namespace SnapSell.Application.Abstractions.Interfaces.Authentication;
 
 public interface IAuthenticationService
 {

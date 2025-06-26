@@ -1,10 +1,10 @@
 ﻿using Mapster;
 using MediatR;
-using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Models.MongoDbEntities;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
@@ -37,6 +37,14 @@ internal sealed class CreatProductCommandHandler(
                 statusCode: HttpStatusCode.BadRequest);
         }
 
+        var existingStore = await unitOfWork.StoresRepo.Entities
+            .SingleOrDefaultAsync(x => x.Id == request.StoreId, cancellationToken);
+        if (existingStore is null)
+        {
+            return Result<CreateProductResponse>.Failure(
+                message: $"The StoreId you Entered is not Valid: {request.BrandId} or does not belong to current user.",
+                statusCode: HttpStatusCode.BadRequest);
+        }
 
         var product = request.Adapt<Product>();
         product.CategoryIds = request.CategoryIds;

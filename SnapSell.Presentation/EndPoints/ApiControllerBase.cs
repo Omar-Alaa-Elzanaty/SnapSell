@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/[Action]")]
 [ApiController]
 public abstract class ApiControllerBase : ControllerBase
 {

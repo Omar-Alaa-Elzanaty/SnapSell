@@ -3,8 +3,8 @@ using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using SnapSell.Application.Common.Behaviors;
 using System.Reflection;
+using SnapSell.Application.Abstractions.Behaviors;
 
 namespace SnapSell.Application.Extensions.Services
 {

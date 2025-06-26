@@ -5,7 +5,7 @@ using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.Features.product.Commands.CreateProduct;
 
-public sealed record CreatProductCommand(
+public sealed record CreatProductCommand(Guid StoreId,
     Guid BrandId,
     List<Guid> CategoryIds,
     string EnglishName,
@@ -31,6 +31,7 @@ public sealed record CreatProductCommand(
 public sealed class CreateProductResponse
 {
     public Guid ProductId { get; set; }
+    public Guid StoreId { get; set; }
     public string EnglishName { get; set; }
     public string ArabicName { get; set; }
     public bool IsFeatured { get; set; }

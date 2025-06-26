@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.Interfaces;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models.SqlEntities;

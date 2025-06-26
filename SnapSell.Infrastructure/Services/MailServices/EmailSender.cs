@@ -1,4 +1,5 @@
 ﻿using FluentEmail.Core;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.MailDtos;
 
