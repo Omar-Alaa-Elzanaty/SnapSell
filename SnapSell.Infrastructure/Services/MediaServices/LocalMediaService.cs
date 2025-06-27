@@ -58,10 +58,10 @@ public sealed class MediaService(
         return await SaveAsync(media, mediaType);
     }
 
-    private string GetMediaExtension(string base64)
+    private static string GetMediaExtension(string base64)
     {
         if (string.IsNullOrEmpty(base64))
-            return null;
+            return "";
 
         // Remove data URI prefix if present
         var cleanBase64 = base64;

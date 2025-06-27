@@ -8,8 +8,8 @@ public interface ISQLBaseRepo<T>
     Task AddAsync(T entity);
     Task AddRange(IEnumerable<T> entities);
     void Delete(T entity);
-    void UpdateAsync(T entity);
-    void UpdateRangeAsync(IEnumerable<T> entities);
+    void Update(T entity);
+    void UpdateRange(IEnumerable<T> entities);
     IQueryable<T> Entities { get; }
     IQueryable<T> TheDbSet();
     Task<T?> GetByIdAsync(Guid id);

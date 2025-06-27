@@ -29,7 +29,7 @@ public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : cl
         _context.Remove(entity);
     }
 
-    public void UpdateAsync(T entity)
+    public void Update(T entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
         _context.Update(entity);
@@ -47,7 +47,7 @@ public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : cl
     public async Task<T?> FindOnCriteriaAsync(Expression<Func<T, bool>> predicate)
         => await _context.Set<T>().FirstOrDefaultAsync(predicate);
 
-    public void UpdateRangeAsync(IEnumerable<T> entities)
+    public void UpdateRange(IEnumerable<T> entities)
     {
         _context.UpdateRange(entities);
     }

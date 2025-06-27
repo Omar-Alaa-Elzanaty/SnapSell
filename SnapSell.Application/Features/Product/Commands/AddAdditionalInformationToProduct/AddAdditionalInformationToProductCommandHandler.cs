@@ -52,7 +52,7 @@ internal sealed class AddAdditionalInformationToProductCommandHandler(
         //    variantEntities.Add(variant);
         //}
 
-        productRepository.UpdateAsync(product);
+        productRepository.Update(product);
         //await variantsRepository.AddRange(variantEntities);
         await unitOfWork.SaveAsync(cancellationToken);
 

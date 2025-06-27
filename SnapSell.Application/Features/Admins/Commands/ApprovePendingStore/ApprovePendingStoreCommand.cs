@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SnapSell.Domain.Dtos.ResultDtos;
 
-namespace SnapSell.Application.Features.Admins.Commands.ApproveBendingStore
+namespace SnapSell.Application.Features.Admins.Commands.ApprovePendingStore
 {
     public sealed record ApprovePendingStoreCommand : IRequest<Result<string>>
     {
