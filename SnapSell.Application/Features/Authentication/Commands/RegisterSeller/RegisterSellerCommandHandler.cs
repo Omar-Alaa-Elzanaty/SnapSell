@@ -13,8 +13,7 @@ internal sealed class RegisterSellerCommandHandler(
     RoleManager<IdentityRole> roleManager)
     : IRequestHandler<RegisterSellerCommand, Result<RegisterSellerResult>>
 {
-    public readonly string DefaultSellerRole = "Seller";
-
+    private readonly string _defaultSellerRole = "Seller";
     public async Task<Result<RegisterSellerResult>> Handle(RegisterSellerCommand request,
         CancellationToken cancellationToken)
     {
@@ -39,9 +38,9 @@ internal sealed class RegisterSellerCommandHandler(
                 statusCode: HttpStatusCode.BadRequest);
         }
 
-        if (!await roleManager.RoleExistsAsync(DefaultSellerRole))
+        if (!await roleManager.RoleExistsAsync(_defaultSellerRole))
         {
-            var roleResult = await roleManager.CreateAsync(new IdentityRole(DefaultSellerRole));
+            var roleResult = await roleManager.CreateAsync(new IdentityRole(_defaultSellerRole));
             if (!roleResult.Succeeded)
             {
                 return Result<RegisterSellerResult>.Failure(
@@ -50,7 +49,7 @@ internal sealed class RegisterSellerCommandHandler(
             }
         }
 
-        var addRoleResult = await userManager.AddToRoleAsync(user, DefaultSellerRole);
+        var addRoleResult = await userManager.AddToRoleAsync(user, _defaultSellerRole);
         if (!addRoleResult.Succeeded)
         {
             return Result<RegisterSellerResult>.Failure(
@@ -58,14 +57,14 @@ internal sealed class RegisterSellerCommandHandler(
                 statusCode: HttpStatusCode.InternalServerError);
         }
 
-        var token = await authenticationService.GenerateTokenAsync(user, DefaultSellerRole, isMobile: true);
+        var token = await authenticationService.GenerateTokenAsync(user, _defaultSellerRole, isMobile: true);
         var sellerDto = new RegisterResponseSellerDto(
             user.Id,
             user.FullName,
             user.UserName);
 
         var registerResult = new RegisterSellerResult(sellerDto, token);
-
+        
         return Result<RegisterSellerResult>.Success(
             data: registerResult,
             message: "UserCreated Successfully.",
