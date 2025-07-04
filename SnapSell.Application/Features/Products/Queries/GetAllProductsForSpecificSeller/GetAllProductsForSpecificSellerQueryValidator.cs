@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
+namespace SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
 
 public sealed class GetAllProductsForSpecificSellerQueryValidator
     : AbstractValidator<GetAllProductsForSpecificSellerQuery>

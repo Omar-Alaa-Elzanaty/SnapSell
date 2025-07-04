@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SnapSell.Domain.Dtos.ResultDtos;
 
-namespace SnapSell.Application.Features.product.Queries.GetSizes;
+namespace SnapSell.Application.Features.products.Queries.GetSizes;
 
 public sealed record GetAllSizesQuery() : IRequest<Result<IReadOnlyList<GetAllSizesGroupedResponse>>>;
 

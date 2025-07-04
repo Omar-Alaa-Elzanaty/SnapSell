@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
+using SnapSell.Application.Features.products.Commands.AddAdditionalInformationToProduct;
 
-namespace SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
+namespace SnapSell.Application.Features.products.Commands.AddVariantsToProduct;
 
 public sealed class AddVariantsToProductCommandValidator : AbstractValidator<VariantDto>
 {

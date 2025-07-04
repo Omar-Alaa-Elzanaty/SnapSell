@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Models.MongoDbEntities;
 
-namespace SnapSell.Application.Features.product.Commands.CreateProduct;
+namespace SnapSell.Application.Features.products.Commands.CreateProduct;
 
 internal sealed class CreateProductCommandHandler(
     IUnitOfWork unitOfWork,
@@ -37,7 +37,7 @@ internal sealed class CreateProductCommandHandler(
                 statusCode: HttpStatusCode.BadRequest);
         }
 
-        var product = request.Adapt<Product>();
+        var product = request.Adapt<Domain.Models.MongoDbEntities.Product>();
         product.CategoryIds = request.CategoryIds;
 
         product.Images = new List<ProductImage>();

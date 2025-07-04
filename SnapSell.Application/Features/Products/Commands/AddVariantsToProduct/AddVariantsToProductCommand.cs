@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SnapSell.Domain.Dtos.ResultDtos;
 
-namespace SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
+namespace SnapSell.Application.Features.products.Commands.AddVariantsToProduct;
 
 public sealed record AddVariantsToProductCommand(
     Guid ProductId,

@@ -1,11 +1,10 @@
-﻿using SnapSell.Domain.Models.MongoDbEntities;
-using SnapSell.Domain.Models.SqlEntities.Identitiy;
-using System.ComponentModel.DataAnnotations;
+﻿using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Domain.Models.SqlEntities;
 
-public class Order : BaseEntity
+public class Order : Auditable
 {
+    public int Id { get; set; }
     public string ClientId { get; set; }  // customerId
     public virtual Client Client { get; set; }
     public virtual List<OrderItem> Items { get; set; } = [];
@@ -24,14 +23,14 @@ public class OrderItem : BaseEntity
     public Guid ProductId { get; set; }
     public Guid? VariantId { get; set; }
 
-    public required Guid OrderId { get; set; }
+    public required int OrderId { get; set; }
     public virtual Order Order { get; set; }
     public int Quantity { get; set; }
     public decimal ProductVariantUnitPrice { get; set; }
     public decimal TotalPrice => Quantity * ProductVariantUnitPrice;
 }
 
-public class OrderAddress:BaseEntity
+public class OrderAddress : BaseEntity
 {
 
     public string FullName { get; set; }

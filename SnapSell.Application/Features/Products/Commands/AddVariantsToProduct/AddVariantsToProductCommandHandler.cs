@@ -6,7 +6,7 @@ using System.Net;
 using System.Security.Claims;
 using SnapSell.Application.Abstractions.Interfaces;
 
-namespace SnapSell.Application.Features.product.Commands.AddVariantsToProduct;
+namespace SnapSell.Application.Features.products.Commands.AddVariantsToProduct;
 
 internal sealed class AddVariantsToProductCommandHandler(
     IUnitOfWork unitOfWork,

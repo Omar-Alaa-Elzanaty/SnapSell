@@ -7,10 +7,10 @@ using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.MongoDbEntities;
 
-namespace SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
+namespace SnapSell.Application.Features.products.Commands.AddAdditionalInformationToProduct;
 
 internal sealed class AddAdditionalInformationToProductCommandHandler(
-    ISQLBaseRepo<Product> productRepository,
+    ISQLBaseRepo<Domain.Models.MongoDbEntities.Product> productRepository,
     ISQLBaseRepo<Variant> variantsRepository,
     IUnitOfWork unitOfWork)
     : IRequestHandler<AddAdditionalInformationToProductCommand,

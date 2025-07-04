@@ -4,7 +4,7 @@ using System.Net;
 using Mapster;
 using SnapSell.Application.Abstractions.Interfaces;
 
-namespace SnapSell.Application.Features.product.Queries.GetSizes;
+namespace SnapSell.Application.Features.products.Queries.GetSizes;
 
 internal sealed class GetAllSizesQueryHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<GetAllSizesQuery, Result<IReadOnlyList<GetAllSizesGroupedResponse>>>

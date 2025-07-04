@@ -61,7 +61,7 @@ namespace SnapSell.Test
             var connection = CreateDatabaseAndGetConnection(contextAccessor);
             services.AddDbContext<SqlDbContext>(options =>
                           options.UseSqlite(connection,
-                              _builder => _builder.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)).LogTo(Console.WriteLine), ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+                              _builder => _builder.MigrationsAssembly(typeof(SqlDbContext).Assembly.FullName)).LogTo(Console.WriteLine), ServiceLifetime.Scoped, ServiceLifetime.Scoped);
 
             if (contextAccessor is not null)
             {
@@ -85,7 +85,14 @@ namespace SnapSell.Test
         private void AddMongoDbContext(IServiceCollection services, IConfiguration configuration)
         {
 
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            try
+            {
+                BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            }
+            catch (BsonSerializationException ex) when (ex.Message.Contains("already a serializer registered"))
+            {
+                
+            }
 
             services.Configure<MongoDbSettings>(configuration.GetSection(MongoDbSettings.SectionName));
 
@@ -125,10 +132,14 @@ namespace SnapSell.Test
         {
             try
             {
-                var context = _serviceProvider.GetRequiredService<SqlDbContext>();
 
-                var roleManger = _serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = _serviceProvider.GetRequiredService<UserManager<Account>>();
+                using var scope = _serviceScopeFactory.CreateScope();
+                var scopedProvider = scope.ServiceProvider;
+
+                var context = scopedProvider.GetRequiredService<SqlDbContext>();
+
+                var roleManger = scopedProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scopedProvider.GetRequiredService<UserManager<Account>>();
 
                 var admin = new Account()
                 {

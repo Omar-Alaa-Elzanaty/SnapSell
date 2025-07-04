@@ -1,9 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
-using SnapSell.Application.Features.product.Commands.CreateProduct;
-using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
+using SnapSell.Application.Features.products.Commands.AddAdditionalInformationToProduct;
+using SnapSell.Application.Features.products.Commands.CreateProduct;
+using SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Application.Features.store.Commands.CreateStore;
 using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;

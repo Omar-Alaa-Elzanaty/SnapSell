@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
+namespace SnapSell.Application.Features.products.Commands.AddAdditionalInformationToProduct;
 
 public sealed class AddAdditionalInformationToProductCommandValidator
     : AbstractValidator<AddAdditionalInformationToProductCommand>

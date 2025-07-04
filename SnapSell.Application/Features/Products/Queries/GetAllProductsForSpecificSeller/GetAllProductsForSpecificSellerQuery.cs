@@ -3,7 +3,7 @@ using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 
-namespace SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
+namespace SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
 
 public sealed record GetAllProductsForSpecificSellerQuery(
     string SellerId,

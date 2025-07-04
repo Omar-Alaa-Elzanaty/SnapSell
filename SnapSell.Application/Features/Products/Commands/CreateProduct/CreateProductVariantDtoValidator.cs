@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SnapSell.Application.Features.product.Commands.CreateProduct;
+namespace SnapSell.Application.Features.products.Commands.CreateProduct;
 
 public sealed class CreateProductVariantDtoValidator : AbstractValidator<CreatProductVariantDto>
 {

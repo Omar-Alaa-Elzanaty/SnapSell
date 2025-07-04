@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using SnapSell.Domain.Enums;
 
-namespace SnapSell.Application.Features.product.Commands.CreateProduct;
+namespace SnapSell.Application.Features.products.Commands.CreateProduct;
 
 public sealed class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
