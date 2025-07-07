@@ -8,7 +8,7 @@ using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.Features.Admins.Queries.GetPendingStores
 {
-    internal class GetPendingStoresQueryHandler : IRequestHandler<GetPendingStoresQuery, PaginatedResult<GetBendingStoresQueryDto>>
+    internal class GetPendingStoresQueryHandler : IRequestHandler<GetPendingStoresQuery, PaginatedResult<GetPendingStoresQueryDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -17,11 +17,11 @@ namespace SnapSell.Application.Features.Admins.Queries.GetPendingStores
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<PaginatedResult<GetBendingStoresQueryDto>> Handle(GetPendingStoresQuery query, CancellationToken cancellationToken)
+        public async Task<PaginatedResult<GetPendingStoresQueryDto>> Handle(GetPendingStoresQuery query, CancellationToken cancellationToken)
         {
             var pendingStores = await _unitOfWork.StoresRepo.Entities
                                 .Where(x => x.Status == StoreStatusTypes.Pending)
-                                .ProjectToType<GetBendingStoresQueryDto>()
+                                .ProjectToType<GetPendingStoresQueryDto>()
                                 .ToPaginatedListAsync(query.PageNumber, query.PageSize, cancellationToken);
 
             return pendingStores;

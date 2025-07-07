@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 using MongoDB.Driver;
+using SnapSell.Domain.Models.Interfaces;
 
 namespace SnapSell.Application.Interfaces.Repos;
 
-public interface IMongoBaseRepo<T> where T : class
+public interface IMongoBaseRepo<T> where T : IAuditable
 {
     // Collection access
     IMongoCollection<T> Collection { get; }
-    IQueryable<T> Entities { get; }
 
     // Create operations
     Task InsertOneAsync(T entity, CancellationToken cancellationToken = default);

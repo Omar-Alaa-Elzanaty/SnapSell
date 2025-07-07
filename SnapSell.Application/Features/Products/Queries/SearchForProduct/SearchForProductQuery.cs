@@ -24,7 +24,7 @@ namespace SnapSell.Application.Features.Products.Queries.SearchForProduct
     }
     public class SearchForProductQueryDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string ImageUrl { get; set; }
         public decimal? Price { get; set; }
         public decimal? SalePrice { get; set; }

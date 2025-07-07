@@ -20,7 +20,7 @@ public class Order : Auditable
 
 public class OrderItem : BaseEntity
 {
-    public Guid ProductId { get; set; }
+    public int ProductId { get; set; }
     public Guid? VariantId { get; set; }
 
     public required int OrderId { get; set; }

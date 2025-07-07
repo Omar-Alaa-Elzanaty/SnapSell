@@ -11,7 +11,6 @@ public interface ISQLBaseRepo<T>
     void Update(T entity);
     void UpdateRange(IEnumerable<T> entities);
     IQueryable<T> Entities { get; }
-    IQueryable<T> TheDbSet();
     Task<T?> GetByIdAsync(Guid id);
     Task<IEnumerable<T>> GetAllAsync();
     Task<IEnumerable<T>> FindAsync(Func<T, bool> predicate);

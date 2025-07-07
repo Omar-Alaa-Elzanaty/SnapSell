@@ -53,7 +53,6 @@ namespace SnapSell.Test.Admins.Commands
             // Assert
             result.IsSuccess.Should().BeTrue();
             store.Status.Should().Be(StoreStatusTypes.Verified);
-
         }
 
 

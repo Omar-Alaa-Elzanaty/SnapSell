@@ -7,8 +7,10 @@ using SnapSell.Domain.Models.SqlEntities;
 namespace SnapSell.Domain.Models.MongoDbEntities;
 
 [CollectionName("Products")]
-public class Product:BaseEntity
+public class Product:Auditable
 {
+    [BsonRepresentation(BsonType.Int32)]
+    public int Id { get; set; }
 
     [BsonElement("englishName")]
     public string EnglishName { get; set; }
@@ -70,7 +72,7 @@ public class Product:BaseEntity
 
     [BsonElement("shippingType")]
     [BsonRepresentation(BsonType.Int32)]
-    public int ShippingType { get; set; }
+    public ShippingType ShippingType { get; set; }
 
     [BsonElement("price")]
     [BsonRepresentation(BsonType.Decimal128)]
