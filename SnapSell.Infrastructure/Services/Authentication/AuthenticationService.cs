@@ -9,8 +9,10 @@ using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Infrastructure.Services.Authentication;
 
-public sealed class AuthenticationService(IOptions<JwtSettings> jwtSettings, UserManager<Account> userManager)
-    : IAuthenticationService
+public sealed class AuthenticationService(
+    IOptions<JwtSettings> jwtSettings,
+    UserManager<Account> userManager,
+    RoleManager<IdentityRole> roleManager) : IAuthenticationService
 {
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
@@ -94,5 +96,22 @@ public sealed class AuthenticationService(IOptions<JwtSettings> jwtSettings, Use
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescription);
         return tokenHandler.WriteToken(token);
+    }
+
+    public async Task<bool> AddRoleToUser(string userId, string role)
+    {
+        var user = await userManager.FindByIdAsync(userId);
+        if (user == null)
+            return false;
+
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            var roleResult = await roleManager.CreateAsync(new IdentityRole(role));
+            if (!roleResult.Succeeded)
+                return false;
+        }
+
+        var addRoleResult = await userManager.AddToRoleAsync(user, role);
+        return addRoleResult.Succeeded;
     }
 }

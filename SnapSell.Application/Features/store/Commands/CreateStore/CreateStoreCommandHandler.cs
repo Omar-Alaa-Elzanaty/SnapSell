@@ -4,6 +4,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using SnapSell.Application.Abstractions.Interfaces;
+using SnapSell.Application.Abstractions.Interfaces.Authentication;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models.SqlEntities;
@@ -11,11 +12,13 @@ using SnapSell.Domain.Models.SqlEntities;
 namespace SnapSell.Application.Features.store.Commands.CreateStore;
 
 internal sealed class CreateStoreCommandHandler(
+    IAuthenticationService authenticationService,
     IHttpContextAccessor httpContextAccessor,
     IUnitOfWork unitOfWork,
     IMediaService mediaService)
     : IRequestHandler<CreateStoreCommand, Result<CreateStoreResponse>>
 {
+    private readonly string _defaultSellerRole = "Seller";
     public async Task<Result<CreateStoreResponse>> Handle(CreateStoreCommand request,
         CancellationToken cancellationToken)
     {
@@ -36,6 +39,13 @@ internal sealed class CreateStoreCommandHandler(
         store.SellerId = sellerId;
         store.LogoUrl = image;
 
+        var result = await authenticationService.AddRoleToUser(sellerId!, _defaultSellerRole);
+        if (result is not true)
+        {
+            return Result<CreateStoreResponse>.Failure(
+                message: "canot add seller role to user.",
+                statusCode: HttpStatusCode.BadRequest);
+        }
         await unitOfWork.StoresRepo.AddAsync(store);
         await unitOfWork.SaveAsync(cancellationToken);
 

@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Linq.Expressions;
 using System.Reflection;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Extensions;
 
@@ -26,6 +27,29 @@ public static class QuerableExtensions
 
         return await PaginatedResult<T>.SuccessAsync(items, count, pageNumber, pageSize, message);
     }
+    
+    public static async Task<List<TEntity>> TextSearchAsync<TEntity>(
+        this IMongoCollection<TEntity> collection,
+        string searchText,
+        int pageNumber = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default) where TEntity : BaseEntity
+    {
+        var filter = Builders<TEntity>.Filter.Text(searchText);
+        
+        var options = new FindOptions<TEntity>
+        {
+            Skip = (pageNumber - 1) * pageSize,
+            Limit = pageSize
+        };
+        
+        using var cursor = await collection.FindAsync(
+            filter: filter,
+            options: options,
+            cancellationToken: cancellationToken);
+        
+        return await cursor.ToListAsync(cancellationToken);
+    }
 
     public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(
         this IMongoCollection<T> collection,
@@ -40,7 +64,7 @@ public static class QuerableExtensions
         pageNumber = pageNumber <= 0 ? 1 : pageNumber;
 
         var count = await collection.CountDocumentsAsync(filter: filter, cancellationToken: cancellationToken);
-
+        
         var items = await collection.Find(filter)
             .Sort(sort)
             .Skip((pageNumber - 1) * pageSize)

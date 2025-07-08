@@ -72,6 +72,7 @@ namespace SnapSell.Presistance.Extensions
 
             services.AddScoped<MongoDbContext>();
             services.AddMongoCollection<Product>();
+            
 
             return services;
         }
