@@ -3,7 +3,7 @@ using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
-[Route("api/[controller]/[Action]")]
+[Route("api/[controller]")]
 [ApiController]
 public abstract class ApiControllerBase : ControllerBase
 {

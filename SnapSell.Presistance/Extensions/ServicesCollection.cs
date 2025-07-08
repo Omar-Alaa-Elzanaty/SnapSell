@@ -76,9 +76,9 @@ namespace SnapSell.Presistance.Extensions
             return services;
         }
 
-        private static IServiceCollection AddMongoCollection<T>(this IServiceCollection services) where T : BaseEntity
+        private static IServiceCollection AddMongoCollection<T>(this IServiceCollection services)
         {
-            return services.AddScoped<IMongoCollection<T>>(sp =>
+            return services.AddScoped(sp =>
             {
                 var context = sp.GetRequiredService<MongoDbContext>();
                 return context.GetCollection<T>();

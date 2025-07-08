@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
-using SnapSell.Application.Features.product.Queries.GetSizes;
+using SnapSell.Application.Features.Products.Queries.SearchForProduct;
+using SnapSell.Application.Features.products.Queries.GetSizes;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
@@ -34,4 +35,5 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
         var result = await sender.Send(query, cancellationToken);
         return await HandleMediatorResult(result);
     }
+
 }

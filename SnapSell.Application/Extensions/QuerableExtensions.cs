@@ -27,10 +27,11 @@ public static class QuerableExtensions
         return await PaginatedResult<T>.SuccessAsync(items, count, pageNumber, pageSize, message);
     }
 
-    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(
-        this IMongoCollection<T> collection,
-        FilterDefinition<T> filter,
-        SortDefinition<T> sort,
+    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<M,T>(
+        this IMongoCollection<M> collection,
+        FilterDefinition<M> filter,
+        SortDefinition<M> sort,
+        ProjectionDefinition<M, T>? projection,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken = default)
@@ -45,6 +46,7 @@ public static class QuerableExtensions
             .Sort(sort)
             .Skip((pageNumber - 1) * pageSize)
             .Limit(pageSize)
+            .Project(projection)
             .ToListAsync(cancellationToken);
 
         return await PaginatedResult<T>.SuccessAsync(items, (int)count, pageNumber, pageSize);

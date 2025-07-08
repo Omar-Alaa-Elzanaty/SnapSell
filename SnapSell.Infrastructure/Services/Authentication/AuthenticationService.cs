@@ -14,7 +14,7 @@ public sealed class AuthenticationService(IOptions<JwtSettings> jwtSettings, Use
 {
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
-    public async Task<string> GenerateTokenAsync(Account user, bool isMobile = false)
+    public async Task<string> GenerateTokenAsync(Account user, bool isMobile = true)
     {
         if (user is null)
         {

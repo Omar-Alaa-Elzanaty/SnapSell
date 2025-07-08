@@ -4,5 +4,8 @@
   "BrandIdIsRequired": "BrandId is required",
   "EmailOtpSent": "An OTP has been sent to your email address.",
   "InvalidOtp": "Invalid OTP. Please try again.",
-  "EmailOtpFailed": "Failed to send OTP to your email address. Please try again."
+  "EmailOtpFailed": "Failed to send OTP to your email address. Please try again.",
+  "SellerNotFound": "Seller not found.",
+  "StoreApproved": "Store has been approved successfully.",
+  "StoreRejected": "Store has been rejected."
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Presistance.EntityConfiguration;
@@ -13,5 +14,7 @@ public class StoreConfiguration : AuditableEntityConfiguration<Store>
             .HasForeignKey<Store>(s => s.SellerId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasQueryFilter(x => x.Status != StoreStatusTypes.Rejected);
     }
 }

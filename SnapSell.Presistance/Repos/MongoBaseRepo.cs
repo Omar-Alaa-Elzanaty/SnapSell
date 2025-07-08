@@ -7,6 +7,7 @@ using SnapSell.Presistance.Context;
 using SnapSell.Presistance.Extensions;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Http;
+using SnapSell.Domain.Models.Interfaces;
 
 namespace SnapSell.Presistance.Repos;
 
@@ -16,7 +17,7 @@ public class MongoBaseRepo<T>(
     IMongoCollection<T> collection,
     string collectionName = null)
     : IMongoBaseRepo<T>
-    where T : BaseEntity
+    where T : IAuditable
 {
     private readonly IMongoCollection<T> _collection = dbContext.GetCollection<T>(collectionName);
     public IMongoCollection<T> Collection { get; } = collection;
