@@ -33,7 +33,7 @@ public static class QuerableExtensions
         string searchText,
         int pageNumber = 1,
         int pageSize = 20,
-        CancellationToken cancellationToken = default) where TEntity : BaseEntity
+        CancellationToken cancellationToken = default)
     {
         var filter = Builders<TEntity>.Filter.Text(searchText);
         
@@ -51,10 +51,11 @@ public static class QuerableExtensions
         return await cursor.ToListAsync(cancellationToken);
     }
 
-    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(
-        this IMongoCollection<T> collection,
-        FilterDefinition<T> filter,
-        SortDefinition<T> sort,
+    public static async Task<PaginatedResult<T>> ToPaginatedListAsync<M,T>(
+        this IMongoCollection<M> collection,
+        FilterDefinition<M> filter,
+        SortDefinition<M> sort,
+        ProjectionDefinition<M, T>? projection,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken = default)
@@ -69,6 +70,7 @@ public static class QuerableExtensions
             .Sort(sort)
             .Skip((pageNumber - 1) * pageSize)
             .Limit(pageSize)
+            .Project(projection)
             .ToListAsync(cancellationToken);
 
         return await PaginatedResult<T>.SuccessAsync(items, (int)count, pageNumber, pageSize);

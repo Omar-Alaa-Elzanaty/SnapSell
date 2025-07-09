@@ -1,13 +1,16 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using SnapSell.Domain.Attributes;
+using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Domain.Models.MongoDbEntities;
 
 [CollectionName("Products")]
-public class Product:BaseEntity
+public class Product:Auditable
 {
+    [BsonRepresentation(BsonType.Int32)]
+    public int Id { get; set; }
 
     [BsonElement("englishName")]
     public string EnglishName { get; set; }
@@ -49,7 +52,11 @@ public class Product:BaseEntity
 
     [BsonElement("productStatus")]
     [BsonRepresentation(BsonType.Int32)]
-    public int ProductStatus { get; set; }
+    public ProductStatus ProductStatus { get; set; }
+
+    [BsonElement("productType")]
+    [BsonRepresentation(BsonType.Int32)]
+    public ProductTypes ProductType { get; set; }
 
     [BsonElement("minDeliveryDays")]
     public int MinDeliveryDays { get; set; }
@@ -65,7 +72,7 @@ public class Product:BaseEntity
 
     [BsonElement("shippingType")]
     [BsonRepresentation(BsonType.Int32)]
-    public int ShippingType { get; set; }
+    public ShippingType ShippingType { get; set; }
 
     [BsonElement("price")]
     [BsonRepresentation(BsonType.Decimal128)]
@@ -84,4 +91,6 @@ public class Product:BaseEntity
 
     [BsonElement("sku")]
     public string? Sku { get; set; }
+    [BsonElement("isDraft")]
+    public bool IsDraft { get; set; }
 }

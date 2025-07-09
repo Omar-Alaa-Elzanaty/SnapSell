@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace SnapSell.Application.Features.Admins.Queries.GetPendingStores
 {
-    public sealed record GetPendingStoresQuery:PaginatedRequest,IRequest<PaginatedResult<GetBendingStoresQueryDto>>;
+    public sealed record GetPendingStoresQuery:PaginatedRequest,IRequest<PaginatedResult<GetPendingStoresQueryDto>>;
 
-    public class GetBendingStoresQueryDto
+    public class GetPendingStoresQueryDto
     {
         public string Id { get; set; }
         public string Name { get; set; }

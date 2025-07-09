@@ -1,10 +1,8 @@
 ﻿using Mapster;
-using SnapSell.Application.Features.product.Commands.AddAdditionalInformationToProduct;
-using SnapSell.Application.Features.product.Commands.CreateProduct;
-using SnapSell.Application.Features.product.Queries.GetAllProductsForSpecificSeller;
-using SnapSell.Application.Features.product.Queries.ProductSearch;
+using SnapSell.Application.Features.products.Commands.AddAdditionalInformationToProduct;
+using SnapSell.Application.Features.products.Commands.CreateProduct;
+using SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Domain.Models.MongoDbEntities;
-using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Common.Mapping;
 
@@ -23,17 +21,5 @@ public class ProductMappingConfig : IRegister
         config.NewConfig<Product, CreateProductAdditionalInformationResponse>()
             .Map(dest => dest.ProductId, src => src.Id);
 
-        config.NewConfig<Product, ProductSearchDto>()
-            .Map(dest => dest.ProductId, src => src.Id);
-
-        config.NewConfig<Variant, ProductVariantSearchResponse>()
-            .Map(dest => dest.Id, src => src.Id)
-            .Map(dest => dest.SizeId, src => src.SizeId);
-        
-        config.NewConfig<Brand, BrandDto>()
-            .Map(dest => dest.BrandId, src => src.Id);
-        
-        config.NewConfig<Category, CategoriesDto>()
-            .Map(dest => dest.CategoryId, src => src.Id);
     }
 }

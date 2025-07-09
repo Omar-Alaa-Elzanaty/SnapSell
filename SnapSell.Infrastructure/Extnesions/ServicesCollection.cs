@@ -1,8 +1,4 @@
-﻿using System.Globalization;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Mail;
-using FirebaseAdmin;
+﻿using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
@@ -11,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Abstractions.Interfaces.Authentication;
-using SnapSell.Application.Interfaces;
 using SnapSell.Infrastructure.Services.ApiRequestService;
 using SnapSell.Infrastructure.Services.Authentication;
 using SnapSell.Infrastructure.Services.CacheServices;
@@ -20,6 +15,10 @@ using SnapSell.Infrastructure.Services.MailServices;
 using SnapSell.Infrastructure.Services.MediaServices;
 using SnapSell.Infrastructure.Services.PaymentGateway;
 using SnapSell.Infrastructure.Services.PushNotificationServices;
+using System.Globalization;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Mail;
 using JwtSettings = SnapSell.Infrastructure.Services.Authentication.JwtSettings;
 
 namespace SnapSell.Infrastructure.Extnesions
@@ -48,7 +47,7 @@ namespace SnapSell.Infrastructure.Extnesions
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IPushNotificationSender, PushNotificationSender>()
                 .AddScoped<IApiRequestHandleService, ApiRequestHandleService>()
-                //.AddScoped<ICacheService, CacheService>()
+                .AddScoped<ICacheService, CacheService>()
                 .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
 
             return services;
@@ -132,11 +131,11 @@ namespace SnapSell.Infrastructure.Extnesions
 
             return services;
         }
-        private static IServiceCollection AddJwt(this IServiceCollection services,IConfiguration configuration)
+        private static IServiceCollection AddJwt(this IServiceCollection services, IConfiguration configuration)
         {
 
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
-            JwtSettings jwtSettings = new JwtSettings();
+            JwtSettings jwtSettings = new();
             configuration.Bind(JwtSettings.SectionName, jwtSettings);
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();

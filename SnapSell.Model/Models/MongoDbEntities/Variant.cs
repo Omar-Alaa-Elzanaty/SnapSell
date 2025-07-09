@@ -10,8 +10,8 @@ public class Variant
     public Guid Id { get; set; }
 
     [BsonElement("productId")]
-    [BsonRepresentation(BsonType.String)]
-    public Guid ProductId { get; set; }
+    [BsonRepresentation(BsonType.Int64)]
+    public int ProductId { get; set; }
 
     [BsonElement("sizeId")]
     [BsonRepresentation(BsonType.String)]

@@ -1,21 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using SnapSell.Application.Features.product.Commands.CreateProduct;
-using SnapSell.Application.Interfaces;
-using SnapSell.Domain.Enums;
-using SnapSell.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SnapSell.Test.Products.Commands
+﻿namespace SnapSell.Test.Products.Commands
 {
     public class CreateProductCommandTest : TestBase
     {
