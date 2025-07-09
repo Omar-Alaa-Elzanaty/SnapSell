@@ -25,7 +25,6 @@ namespace SnapSell.Application.Features.Products.Queries.GetProductById
         public int MinDeliveryDays { get; set; }
         public int MaxDeliveryDays { get; set; }
         public List<string> ImagesUrl { get; set; }
-        public string? MainVideoUrl { get; set; }
         [JsonIgnore]
         public Guid BrandId { get; set; }
         public string BrandName { get; set; }

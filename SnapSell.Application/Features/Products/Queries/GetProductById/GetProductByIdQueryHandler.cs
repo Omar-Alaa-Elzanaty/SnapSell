@@ -36,7 +36,6 @@ namespace SnapSell.Application.Features.Products.Queries.GetProductById
                     ImagesUrl = x.Images.OrderByDescending(x => x.IsMainImage).Select(x => x.ImageUrl).ToList(),
                     MaxDeliveryDays = x.MaxDeliveryDays,
                     MinDeliveryDays = x.MinDeliveryDays,
-                    MainVideoUrl = x.MainVideoUrl,
                     BrandId = x.BrandId,
                     ProductType = x.ProductType,
                     ShippingType = x.ShippingType,
