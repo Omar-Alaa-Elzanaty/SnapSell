@@ -54,6 +54,12 @@ else
 var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
 app.UseRequestLocalization(locOptions?.Value!);
 
+// using (var scope = app.Services.CreateScope())
+// {
+//     var services = scope.ServiceProvider;
+//     await services.EnsureProductTextIndexCreatedAsync();
+// }
+
 app.UseRouting();
 
 app.UseStaticFiles();
