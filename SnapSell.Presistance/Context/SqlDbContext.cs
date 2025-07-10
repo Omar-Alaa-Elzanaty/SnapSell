@@ -24,6 +24,8 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<Client> Clients { get; set; }
     public DbSet<Size> Sizes { get; set; }
     public DbSet<Store> Stores { get; set; }
+    public DbSet<ClientCategoryFavorite> ClientCategoryFavorites { get; set; }
+    public DbSet<ClientBrandFavorite> ClientBrandFavorites { get; set; }
 
     //public DbSet<CacheCode> CacheCodes { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

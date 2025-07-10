@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Test.FakeObjects
 {

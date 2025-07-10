@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http.Features;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Presistance.Context;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -129,7 +129,7 @@ namespace SnapSell.API
                 var existingIndexes = await productCollection.Indexes.ListAsync();
                 var indexes = await existingIndexes.ToListAsync();
                 
-                bool hasTextIndex = indexes.Any(index =>
+                var hasTextIndex = indexes.Any(index =>
                     index.Contains("weights") &&
                     index["weights"].AsBsonDocument.Names.Contains("EnglishName"));
                 

@@ -2,7 +2,6 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Presistance.Context;
 using SnapSell.Presistance.Extensions;
 using System.Linq.Expressions;

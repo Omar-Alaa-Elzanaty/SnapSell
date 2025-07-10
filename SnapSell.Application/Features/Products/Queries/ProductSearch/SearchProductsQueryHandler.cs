@@ -8,7 +8,6 @@ using SnapSell.Application.Extensions;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
-using SnapSell.Domain.Models.MongoDbEntities;
 using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Features.Products.Queries.ProductSearch;

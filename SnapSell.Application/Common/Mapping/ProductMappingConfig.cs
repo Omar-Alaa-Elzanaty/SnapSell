@@ -2,7 +2,7 @@
 using SnapSell.Application.Features.products.Commands.AddAdditionalInformationToProduct;
 using SnapSell.Application.Features.products.Commands.CreateProduct;
 using SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
-using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Common.Mapping;
 

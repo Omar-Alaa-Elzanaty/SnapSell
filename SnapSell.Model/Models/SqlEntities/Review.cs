@@ -1,5 +1,4 @@
-﻿using SnapSell.Domain.Models.MongoDbEntities;
-using SnapSell.Domain.Models.SqlEntities.Identitiy;
+﻿using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Domain.Models.SqlEntities;
 

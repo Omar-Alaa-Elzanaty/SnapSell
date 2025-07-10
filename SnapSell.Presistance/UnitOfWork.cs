@@ -1,7 +1,6 @@
 ﻿using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Interfaces;
 using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Models.MongoDbEntities;
 using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Context;

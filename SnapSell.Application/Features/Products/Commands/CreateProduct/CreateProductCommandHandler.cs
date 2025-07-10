@@ -5,7 +5,7 @@ using SnapSell.Domain.Enums;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using SnapSell.Application.Abstractions.Interfaces;
-using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Features.products.Commands.CreateProduct;
 
@@ -37,7 +37,7 @@ internal sealed class CreateProductCommandHandler(
                 statusCode: HttpStatusCode.BadRequest);
         }
 
-        var product = request.Adapt<Domain.Models.MongoDbEntities.Product>();
+        var product = request.Adapt<Product>();
         product.CategoryIds = request.CategoryIds;
 
         product.Images = new List<ProductImage>();
@@ -45,7 +45,7 @@ internal sealed class CreateProductCommandHandler(
         {
             product.Images.Add(new ProductImage
             {
-                ImageUrl = await mediaService.SaveAsync(image, MediaTypes.Image)??"",
+                ImageUrl = await mediaService.SaveAsync(image, MediaTypes.Image) ?? "",
                 IsMainImage = image.IsMain
             });
         }

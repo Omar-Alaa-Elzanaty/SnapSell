@@ -18,7 +18,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (_validators.Length == 0) return await next();
+        if (_validators.Length == 0) return await next(cancellationToken);
 
         var context = new ValidationContext<TRequest>(request);
 
@@ -40,6 +40,6 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
                 message: "Validation Process is failed to current request.");
         }
 
-        return await next();
+        return await next(cancellationToken);
     }
 }

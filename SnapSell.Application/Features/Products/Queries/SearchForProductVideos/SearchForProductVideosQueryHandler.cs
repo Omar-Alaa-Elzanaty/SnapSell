@@ -5,7 +5,7 @@ using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Extensions;
 using SnapSell.Application.Extensions.Services;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Models.MongoDbEntities;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Features.Products.Queries.SearchForProductVideos
 {
