@@ -1,0 +1,27 @@
+name: .NET Tests
+
+on:
+  push:
+    branches: [ AhmedSh ]
+  pull_request:
+    branches: [ AhmedSh ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'  # Adjust to your .NET version
+
+      - name: Run .NET Tests
+        uses: EasyDesk/action-dotnet-test@v1.0.0
+        with:
+          test-args: '--configuration Release --no-build'  # Optional
+          build-configuration: Release  # Optional (default: Release)
+          path: './SnapSell.Test.sln'    # Optional (default: .)
+          skip-build: true              # Optional (default: true)
