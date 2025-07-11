@@ -26,8 +26,10 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<Store> Stores { get; set; }
     public DbSet<ClientCategoryFavorite> ClientCategoryFavorites { get; set; }
     public DbSet<ClientBrandFavorite> ClientBrandFavorites { get; set; }
-
-    //public DbSet<CacheCode> CacheCodes { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<CacheCode> CacheCodes { get; set; }
+    public DbSet<Video> Videos { get; set; }
+    public DbSet<ProductVideo> ProductVideos { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
