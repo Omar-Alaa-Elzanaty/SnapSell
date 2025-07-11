@@ -13,5 +13,6 @@ namespace SnapSell.Domain.Models.SqlEntities
         public virtual Product Product { get; set; }
         public Guid VideoId { get; set; }
         public virtual Video Video { get; set; }
+
     }
 }
