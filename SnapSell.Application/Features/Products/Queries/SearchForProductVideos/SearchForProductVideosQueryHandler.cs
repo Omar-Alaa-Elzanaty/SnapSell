@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Mapster;
 using MediatR;
 using MongoDB.Driver;
 using SnapSell.Application.Abstractions.Interfaces;
@@ -29,66 +30,57 @@ namespace SnapSell.Application.Features.Products.Queries.SearchForProductVideos
                 return PaginatedResult<SearchForProductVideosQueryDto>.ValidationFailure(validationResult.Errors);
             }
 
-            var filterBuilder = Builders<Product>.Filter;
+            var entities = _unitOfWork.ProductsRepo.Entities;
 
-            var filters = FilterDefinition<Product>.Empty;
-
-            SortDefinition<Product> sort = null!;
 
             if (!query.CategoriesIds.IsEmptyOrNull())
             {
-                filters = Builders<Product>.Filter.AnyIn(x => x.CategoryIds, query.CategoriesIds);
+                entities = entities.Where(x => x.CategoryIds.Any(c => query.CategoriesIds.Contains(c)));
             }
 
             if (!query.BrandsIds.IsEmptyOrNull())
             {
-                filters &= Builders<Product>.Filter.In(x => x.BrandId, query.BrandsIds);
+                entities = entities.Where(x => query.BrandsIds.Contains(x.BrandId));
             }
 
             if (!query.Colors.IsEmptyOrNull())
             {
-                filters &= Builders<Product>.Filter.ElemMatch(x => x.Variants, Builders<Variant>.Filter.In(v => v.Color, query.Colors));
+                entities = entities.Where(x => x.Variants.Any(v => query.Colors.Contains(v.Color)));
             }
 
             if (!query.SizesIds.IsEmptyOrNull())
             {
-                filters &= Builders<Product>.Filter.ElemMatch(x => x.Variants, Builders<Variant>.Filter.In(v => v.SizeId, query.SizesIds));
+                entities = entities.Where(x => x.Variants.Any(v => query.SizesIds.Contains(v.SizeId)));
             }
 
-            filters &= Builders<Product>.Filter.Gte(x => x.SalePrice, query.MinPrice);
-            filters &= Builders<Product>.Filter.Lte(x => x.SalePrice, query.MaxPrice);
-            filters &= Builders<Product>.Filter.Where(x => x.MainVideoUrl != null && x.MainVideoUrl.Length > 0);
+            entities = entities.Where(x => x.SalePrice >= query.MinPrice);
+            entities = entities.Where(x => x.SalePrice <= query.MaxPrice);
+            entities = entities.Where(x => x.Videos.Any());
+            entities = entities.DistinctBy(x => x.Videos.First());
 
-            var sortBuilder = Builders<Product>.Sort;
             switch (query.Filter)
             {
                 case SearchForProductVideosFilters.Relevance:
                     break;
                 case SearchForProductVideosFilters.Newest:
-                    sort = sortBuilder.Descending(x => x.CreatedAt);
+                    entities = entities.OrderByDescending(x => x.CreatedAt);
                     break;
                 case SearchForProductVideosFilters.LowToHighPrice:
-                    sort = sortBuilder.Ascending(x => x.SalePrice);
+                    entities = entities.OrderBy(x => x.SalePrice);
                     break;
                 case SearchForProductVideosFilters.HighToLowPrice:
-                    sort = sortBuilder.Ascending(x => x.SalePrice);
+                    entities = entities.OrderByDescending(x => x.SalePrice);
                     break;
             }
 
-            var projection = Builders<Product>.Projection.Expression(p =>
-            new SearchForProductVideosQueryDto
-            {
-                ProductId = p.Id,
-                VideoUrl = p.MainVideoUrl!,
-                Price = p.Price,
-                SalePrice = p.SalePrice
-            });
+            var mapConfig = new TypeAdapterConfig();
 
-            var products = await _unitOfWork.ProductsRepo.Collection
+            mapConfig.NewConfig<Product, SearchForProductVideosQueryDto>()
+                .Map(dest => dest.VideoId, src => src.Videos.First().VideoId);
+
+            var products = await entities
+                .ProjectToType<SearchForProductVideosQueryDto>(mapConfig)
                 .ToPaginatedListAsync(
-                filter: filters,
-                sort: sort,
-                projection: projection,
                 pageNumber: query.PageNumber,
                 pageSize: query.PageSize,
                 cancellationToken: cancellationToken);

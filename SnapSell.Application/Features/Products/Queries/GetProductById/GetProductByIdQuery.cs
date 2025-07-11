@@ -36,7 +36,6 @@ namespace SnapSell.Application.Features.Products.Queries.GetProductById
     public class ProductVariantDto
     {
         public Guid Id { get; set; }
-        public Guid SizeId { get; set; }
         public string Size { get; set; }
         public string Color { get; set; }
 

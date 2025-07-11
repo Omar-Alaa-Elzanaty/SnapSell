@@ -13,7 +13,7 @@ namespace SnapSell.Test.Products.Queries
             var unitOfWork = GetUnitOfWork();
             var pro = FakeProduct.Create();
             pro.HasVariants = true;
-            await unitOfWork.ProductsRepo.InsertOneAsync(pro);
+            await unitOfWork.ProductsRepo.AddAsync(pro);
 
             //Act
             var result = await new GetProductByIdQueryHandler(unitOfWork, null).Handle(new GetProductByIdQuery(pro.Id), default);

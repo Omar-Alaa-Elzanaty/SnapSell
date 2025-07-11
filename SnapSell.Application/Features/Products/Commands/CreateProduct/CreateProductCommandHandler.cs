@@ -76,7 +76,7 @@ internal sealed class CreateProductCommandHandler(
             product.Sku = request.Sku;
         }
 
-        await unitOfWork.ProductsRepo.InsertOneAsync(product, cancellationToken);
+        await unitOfWork.ProductsRepo.AddAsync(product);
 
         var response = product.Adapt<CreateProductResponse>();
         foreach (var image in response.Images)

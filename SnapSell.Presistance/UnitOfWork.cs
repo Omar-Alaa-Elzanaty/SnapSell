@@ -10,7 +10,7 @@ namespace SnapSell.Presistance;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly SqlDbContext _context;
-    public IMongoBaseRepo<Product> ProductsRepo { get; private set; }
+    public ISQLBaseRepo<Product> ProductsRepo { get; private set; }
     public ISQLBaseRepo<Category> CategoryRepo { get; private set; }
     public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
     public ISQLBaseRepo<Variant> VariantsRepo { get; set; }
@@ -22,7 +22,7 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(
         SqlDbContext context,
         ISQLBaseRepo<CacheCode> cacheCodesRepo,
-        IMongoBaseRepo<Product> productsRepo,
+        ISQLBaseRepo<Product> productsRepo,
         ISQLBaseRepo<Variant> variants,
         ISQLBaseRepo<Store> stores,
         ISQLBaseRepo<Client> clients,

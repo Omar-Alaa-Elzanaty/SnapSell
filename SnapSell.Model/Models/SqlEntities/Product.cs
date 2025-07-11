@@ -22,13 +22,14 @@ public class Product : Auditable
     public bool IsHidden { get; set; }
     public bool HasVariants { get; set; }
     public Guid BrandId { get; set; }
+    public virtual Brand Brand { get; set; }
 
     public ProductStatus ProductStatus { get; set; }
     public ProductTypes ProductType { get; set; }
     public int MinDeliveryDays { get; set; }
     public int MaxDeliveryDays { get; set; }
     public virtual List<ProductImage> Images { get; set; } = new();
-    public string? MainVideoUrl { get; set; }
+    public virtual List<ProductVideo> Videos { get; set; } = new();
     public ShippingType ShippingType { get; set; }
     public decimal? Price { get; set; }
     public decimal? SalePrice { get; set; }

@@ -25,7 +25,8 @@ namespace SnapSell.Application.Features.Products.Queries.SearchForProductVideos
 
     public class SearchForProductVideosQueryDto
     {
-        public string VideoUrl { get; set; }
+        public Guid VideoId { get; set; }
+        public string Url { get; set; }
         public int ProductId { get; set; }
         public decimal? SalePrice { get; set; }
         public decimal? Price { get; set; }

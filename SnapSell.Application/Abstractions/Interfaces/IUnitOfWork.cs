@@ -7,7 +7,7 @@ namespace SnapSell.Application.Abstractions.Interfaces;
 public interface IUnitOfWork : IDisposable
 {
     //IBaseRepo<T> Repository<T>() where T : class;
-    IMongoBaseRepo<Product> ProductsRepo { get; }
+    ISQLBaseRepo<Product> ProductsRepo { get; }
     ISQLBaseRepo<Category> CategoryRepo { get; }
     ISQLBaseRepo<CacheCode> CacheCodesRepo { get; } 
     ISQLBaseRepo<Variant> VariantsRepo { get; set; }

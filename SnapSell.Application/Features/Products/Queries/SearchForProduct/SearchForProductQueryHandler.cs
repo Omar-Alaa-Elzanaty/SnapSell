@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Mapster;
 using MediatR;
 using MongoDB.Driver;
 using SnapSell.Application.Abstractions.Interfaces;
@@ -31,66 +32,54 @@ namespace SnapSell.Application.Features.Products.Queries.SearchForProduct
                 return PaginatedResult<SearchForProductQueryDto>.ValidationFailure(validation.Errors);
             }
 
-            var filterBuilder = Builders<Product>.Filter;
-
-            var filters = FilterDefinition<Product>.Empty;
+            var entities = _unitOfWork.ProductsRepo.Entities;
 
             SortDefinition<Product> sort = null!;
 
             if (!command.CategoriesIds.IsEmptyOrNull())
             {
-                filters = Builders<Product>.Filter.AnyIn(x => x.CategoryIds, command.CategoriesIds);
+                entities = entities.Where(x => x.CategoryIds.Any(c => command.CategoriesIds.Contains(c)));
             }
 
             if (!command.BrandsIds.IsEmptyOrNull())
             {
-                filters &= Builders<Product>.Filter.In(x => x.BrandId, command.BrandsIds);
+                entities = entities.Where(x => command.BrandsIds.Contains(x.BrandId));
             }
 
             if (!command.Colors.IsEmptyOrNull())
             {
-                filters &= Builders<Product>.Filter.ElemMatch(x => x.Variants, Builders<Variant>.Filter.In(v => v.Color, command.Colors));
+                entities= entities.Where(x => x.Variants.Any(v => command.Colors.Contains(v.Color)));
             }
 
             if (!command.SizesIds.IsEmptyOrNull())
             {
-                filters &= Builders<Product>.Filter.ElemMatch(x => x.Variants, Builders<Variant>.Filter.In(v => v.SizeId, command.SizesIds));
+                entities= entities.Where(x => x.Variants.Any(v => command.SizesIds.Contains(v.SizeId)));
             }
 
-            filters &= Builders<Product>.Filter.Gte(x => x.SalePrice, command.MinPrice);
-            filters &= Builders<Product>.Filter.Lte(x => x.SalePrice, command.MaxPrice);
-
-            var sortBuilder = Builders<Product>.Sort;
+            entities= entities.Where(x => x.SalePrice >= command.MinPrice);
+            entities= entities.Where(x => x.SalePrice <= command.MaxPrice);
             switch (command.Filter)
             {
                 case SearchForProductSorts.Relevance:
                     break;
                 case SearchForProductSorts.Newest:
-                    sort = sortBuilder.Descending(x => x.CreatedAt);
+                    entities= entities.OrderByDescending(x => x.CreatedAt);
                     break;
                 case SearchForProductSorts.LowToHighPrice:
-                    sort = sortBuilder.Ascending(x => x.SalePrice);
+                    entities= entities.OrderBy(x => x.SalePrice);
                     break;
                 case SearchForProductSorts.HighToLowPrice:
-                    sort = sortBuilder.Ascending(x => x.SalePrice);
+                    entities= entities.OrderByDescending(x => x.SalePrice);
                     break;
             }
 
-            var projection = Builders<Product>.Projection.Expression(p =>
-            new SearchForProductQueryDto
-            {
-                Id = p.Id,
-                Price = p.Price,
-                SalePrice = p.SalePrice,
-                ImageUrl = p.Images.Where(i => i.IsMainImage).Select(i => i.ImageUrl).FirstOrDefault()!
-            });
+            var mapConfig = new TypeAdapterConfig();
+            mapConfig.NewConfig<Product, SearchForProductQueryDto>()
+                .Map(dest => dest.ImageUrl, src => src.Images.Where(i => i.IsMainImage).Select(i => i.ImageUrl).FirstOrDefault()!);
 
-
-            var products = await _unitOfWork.ProductsRepo.Collection
+            var products = await entities
+                .ProjectToType<SearchForProductQueryDto>(mapConfig)
                 .ToPaginatedListAsync(
-                    filter: filters,
-                    sort: sort,
-                    projection: projection,
                     pageNumber: command.PageNumber,
                     pageSize: command.PageSize,
                     cancellationToken: cancellationToken);
