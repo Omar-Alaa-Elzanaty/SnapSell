@@ -1,13 +1,14 @@
 ﻿using Mapster;
 using Microsoft.Extensions.Configuration;
-using SnapSell.Application.Applications.Payments.Commnad.Callback;
-using SnapSell.Application.Applications.Payments.Commnad.Token;
+using SnapSell.Application.Features.Payments.Command.Callback;
+using SnapSell.Application.Features.Payments.Command.Token;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.PaymobDtos;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using SnapSell.Application.Abstractions.Interfaces;
 
 namespace SnapSell.Infrastructure.Services.PaymentGateway
 {
@@ -16,13 +17,13 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
         private readonly IApiRequestHandleService _apiService;
         private readonly IConfiguration _config;
 
-        public PaymobService(HttpClient httpClient,
+        public PaymobService(IHttpClientFactory httpClientFactory,
             IApiRequestHandleService apiRequestHandleService,
             IConfiguration config)
         {
 
             _apiService = apiRequestHandleService;
-            _apiService.HttpClient = httpClient;
+            _apiService.HttpClient = httpClientFactory.CreateClient("PaymobService");
             _config = config;
         }
 
@@ -43,7 +44,7 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
 
 
             return IsAuthenticatedCallback(plainText, hmac);
-
+            
         }
 
         public async Task<PaymobIntentsionResponseDto> CreatePayment(PaymobIntenstionRequestDto model)

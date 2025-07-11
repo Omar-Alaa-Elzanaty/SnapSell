@@ -1,12 +1,6 @@
-﻿using MongoDB.Bson.IO;
-using SnapSell.Application.Interfaces;
+﻿using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SnapSell.Infrastructure.Services.ApiRequestService
 {
@@ -35,7 +29,7 @@ namespace SnapSell.Infrastructure.Services.ApiRequestService
             return Result<T>.Success(result!);
         }
 
-        public async Task<Result<T>> SendAsync<T>(string url,HttpContent? httpContent)
+        public async Task<Result<T>> SendAsync<T>(string url, HttpContent? httpContent)
         {
             var response = await HttpClient.PostAsync(url, httpContent);
 

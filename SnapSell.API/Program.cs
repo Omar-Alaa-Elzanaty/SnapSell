@@ -2,28 +2,32 @@ using Microsoft.Extensions.Options;
 using Serilog;
 using SnapSell.API;
 using SnapSell.Application.Extensions.Services;
-using SnapSell.Infrastructure.Extensions;
+using SnapSell.Infrastructure.Extnesions;
 using SnapSell.Infrastructure.Services.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
 using SnapSell.Presistance.Extensions;
 using SnapSell.Presistance.Seeding;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
-});
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateTimeFormatService());
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
 builder.Services
-       .AddInfrastructure(builder.Configuration)
-       .AddPresistance(builder.Configuration)
-       .AddApplication()
-       .DepedencyInjectionService(builder.Configuration);
+    .AddPresistance(builder.Configuration)
+    .AddInfrastructure(builder.Configuration)
+    .AddApplication()
+    .DepedencyInjectionService(builder.Configuration);
+
+builder.Services.AddHttpContextAccessor();
 
 var logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
@@ -34,11 +38,13 @@ builder.Host.UseSerilog(logger);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
     app.UseCors("DEVELOPMENT");
 }
 else
@@ -48,6 +54,12 @@ else
 
 var locOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
 app.UseRequestLocalization(locOptions?.Value!);
+
+// using (var scope = app.Services.CreateScope())
+// {
+//     var services = scope.ServiceProvider;
+//     await services.EnsureProductTextIndexCreatedAsync();
+// }
 
 app.UseRouting();
 

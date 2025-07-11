@@ -2,41 +2,41 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SnapSell.Domain.Constants;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SnapSell.Presistance.Seeding
+namespace SnapSell.Presistance.Seeding;
+
+public class DataSeed
 {
-    public class DataSeed
+    public static async Task SeedDate(IServiceProvider services)
     {
-        public static async Task SeedDate(IServiceProvider services)
-        {
-            var context = services.GetRequiredService<SqlDbContext>();
+        var context = services.GetRequiredService<SqlDbContext>();
 
-            if (context.Database.GetPendingMigrations().Any())
+        var migrationsCount = context.Database.GetMigrations().Count();
+        var pendingMigrationsCount = context.Database.GetPendingMigrations().Count();
+
+        if (pendingMigrationsCount > 0)
+        {
+            await context.Database.MigrateAsync();
+
+            if (migrationsCount == pendingMigrationsCount)
             {
-                await context.Database.MigrateAsync();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
                 await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
                 await roleManager.CreateAsync(new IdentityRole(Roles.Client));
+                var userManager = services.GetRequiredService<UserManager<Account>>();
 
-                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-
-                var admin = new ApplicationUser()
+                var admin = new Account()
                 {
-                    FirstName = "admin",
-                    LastName = "admin",
+                    FullName = "admin",
                     Email = "admin@gmail.com",
-                    UserName= "admin"
+                    UserName = "admin"
                 };
 
                 await userManager.CreateAsync(admin, "123@Abc");
+                await context.SaveChangesAsync();
             }
         }
     }

@@ -2,79 +2,83 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SnapSell.Domain.Interfaces;
-using SnapSell.Domain.Models;
+using SnapSell.Domain.Models.Interfaces;
+using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Extensions;
 using System.Security.Claims;
 
-namespace SnapSell.Presistance.Context
+namespace SnapSell.Presistance.Context;
+
+public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpContextAccessor contextAccessor)
+    : IdentityDbContext<Account>(options)
 {
-    public class SqlDbContext : IdentityDbContext<ApplicationUser>
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Brand> Brands { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<OrderAddress> OrderAddresses { get; set; }
+    public DbSet<ShoppingBag> ShoppingBags { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    public DbSet<Seller> Sellers { get; set; }
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<Size> Sizes { get; set; }
+    public DbSet<Store> Stores { get; set; }
+    public DbSet<ClientCategoryFavorite> ClientCategoryFavorites { get; set; }
+    public DbSet<ClientBrandFavorite> ClientBrandFavorites { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<CacheCode> CacheCodes { get; set; }
+    public DbSet<Video> Videos { get; set; }
+    public DbSet<ProductVideo> ProductVideos { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        private readonly IHttpContextAccessor _contextAccessor;
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Account>().ToTable("Accounts")
+            .Property(x => x.Id).ValueGeneratedOnAdd();
 
-        public SqlDbContext(
-            DbContextOptions<SqlDbContext> options,
-            IHttpContextAccessor contextAccessor) : base(options)
+        modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+        modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+        modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+        modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+        modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+        modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SqlDbContext).Assembly);
+
+
+        modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var userId = contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        foreach (var entry in ChangeTracker.Entries<IAuditable>())
         {
-            _contextAccessor = contextAccessor;
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ApplicationUser>().ToTable("Accounts").Property(x => x.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
-            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
-            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
-            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
-            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SqlDbContext).Assembly);
+            if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                continue;
 
-            modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
-        }
+            var now = DateTime.UtcNow;
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            var userId = _contextAccessor.HttpContext is null || _contextAccessor.HttpContext.User is null ?
-                null : _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            foreach (var entity in ChangeTracker
-            .Entries()
-                .Where(x => x.Entity is IAuditable 
-                && (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)))
+            if (entry.State == EntityState.Added)
             {
-                IAuditable auditedEntity = (entity as IAuditable)!;
-
-                if (entity.State == EntityState.Added)
-                {
-                    auditedEntity.CreatedAt = DateTime.UtcNow;
-
-                    if (userId != null)
-                    {
-                        auditedEntity.CreatedBy = userId;
-                    }
-                }
-                else
-                {
-                    if (entity.State == EntityState.Deleted)
-                    {
-                        auditedEntity.IsDeleted = true;
-                        entity.State = EntityState.Modified;
-                    }
-
-                    auditedEntity.LastUpdatedAt = DateTime.UtcNow;
-
-                    if (userId != null)
-                    {
-                        auditedEntity.LastUpdatedBy = userId;
-                    }
-                }
+                entry.Entity.CreatedAt = now;
+                entry.Entity.CreatedBy = userId;
+                entry.Entity.IsDeleted = false;
             }
-
-            return await base.SaveChangesAsync(cancellationToken);
+            else if (entry.State == EntityState.Deleted)
+            {
+                entry.State = EntityState.Modified;
+                entry.Entity.IsDeleted = true;
+                entry.Entity.LastUpdatedAt = now;
+                entry.Entity.LastUpdatedBy = userId;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.LastUpdatedAt = now;
+                entry.Entity.LastUpdatedBy = userId;
+            }
         }
 
-        public DbSet<CacheCode> CacheCodes { get; set; }
+        return await base.SaveChangesAsync(cancellationToken);
     }
 }

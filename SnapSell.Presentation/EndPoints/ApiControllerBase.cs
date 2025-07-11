@@ -1,32 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
 
-namespace SnapSell.Presentation.EndPoints
+namespace SnapSell.Presentation.EndPoints;
+
+[Route("api/[controller]")]
+[ApiController]
+public abstract class ApiControllerBase : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public abstract class ApiControllerBase : ControllerBase
+    protected Task<ActionResult<Result<TResult>>> HandleMediatorResult<TResult>(Result<TResult> result)
     {
-        private readonly ICacheService _cacheService;
+        return Task.FromResult<ActionResult<Result<TResult>>>(StatusCode((int)result.StatusCode, result));
+    }
 
-        protected ApiControllerBase(ICacheService cacheService)
-        {
-            _cacheService = cacheService;
-        }
-
-        protected async Task<ObjectResult> StatusCode<T>(Result<T> data)
-        {
-            data.CacheCodes = await _cacheService.GetCacheCodes();
-
-            return StatusCode((int)data.StatusCode, data);
-        }
-
-        protected async Task<ObjectResult> StatusCode<T>(PaginatedResult<T> data)
-        {
-            data.CacheCodes = await _cacheService.GetCacheCodes();
-
-            return StatusCode((int)data.StatusCode, data);
-        }
+    protected Task<ActionResult<PaginatedResult<TResult>>> HandleMediatorResult<TResult>(
+        PaginatedResult<TResult> result)
+    {
+        return Task.FromResult<ActionResult<PaginatedResult<TResult>>>(StatusCode((int)result.StatusCode, result));
     }
 }

@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using SnapSell.Application.Interfaces;
+using SnapSell.Application.Abstractions.Interfaces;
+using SnapSell.Application.Abstractions.Interfaces.Authentication;
 using SnapSell.Infrastructure.Services.ApiRequestService;
+using SnapSell.Infrastructure.Services.Authentication;
 using SnapSell.Infrastructure.Services.CacheServices;
 using SnapSell.Infrastructure.Services.I18nServices;
 using SnapSell.Infrastructure.Services.MailServices;
@@ -17,8 +19,9 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Mail;
+using JwtSettings = SnapSell.Infrastructure.Services.Authentication.JwtSettings;
 
-namespace SnapSell.Infrastructure.Extensions
+namespace SnapSell.Infrastructure.Extnesions
 {
     public static class ServicesCollection
     {
@@ -29,7 +32,8 @@ namespace SnapSell.Infrastructure.Extensions
                 .AddFluentEmailServices(configuration)
                 .AddPaymobService(configuration)
                 .AddPushNotificationService(configuration)
-                .AddI18nService();
+                .AddI18NService()
+                .AddJwt(configuration);
 
             return services;
         }
@@ -37,7 +41,7 @@ namespace SnapSell.Infrastructure.Extensions
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services
-                .AddScoped<IMediaService, LocalMediaService>()
+                .AddScoped<IMediaService, MediaService>()
                 .AddScoped<IPaymobService, PaymobService>()
                 .AddScoped<IEmailSender, EmailSender>()
                 .AddScoped<IEmailService, EmailService>()
@@ -107,7 +111,7 @@ namespace SnapSell.Infrastructure.Extensions
             return services;
         }
 
-        private static IServiceCollection AddI18nService(this IServiceCollection services)
+        private static IServiceCollection AddI18NService(this IServiceCollection services)
         {
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -124,6 +128,17 @@ namespace SnapSell.Infrastructure.Extensions
                 options.SupportedUICultures = supportedCultures;
                 options.ApplyCurrentCultureToResponseHeaders = true;
             });
+
+            return services;
+        }
+        private static IServiceCollection AddJwt(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+            JwtSettings jwtSettings = new();
+            configuration.Bind(JwtSettings.SectionName, jwtSettings);
+
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }

@@ -1,5 +1,5 @@
 ﻿using FluentEmail.Core;
-using SnapSell.Application.Interfaces;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Dtos.MailDtos;
 
 namespace SnapSell.Infrastructure.Services.MailServices
@@ -19,7 +19,7 @@ namespace SnapSell.Infrastructure.Services.MailServices
             {
                 var sendResponse = await _fluentEmail
                                         .Create()
-                                        .SetFrom(request.From, "PSolve")
+                                        .SetFrom(request.From, "SnapSell")
                                         .To(request.To)
                                         .Subject(request.Subject)
                                         .UsingTemplate(request.Body, request.BodyData)

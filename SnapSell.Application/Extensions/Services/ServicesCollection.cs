@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using Mapster;
 using MapsterMapper;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using SnapSell.Application.Behaviors;
 using System.Reflection;
+using SnapSell.Application.Abstractions.Behaviors;
 
 namespace SnapSell.Application.Extensions.Services
 {
@@ -12,20 +13,18 @@ namespace SnapSell.Application.Extensions.Services
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddMediator()
-                    .AddMapping()
-                    .AddFluentValidation();
+                .AddMapping()
+                .AddFluentValidation();
 
             return services;
         }
 
         private static IServiceCollection AddMediator(this IServiceCollection services)
         {
-            //return services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
             services.AddMediatR(configuration =>
             {
                 configuration.RegisterServicesFromAssembly(typeof(ServicesCollection).Assembly);
-                configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             });
 
             return services;
@@ -33,7 +32,8 @@ namespace SnapSell.Application.Extensions.Services
 
         private static IServiceCollection AddFluentValidation(this IServiceCollection services)
         {
-            return services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            return services;
         }
 
         private static IServiceCollection AddMapping(this IServiceCollection services)
@@ -41,7 +41,6 @@ namespace SnapSell.Application.Extensions.Services
             var config = TypeAdapterConfig.GlobalSettings;
             config.Scan(Assembly.GetExecutingAssembly());
             services.AddSingleton(config);
-
             services.AddSingleton<IMapper, ServiceMapper>();
 
             return services;

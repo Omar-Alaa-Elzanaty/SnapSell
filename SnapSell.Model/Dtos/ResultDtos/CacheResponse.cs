@@ -1,4 +1,4 @@
-﻿using SnapSell.Domain.Interfaces;
+﻿using SnapSell.Domain.Models.Interfaces;
 
 namespace SnapSell.Domain.Dtos.ResultDtos
 {

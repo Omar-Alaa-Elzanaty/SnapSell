@@ -1,55 +1,151 @@
 ﻿using FluentValidation.Results;
 using SnapSell.Domain.Extnesions;
 using System.Net;
+using System.Text.Json.Serialization;
 
-namespace SnapSell.Domain.Dtos.ResultDtos
+namespace SnapSell.Domain.Dtos.ResultDtos;
+
+public sealed class PaginatedResult<TData> : IResult<PaginatedResponse<TData>>
 {
-    public class PaginatedResult<T>:Result<List<T>>
+    public bool IsSuccess => (int)StatusCode >= 200 && (int)StatusCode <= 299;
+
+    [JsonIgnore]
+    public HttpStatusCode StatusCode { get; set; }
+
+    [JsonPropertyName("statusCode")]
+    public int StatusCodeNumber => (int)StatusCode;
+    public CacheResponse? CacheCodes { get; set; }
+    public string? Message { get; set; }
+    public PaginatedResponse<TData>? Data { get; set; }
+    public Dictionary<string, List<string>>? Errors { get; set; }
+
+    public IResult ToValidationErrors(Dictionary<string, List<string>> errors, HttpStatusCode statusCode,
+        string message)
     {
-        public PaginatedResult(List<T> data)
-        {
-            Data = data;
-        }
-        public PaginatedResult()
-        {
+        return new PaginatedResult<TData>(message, statusCode, errors);
+    }
 
-        }
-        public PaginatedResult(bool succeeded, List<T> data = default,
-                               string message = null,
-                               List<ValidationFailure> validationFailures = null, int count = 0,
-                               HttpStatusCode httpStatusCode = HttpStatusCode.OK,
-                               int pageNumber = 1, int pageSize = 10)
+    public PaginatedResult()
+    {
+        Data = new PaginatedResponse<TData>();
+    }
+
+    public PaginatedResult(
+        List<TData> items,
+        int totalCount,
+        int pageNumber,
+        int pageSize,
+        string? message = null,
+        HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+        Data = new PaginatedResponse<TData>
         {
-            Data = data;
-            CurrentPage = pageNumber;
-            StatusCode = httpStatusCode;
-            Message = message;
-            Errors = validationFailures?.GetErrorsDictionary();
-            PageSize = pageSize;
-            TotalPages = count / pageSize + (count % pageSize > 0 ? 1 : 0);
-            TotalCount = count;
-        }
-
-        public int CurrentPage { get; set; }
-        public int TotalPages { get; set; }
-        public int TotalCount { get; set; }
-        public int PageSize { get; set; }
-
-        public bool HasPreviousPage => CurrentPage > 1;
-        public bool HasNextPage => CurrentPage < TotalPages;
-
-        public static PaginatedResult<T> Create(List<T> data, int count, int pageNumber, int pageSize)
-        {
-            return new PaginatedResult<T>(true, data, null, null, count, HttpStatusCode.OK, pageNumber, pageSize);
-        }
-
-        public static async Task<PaginatedResult<T>> FailureAsync(string message, HttpStatusCode statusCode)
-        {
-            return new PaginatedResult<T>()
+            Items = items,
+            Meta = new PaginationMeta
             {
-                Message = message,
-                StatusCode = statusCode
-            };
+                TotalCount = totalCount,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+            }
+        };
+        StatusCode = statusCode;
+        Message = message;
+    }
+
+    public PaginatedResult(
+        string message,
+        HttpStatusCode statusCode,
+        Dictionary<string, List<string>>? errors = null)
+    {
+        Message = message;
+        StatusCode = statusCode;
+        Errors = errors;
+        Data = new PaginatedResponse<TData>();
+    }
+
+
+    public static PaginatedResult<TData> Success(
+        List<TData> data,
+        int count,
+        int pageNumber,
+        int pageSize,
+        string? message = null)
+    {
+        return new PaginatedResult<TData>(data, count, pageNumber, pageSize, message);
+    }
+
+    public static Task<PaginatedResult<TData>> SuccessAsync(
+        List<TData> items,
+        int totalCount,
+        int pageNumber,
+        int pageSize,
+        string? message = null)
+    {
+        return Task.FromResult(new PaginatedResult<TData>(
+            items: items,
+            totalCount: totalCount,
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+            message: message));
+    }
+
+    public static PaginatedResult<TData> Failure(
+        string message,
+        HttpStatusCode statusCode = HttpStatusCode.BadRequest,
+        Dictionary<string, List<string>>? errors = null)
+    {
+        return new PaginatedResult<TData>(message, statusCode, errors);
+    }
+
+    public static Task<PaginatedResult<TData>> FailureAsync(
+        string message,
+        HttpStatusCode statusCode = HttpStatusCode.BadRequest,
+        Dictionary<string, List<string>>? errors = null)
+    {
+        return Task.FromResult(Failure(message, statusCode, errors));
+    }
+
+    public static PaginatedResult<TData> ValidationFailure(
+        List<ValidationFailure> validationFailures,
+        string? message = null)
+    {
+        return new PaginatedResult<TData>(
+            message ?? "Validation failed",
+            HttpStatusCode.UnprocessableEntity,
+            validationFailures.GetErrorsDictionary());
+    }
+}
+
+public class PaginatedResponse<TResult>
+{
+    public List<TResult> Items { get; set; } = new List<TResult>();
+    public PaginationMeta Meta { get; set; } = new PaginationMeta();
+}
+
+public class PaginationMeta
+{
+    public int CurrentPage { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
+
+    public int TotalPages
+    {
+        get
+        {
+            if (PageSize <= 0 || TotalCount <= 0)
+                return 0;
+
+            try
+            {
+                return (int)Math.Ceiling(TotalCount / (double)Math.Max(1, PageSize));
+            }
+            catch
+            {
+                return 0;
+            }
         }
     }
+
+    public bool HasPreviousPage => CurrentPage > 1;
+    public bool HasNextPage => CurrentPage < TotalPages;
 }

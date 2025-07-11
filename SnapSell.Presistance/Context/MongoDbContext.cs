@@ -1,69 +1,22 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using MongoDB.EntityFrameworkCore.Extensions;
-using SnapSell.Domain.Interfaces;
-using SnapSell.Domain.Models;
-using System.Security.Claims;
+﻿using System.Reflection;
+using MongoDB.Driver;
+using SnapSell.Domain.Attributes;
 
-namespace SnapSell.Presistance.Context
+namespace SnapSell.Presistance.Context;
+
+
+public class MongoDbContext
 {
-    public class MongoDbContext : DbContext
+    private readonly IMongoDatabase _database;
+
+    public MongoDbContext(IMongoClient client, IMongoDbSettings settings)
     {
-        private readonly IHttpContextAccessor _contextAccessor;
-        public MongoDbContext(
-            DbContextOptions options,
-            IHttpContextAccessor contextAccessor) : base(options)
-        {
-            _contextAccessor = contextAccessor;
-        }
+        _database = client.GetDatabase(settings.DatabaseName);
+    }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Product>().ToCollection("Products");
-        }
-
-        public DbSet<Product> Products { get; set; }
-
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            var userId = _contextAccessor.HttpContext is null || _contextAccessor.HttpContext.User is null ?
-                null : _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            foreach (var entity in ChangeTracker
-            .Entries()
-                .Where(x => x.Entity is IAuditable
-                && (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)))
-            {
-                IAuditable auditedEntity = (entity as IAuditable)!;
-
-                if (entity.State == EntityState.Added)
-                {
-                    auditedEntity.CreatedAt = DateTime.UtcNow;
-
-                    if (userId != null)
-                    {
-                        auditedEntity.CreatedBy = userId;
-                    }
-                }
-                else
-                {
-                    if (entity.State == EntityState.Deleted)
-                    {
-                        auditedEntity.IsDeleted = true;
-                        entity.State = EntityState.Modified;
-                    }
-
-                    auditedEntity.LastUpdatedAt = DateTime.UtcNow;
-
-                    if (userId != null)
-                    {
-                        auditedEntity.LastUpdatedBy = userId;
-                    }
-                }
-            }
-
-            return await base.SaveChangesAsync(cancellationToken);
-        }
+    public IMongoCollection<T> GetCollection<T>(string collectionName = null)
+    {
+        var attribute = typeof(T).GetCustomAttribute<CollectionNameAttribute>();
+        return _database.GetCollection<T>(attribute?.Name);
     }
 }
