@@ -23,6 +23,9 @@ public class Product : Auditable
     public bool HasVariants { get; set; }
     public Guid BrandId { get; set; }
     public virtual Brand Brand { get; set; }
+    
+    public virtual Category Category { get; set; }
+    public Guid  CategoryId { get; set; }
 
     public ProductStatus ProductStatus { get; set; }
     public ProductTypes ProductType { get; set; }

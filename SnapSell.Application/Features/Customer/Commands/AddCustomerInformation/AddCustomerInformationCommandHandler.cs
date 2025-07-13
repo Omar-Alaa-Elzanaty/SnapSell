@@ -2,7 +2,6 @@ using System.Net;
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Abstractions.Interfaces.Authentication;
 using SnapSell.Domain.Dtos.ResultDtos;
 
@@ -10,12 +9,10 @@ namespace SnapSell.Application.Features.Customer.Commands.AddCustomerInformation
 
 internal sealed class AddCustomerInformationCommandHandler(
     IHttpContextAccessor httpContextAccessor,
-    IAuthenticationService authenticationService,
-    IUnitOfWork unitOfWork)
+    IAuthenticationService authenticationService)
     : IRequestHandler<AddCustomerInformationCommand, Result<AddCustomerInformationRespose>>
 {
     private readonly string _defaultCustomerRole = "Customer";
-
     public async Task<Result<AddCustomerInformationRespose>> Handle(AddCustomerInformationCommand request,
         CancellationToken cancellationToken)
     {
@@ -29,7 +26,7 @@ internal sealed class AddCustomerInformationCommandHandler(
         }
 
         return Result<AddCustomerInformationRespose>.Success(
-            data:null,
+            data:null!,
             message: "Customer Details Added successfuly." ,
             statusCode:HttpStatusCode.Created);
     }

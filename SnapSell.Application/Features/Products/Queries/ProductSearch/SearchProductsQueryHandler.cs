@@ -13,7 +13,7 @@ using SnapSell.Domain.Models.SqlEntities;
 namespace SnapSell.Application.Features.Products.Queries.ProductSearch;
 
 internal sealed class SearchProductsQueryHandler(
-    IMongoCollection<Product> productCollection,
+    ISQLBaseRepo<Product> productRepository,
     ISQLBaseRepo<Brand> brandRepo,
     ISQLBaseRepo<Category> categoryRepo,
     IMediaService mediaService,
@@ -33,49 +33,46 @@ internal sealed class SearchProductsQueryHandler(
 
         var isArabic = language.StartsWith("ar");
 
-        var products = await productCollection.TextSearchAsync(
-            searchText: request.SearchText,
-            pageNumber: request.PageNumber,
-            pageSize: request.PageSize,
-            cancellationToken: cancellationToken);
+        var query = productRepository.Entities
+            .Include(p => p.Brand)
+            .Include(p => p.Category)
+            .Where(p =>
+                EF.Functions.Like(p.EnglishName, $"%{request.SearchText}%") ||
+                EF.Functions.Like(p.ArabicName, $"%{request.SearchText}%") ||
+                EF.Functions.Like(p.EnglishDescription, $"%{request.SearchText}%") ||
+                EF.Functions.Like(p.ArabicDescription, $"%{request.SearchText}%") ||
+                EF.Functions.Like(p.Brand.Name, $"%{request.SearchText}%") ||
+                EF.Functions.Like(p.Category.Name, $"%{request.SearchText}%"));
+        
+        
+        var count = await query.CountAsync(cancellationToken);
 
-        var response = new SearchResponse
-        {
-            Products = products.Adapt<List<ProductSearchDto>>(),
-            Brands = new List<BrandDto>(),
-            Categories = new List<CategoriesDto>()
-        };
+        var products = await query
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync(cancellationToken);
 
-        foreach (var product in response.Products)
+        var result = new List<SearchResponse>();
+
+        foreach (var product in products)
         {
-            foreach (var image in product.Images)
+            var response = product.Adapt<SearchResponse>();
+            if (response.Product?.Images is not null)
             {
-                image.ImageUrl = mediaService.GetUrl(image.ImageUrl, MediaTypes.Image);
+                foreach (var img in response.Product.Images)
+                {
+                    if (!string.IsNullOrWhiteSpace(img.ImageUrl))
+                        img.ImageUrl = mediaService.GetUrl(img.ImageUrl,MediaTypes.Image);
+                }
             }
+
+            result.Add(response);
         }
 
-        var brands = await brandRepo.Entities
-            .Where(b => b.Name.Contains(request.SearchText))
-            .Take(request.PageSize)
-            .ToListAsync(cancellationToken);
-
-        response.Brands = brands.Adapt<List<BrandDto>>();
-        
-        var categories = await categoryRepo.Entities
-            .Where(c => c.Name.Contains(request.SearchText))
-            .Take(request.PageSize)
-            .ToListAsync(cancellationToken);
-
-        response.Categories = categories.Adapt<List<CategoriesDto>>();
-        
-        var filter = Builders<Product>.Filter.Text(request.SearchText);
-        var totalCount = (int)await productCollection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
-
         return await PaginatedResult<SearchResponse>.SuccessAsync(
-            new List<SearchResponse> { response },
-            totalCount,
-            request.PageNumber,
-            request.PageSize,
-            isArabic ? "تم العثور على النتائج" : "Search results found");
+            items: result,
+            totalCount: count,
+            pageNumber: request.PageNumber,
+            pageSize: request.PageSize);
     }
 }
