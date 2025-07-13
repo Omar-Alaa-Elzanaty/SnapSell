@@ -31,9 +31,6 @@ public sealed class ProductConfiguration : AuditableEntityConfiguration<Product>
         builder.Property(x => x.ArabicDescription)
             .HasMaxLength(1000);
 
-        builder.Property(x => x.MainVideoUrl)
-            .HasMaxLength(500);
-
         builder.Property(x => x.Sku)
             .HasMaxLength(100);
 
