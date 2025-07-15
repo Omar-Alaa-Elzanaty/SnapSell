@@ -35,4 +35,7 @@
 	<ItemGroup>
 	  <Folder Include="Abstractions\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Include="Features\store\Queries\GetStoreById\GetStoreByIdQuery.cs" />
+	</ItemGroup>
 </Project>
