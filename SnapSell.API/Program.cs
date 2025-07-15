@@ -76,6 +76,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-DataSeed.SeedDate(app.Services.CreateScope().ServiceProvider).Wait();
+DataSeed.SeedData(app.Services.CreateScope().ServiceProvider).Wait();
 
 app.Run();
