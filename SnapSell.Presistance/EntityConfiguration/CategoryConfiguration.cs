@@ -25,5 +25,10 @@ public sealed class CategoryConfiguration : AuditableEntityConfiguration<Categor
             .WithMany()
             .HasForeignKey(x => x.ParentCategoryId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasMany(x => x.ProductCategories)
+            .WithOne(x => x.Category)
+            .HasForeignKey(x => x.CategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

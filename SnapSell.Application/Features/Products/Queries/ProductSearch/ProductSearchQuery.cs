@@ -13,7 +13,7 @@ public sealed class SearchResponse
 { 
     public ProductSearchDto? Product { get; set; }
     public BrandDto? Brand { get; set; }
-    public CategoriesDto? Categorie { get; set; }
+    public CategoriesDto? Categories { get; set; }
 }
 
 public sealed class ProductSearchDto

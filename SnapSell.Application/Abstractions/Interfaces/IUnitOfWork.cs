@@ -8,6 +8,7 @@ public interface IUnitOfWork : IDisposable
 {
     //IBaseRepo<T> Repository<T>() where T : class;
     ISQLBaseRepo<Product> ProductsRepo { get; }
+    ISQLBaseRepo<ProductCategory> ProductCategoriesRepo { get; }
     ISQLBaseRepo<Category> CategoryRepo { get; }
     ISQLBaseRepo<CacheCode> CacheCodesRepo { get; } 
     ISQLBaseRepo<Variant> VariantsRepo { get; set; }
