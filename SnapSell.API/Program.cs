@@ -6,7 +6,6 @@ using SnapSell.Infrastructure.Extnesions;
 using SnapSell.Infrastructure.Services.JsonSerilizeServices;
 using SnapSell.Presentation.MiddleWare;
 using SnapSell.Presistance.Extensions;
-using SnapSell.Presistance.Seeding;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);

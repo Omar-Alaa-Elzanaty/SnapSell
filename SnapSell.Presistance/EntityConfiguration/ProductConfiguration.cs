@@ -43,8 +43,15 @@ public sealed class ProductConfiguration : AuditableEntityConfiguration<Product>
             .WithOne(x => x.Product)
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        // builder.HasIndex(x => x.StoreId);
-        // builder.HasIndex(x => x.BrandId);
+        
+        builder.HasOne(x => x.Brand)
+            .WithMany(x => x.Products)
+            .HasForeignKey(x => x.BrandId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasMany(x => x.ProductCategories)
+            .WithOne(x => x.Product)
+            .HasForeignKey(x => x.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

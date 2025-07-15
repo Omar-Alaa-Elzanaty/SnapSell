@@ -9,11 +9,11 @@ public sealed record SearchProductsQuery(string SearchText)
     : PaginatedRequest, IRequest<PaginatedResult<SearchResponse>>;
 
 
-public class SearchResponse
-{
-    public List<ProductSearchDto>? Products { get; set; }
-    public List<BrandDto>? Brands { get; set; }
-    public List<CategoriesDto>? Categories { get; set; }
+public sealed class SearchResponse
+{ 
+    public ProductSearchDto? Product { get; set; }
+    public BrandDto? Brand { get; set; }
+    public CategoriesDto? Categories { get; set; }
 }
 
 public sealed class ProductSearchDto

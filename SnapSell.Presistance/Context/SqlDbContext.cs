@@ -27,6 +27,7 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<ClientCategoryFavorite> ClientCategoryFavorites { get; set; }
     public DbSet<ClientBrandFavorite> ClientBrandFavorites { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<ProductCategory> ProductCategories { get; set; }
     public DbSet<CacheCode> CacheCodes { get; set; }
     public DbSet<Video> Videos { get; set; }
     public DbSet<ProductVideo> ProductVideos { get; set; }

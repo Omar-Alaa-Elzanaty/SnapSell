@@ -1,10 +1,7 @@
 using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
 using SnapSell.Application.Abstractions.Interfaces;
-using SnapSell.Application.Extensions;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
@@ -13,69 +10,74 @@ using SnapSell.Domain.Models.SqlEntities;
 namespace SnapSell.Application.Features.Products.Queries.ProductSearch;
 
 internal sealed class SearchProductsQueryHandler(
-    IMongoCollection<Product> productCollection,
-    ISQLBaseRepo<Brand> brandRepo,
-    ISQLBaseRepo<Category> categoryRepo,
-    IMediaService mediaService,
-    IHttpContextAccessor httpContextAccessor)
+    ISQLBaseRepo<Product> productRepository,
+    IMediaService mediaService)
     : IRequestHandler<SearchProductsQuery, PaginatedResult<SearchResponse>>
 {
     public async Task<PaginatedResult<SearchResponse>> Handle(
         SearchProductsQuery request,
         CancellationToken cancellationToken)
     {
-        var language = httpContextAccessor.HttpContext?
-            .Request
-            .GetTypedHeaders()
-            .AcceptLanguage
-            .FirstOrDefault()?
-            .Value.ToString() ?? "en";
+        var searchText = request.SearchText.Trim();
 
-        var isArabic = language.StartsWith("ar");
+        var query = productRepository.Entities
+            .Include(p => p.Brand)
+            .Include(p => p.ProductCategories)
+            .ThenInclude(pc => pc.Category)
+            .Include(p => p.Images)
+            .AsNoTracking()
+            .AsQueryable();
 
-        var products = await productCollection.TextSearchAsync(
-            searchText: request.SearchText,
-            pageNumber: request.PageNumber,
-            pageSize: request.PageSize,
-            cancellationToken: cancellationToken);
-
-        var response = new SearchResponse
+        if (!string.IsNullOrWhiteSpace(searchText))
         {
-            Products = products.Adapt<List<ProductSearchDto>>(),
-            Brands = new List<BrandDto>(),
-            Categories = new List<CategoriesDto>()
-        };
-
-        foreach (var product in response.Products)
-        {
-            foreach (var image in product.Images)
-            {
-                image.ImageUrl = mediaService.GetUrl(image.ImageUrl, MediaTypes.Image);
-            }
+            query = query.Where(p =>
+                EF.Functions.Like(p.EnglishName, $"%{searchText}%") ||
+                EF.Functions.Like(p.ArabicName, $"%{searchText}%") ||
+                EF.Functions.Like(p.Brand.Name, $"%{searchText}%") ||
+                p.ProductCategories.Any(pc =>
+                    pc.Category != null &&
+                    EF.Functions.Like(pc.Category.Name, $"%{searchText}%")));
         }
+        
+        var totalCount = await query.CountAsync(cancellationToken);
 
-        var brands = await brandRepo.Entities
-            .Where(b => b.Name.Contains(request.SearchText))
+        var products = await query
+            .OrderByDescending(p => p.IsFeatured)
+            .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
             .ToListAsync(cancellationToken);
-
-        response.Brands = brands.Adapt<List<BrandDto>>();
         
-        var categories = await categoryRepo.Entities
-            .Where(c => c.Name.Contains(request.SearchText))
-            .Take(request.PageSize)
-            .ToListAsync(cancellationToken);
-
-        response.Categories = categories.Adapt<List<CategoriesDto>>();
-        
-        var filter = Builders<Product>.Filter.Text(request.SearchText);
-        var totalCount = (int)await productCollection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
+        var responseItems = products.Select(product =>
+        {
+            var response = new SearchResponse
+            {
+                Product = product.Adapt<ProductSearchDto>(),
+                Brand = product.Brand.Adapt<BrandDto>(),
+                Categories = product.ProductCategories
+                    .Where(pc => pc.Category != null)
+                    .Select(pc => pc.Category.Adapt<CategoriesDto>())
+                    .FirstOrDefault()
+            };
+            
+            if (response.Product?.Images != null)
+            {
+                foreach (var img in response.Product.Images)
+                {
+                    if (!string.IsNullOrWhiteSpace(img.ImageUrl))
+                    {
+                        img.ImageUrl = mediaService.GetUrl(img.ImageUrl, MediaTypes.Image);
+                    }
+                }
+            }
+            
+            return response;
+        }).ToList();
 
         return await PaginatedResult<SearchResponse>.SuccessAsync(
-            new List<SearchResponse> { response },
+            responseItems,
             totalCount,
             request.PageNumber,
             request.PageSize,
-            isArabic ? "تم العثور على النتائج" : "Search results found");
+            message: "Search results retrieved successfully.");
     }
 }

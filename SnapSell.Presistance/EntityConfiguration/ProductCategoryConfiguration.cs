@@ -11,14 +11,14 @@ public sealed class ProductCategoryConfiguration : IEntityTypeConfiguration<Prod
         builder.ToTable("ProductCategories");
 
         builder.HasKey(x => new { x.ProductId, x.CategoryId });
-
+        
         builder.HasOne(x => x.Product)
-            .WithMany()
+            .WithMany(x => x.ProductCategories)
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
-
+        
         builder.HasOne(x => x.Category)
-            .WithMany()
+            .WithMany(x => x.ProductCategories)
             .HasForeignKey(x => x.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
     }

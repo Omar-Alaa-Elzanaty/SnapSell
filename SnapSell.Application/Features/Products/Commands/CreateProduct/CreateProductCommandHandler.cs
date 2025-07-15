@@ -16,30 +16,31 @@ internal sealed class CreateProductCommandHandler(
     public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request,
         CancellationToken cancellationToken)
     {
-        var existingCategories = await unitOfWork.CategoryRepo.Entities
+        var brandExists = await unitOfWork.BrandsRepo.Entities
+            .AnyAsync(b => b.Id == request.BrandId, cancellationToken);
+        
+        if (!brandExists)
+        {
+            return Result<CreateProductResponse>.Failure(
+                message: $"Brand with ID {request.BrandId} does not exist",
+                statusCode: HttpStatusCode.BadRequest);
+        }
+
+        var existingCategoryIds = await unitOfWork.CategoryRepo.Entities
             .Where(c => request.CategoryIds.Contains(c.Id))
+            .Select(c => c.Id)
             .ToListAsync(cancellationToken);
 
-        var allCategoriesExist = request.CategoryIds.All(id => existingCategories.Select(x => x.Id).Contains(id));
-        if (!allCategoriesExist)
+        var missingCategoryIds = request.CategoryIds.Except(existingCategoryIds).ToList();
+        if (missingCategoryIds.Any())
         {
             return Result<CreateProductResponse>.Failure(
-                message: "One or more categories do not exist",
+                message: "Categories not found.",
                 statusCode: HttpStatusCode.BadRequest);
         }
-
-        var existingBrand = await unitOfWork.BrandsRepo.Entities
-            .SingleOrDefaultAsync(x => x.Id == request.BrandId, cancellationToken);
-        if (existingBrand is null)
-        {
-            return Result<CreateProductResponse>.Failure(
-                message: $"The Brand Id you Entered is not Valid : {request.BrandId}.",
-                statusCode: HttpStatusCode.BadRequest);
-        }
-
         var product = request.Adapt<Product>();
-        product.CategoryIds = request.CategoryIds;
-
+        product.BrandId = request.BrandId;
+        
         product.Images = new List<ProductImage>();
         foreach (var image in request.Images)
         {
@@ -75,8 +76,16 @@ internal sealed class CreateProductCommandHandler(
             product.Quantity = request.Quantity;
             product.Sku = request.Sku;
         }
-
+        
         await unitOfWork.ProductsRepo.AddAsync(product);
+        var productCategories = request.CategoryIds.Select(categoryId => new ProductCategory
+        {
+            ProductId = product.Id,
+            CategoryId = categoryId
+        }).ToList();
+
+        await unitOfWork.ProductCategoriesRepo.AddRange(productCategories);
+        await unitOfWork.SaveAsync(cancellationToken);
 
         var response = product.Adapt<CreateProductResponse>();
         foreach (var image in response.Images)

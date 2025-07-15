@@ -11,6 +11,7 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly SqlDbContext _context;
     public ISQLBaseRepo<Product> ProductsRepo { get; private set; }
+    public ISQLBaseRepo<ProductCategory> ProductCategoriesRepo { get; }
     public ISQLBaseRepo<Category> CategoryRepo { get; private set; }
     public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
     public ISQLBaseRepo<Variant> VariantsRepo { get; set; }
@@ -28,7 +29,8 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Client> clients,
         ISQLBaseRepo<Brand> brands,
         ISQLBaseRepo<Category> categoryRepo,
-        ISQLBaseRepo<Size> sizesRepo)
+        ISQLBaseRepo<Size> sizesRepo,
+        ISQLBaseRepo<ProductCategory> productCategoryRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -39,6 +41,7 @@ public class UnitOfWork : IUnitOfWork
         BrandsRepo = brands;
         CategoryRepo = categoryRepo;
         SizesRepo = sizesRepo;
+        ProductCategoriesRepo = productCategoryRepo;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)
