@@ -16,6 +16,10 @@ namespace SnapSell.Application.Features.Products.Queries.RelatedProductsWithPagi
 
     public class GetRelatedProductsQueryWithPaginationDto
     {
-
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal? SalePrice { get; set; }
+        public decimal? Price { get; set; }
+        public string ImageUrl { get; set; }
     }
 }
