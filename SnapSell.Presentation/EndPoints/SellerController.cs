@@ -18,7 +18,7 @@ public sealed class SellerController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpGet("GetAllProductsForSpecificSeller/{sellerId}")]
@@ -28,7 +28,7 @@ public sealed class SellerController(ISender sender) : ApiControllerBase
     {
         var query = new GetAllProductsForSpecificSellerQuery(sellerId, request);
         var result = await sender.Send(query, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpPost("CreateProduct")]
@@ -37,7 +37,7 @@ public sealed class SellerController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpPost("CreateProductAdditionalInformation")]
@@ -46,6 +46,6 @@ public sealed class SellerController(ISender sender) : ApiControllerBase
             CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 }

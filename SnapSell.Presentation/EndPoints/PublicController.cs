@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.Products.Queries.GetProductById;
+using SnapSell.Application.Features.Products.Queries.RelatedProductsWithPagination;
 using SnapSell.Application.Features.Products.Queries.SearchForProduct;
 using SnapSell.Application.Features.Products.Queries.SearchForProductVideos;
 using SnapSell.Domain.Dtos.ResultDtos;
@@ -13,14 +14,14 @@ namespace SnapSell.Presentation.EndPoints
         public async Task<ActionResult<PaginatedResult<SearchForProductQueryDto>>> SearchForProducts([FromBody] SearchForProductQuery query, CancellationToken cancellationToken)
         {
             var result = await sender.Send(query, cancellationToken);
-            return await HandleMediatorResult(result);
+            return await HandleMediatorResultAsync(result);
         }
 
         [HttpPost("Search/videos")]
         public async Task<ActionResult<PaginatedResult<SearchForProductVideosQueryDto>>> SearchForProductVideos([FromBody] SearchForProductVideosQuery query, CancellationToken cancellationToken)
         {
             var result = await sender.Send(query, cancellationToken);
-            return await HandleMediatorResult(result);
+            return await HandleMediatorResultAsync(result);
         }
 
         [HttpGet("Products/{id}")]
@@ -28,7 +29,15 @@ namespace SnapSell.Presentation.EndPoints
         {
             var query = new GetProductByIdQuery(id);
             var result = await sender.Send(query, cancellationToken);
-            return await HandleMediatorResult(result);
+            return await HandleMediatorResultAsync(result);
+        }
+
+        [HttpGet("Products/Related")]
+        public async Task<ActionResult<PaginatedResult<GetRelatedProductsQueryWithPaginationDto>>>GetRelatedProductsWithPagination
+            (GetRelatedProductsQueryWithPagination query,CancellationToken cancellationToken)
+        {
+            var result = await sender.Send(query, cancellationToken);
+            return await HandleMediatorResultAsync(result);
         }
     }
 }
