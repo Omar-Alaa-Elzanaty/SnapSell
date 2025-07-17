@@ -7,5 +7,7 @@
   "EmailOtpFailed": "Failed to send OTP to your email address. Please try again.",
   "SellerNotFound": "Seller not found.",
   "StoreApproved": "Store has been approved successfully.",
-  "StoreRejected": "Store has been rejected."
+  "StoreRejected": "Store has been rejected.",
+  "ShouldEnterAddress": "Address most provide",
+  "ProductNotFound": "Product not found."
 }

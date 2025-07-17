@@ -20,18 +20,18 @@ public sealed class AdminController : ApiControllerBase
     [HttpPut("ApprovePendingStore/{storeId}")]
     public async Task<ActionResult<Result<string>>> ApprovePendingStore(Guid storeId, CancellationToken cancellationToken)
     {
-        return await HandleMediatorResult(await _mediator.Send(new ApprovePendingStoreCommand(storeId), cancellationToken));
+        return await HandleMediatorResultAsync(await _mediator.Send(new ApprovePendingStoreCommand(storeId), cancellationToken));
     }
 
     [HttpPut("RejectPendingStore/{storeId}")]
     public async Task<ActionResult<Result<bool>>>RejectPendingStore(Guid storeId, CancellationToken cancellationToken)
     {
-        return await HandleMediatorResult(await _mediator.Send(new RejectPendingStoreCommand(storeId), cancellationToken));
+        return await HandleMediatorResultAsync(await _mediator.Send(new RejectPendingStoreCommand(storeId), cancellationToken));
     }
 
     [HttpGet("GetPendingStores")]
     public async Task<ActionResult<PaginatedResult<GetPendingStoresQueryDto>>> GetPendingStores([FromBody] GetPendingStoresQuery query, CancellationToken cancellationToken)
     {
-        return await HandleMediatorResult(await _mediator.Send(query, cancellationToken));
+        return await HandleMediatorResultAsync(await _mediator.Send(query, cancellationToken));
     }
 }

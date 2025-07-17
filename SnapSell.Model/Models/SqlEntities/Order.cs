@@ -1,4 +1,5 @@
-﻿using SnapSell.Domain.Models.SqlEntities.Identitiy;
+﻿using SnapSell.Domain.Enums;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Domain.Models.SqlEntities;
 
@@ -15,7 +16,7 @@ public class Order : Auditable
     public string PaymentMethod { get; set; }
     public string Email { get; set; }
     public decimal OrderTotal { get; set; }
-    public string OrderStatus { get; set; } = "Pending";
+    public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 }
 
 public class OrderItem : BaseEntity
@@ -42,5 +43,7 @@ public class OrderAddress : BaseEntity
     public required string City { get; set; }
     public required string District { get; set; }
     public string? Landmark { get; set; }
+    public string ClientId { get; set; }
+    public virtual Client Client { get; set; }
     public bool IsDefault { get; set; }
 }

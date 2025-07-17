@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
-using SnapSell.Application.Features.Products.Queries.SearchForProduct;
 using SnapSell.Application.Features.products.Queries.GetSizes;
 using SnapSell.Domain.Dtos.ResultDtos;
 
@@ -17,7 +16,7 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
     {
         var query = new GetAllPrandsQuery();
         var result = await sender.Send(query, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpGet("GetAllCategories")]
@@ -25,7 +24,7 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
     {
         var query = new GetAllCategoriesQuery();
         var result = await sender.Send(query, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpGet("GetAllSizes")]
@@ -33,7 +32,7 @@ public sealed class ProductController(ISender sender) : ApiControllerBase
     {
         var query = new GetAllSizesQuery();
         var result = await sender.Send(query, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
 }

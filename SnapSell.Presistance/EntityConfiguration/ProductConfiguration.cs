@@ -49,7 +49,7 @@ public sealed class ProductConfiguration : AuditableEntityConfiguration<Product>
             .HasForeignKey(x => x.BrandId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        builder.HasMany(x => x.ProductCategories)
+        builder.HasMany(x => x.Categories)
             .WithOne(x => x.Product)
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);

@@ -22,7 +22,7 @@ internal sealed class SearchProductsQueryHandler(
 
         var query = productRepository.Entities
             .Include(p => p.Brand)
-            .Include(p => p.ProductCategories)
+            .Include(p => p.Categories)
             .ThenInclude(pc => pc.Category)
             .Include(p => p.Images)
             .AsNoTracking()
@@ -34,7 +34,7 @@ internal sealed class SearchProductsQueryHandler(
                 EF.Functions.Like(p.EnglishName, $"%{searchText}%") ||
                 EF.Functions.Like(p.ArabicName, $"%{searchText}%") ||
                 EF.Functions.Like(p.Brand.Name, $"%{searchText}%") ||
-                p.ProductCategories.Any(pc =>
+                p.Categories.Any(pc =>
                     pc.Category != null &&
                     EF.Functions.Like(pc.Category.Name, $"%{searchText}%")));
         }
@@ -53,7 +53,7 @@ internal sealed class SearchProductsQueryHandler(
             {
                 Product = product.Adapt<ProductSearchDto>(),
                 Brand = product.Brand.Adapt<BrandDto>(),
-                Categories = product.ProductCategories
+                Categories = product.Categories
                     .Where(pc => pc.Category != null)
                     .Select(pc => pc.Category.Adapt<CategoriesDto>())
                     .FirstOrDefault()

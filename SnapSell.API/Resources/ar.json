@@ -7,5 +7,7 @@
   "EmailOtpFailed": "فشل إرسال رمز التحقق إلى بريدك الإلكتروني. يرجى المحاولة مرة أخرى.",
   "SellerNotFound": "البائع غير موجود.",
   "StoreApproved": "تمت الموافقة على المتجر بنجاح.",
-  "StoreRejected": "تم رفض المتجر."
+  "StoreRejected": "تم رفض المتجر.",
+  "ShouldEnterAddress": "يجب إضافة عنوان",
+  "ProductNotFound": "لم يتم العثور على المنتج."
 }
