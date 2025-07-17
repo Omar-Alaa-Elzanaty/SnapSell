@@ -33,8 +33,8 @@ namespace SnapSell.Presentation.EndPoints
         }
 
         [HttpGet("Products/Related")]
-        public async Task<ActionResult<PaginatedResult<GetRelatedProductsQueryWithPaginationDto>>>GetRelatedProductsWithPagination
-            (GetRelatedProductsQueryWithPagination query,CancellationToken cancellationToken)
+        public async Task<ActionResult<PaginatedResult<GetRelatedProductsQueryWithPaginationDto>>> GetRelatedProductsWithPagination
+            ([FromQuery] GetRelatedProductsQueryWithPagination query, CancellationToken cancellationToken)
         {
             var result = await sender.Send(query, cancellationToken);
             return await HandleMediatorResultAsync(result);
