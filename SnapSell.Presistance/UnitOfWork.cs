@@ -19,6 +19,7 @@ public class UnitOfWork : IUnitOfWork
     public ISQLBaseRepo<Client> ClientsRepo { get; private set; }
     public ISQLBaseRepo<Brand> BrandsRepo { get; private set; }
     public ISQLBaseRepo<Size> SizesRepo { get; private set; }
+    public ISQLBaseRepo<Order> OrdersRepo { get; private set; }
     public ISQLBaseRepo<OrderAddress> OrderAddressesRepo { get; private set; }
 
     public UnitOfWork(
@@ -32,7 +33,8 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Category> categoryRepo,
         ISQLBaseRepo<Size> sizesRepo,
         ISQLBaseRepo<ProductCategory> productCategoryRepo,
-        ISQLBaseRepo<OrderAddress> orderAddress)
+        ISQLBaseRepo<OrderAddress> orderAddressRepo,
+        ISQLBaseRepo<Order>orderRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -44,7 +46,8 @@ public class UnitOfWork : IUnitOfWork
         CategoryRepo = categoryRepo;
         SizesRepo = sizesRepo;
         ProductCategoriesRepo = productCategoryRepo;
-        OrderAddressesRepo = orderAddress;
+        OrderAddressesRepo = orderAddressRepo;
+        OrdersRepo = orderRepo;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

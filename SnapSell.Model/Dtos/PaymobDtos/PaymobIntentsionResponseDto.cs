@@ -14,7 +14,7 @@ namespace SnapSell.Domain.Dtos.PaymobDtos
         public IntentionDetailDto IntentionDetail { get; set; }
 
         [JsonPropertyName("client_secret")]
-        public string ClientSecretDto { get; set; }
+        public string ClientSecret { get; set; }
 
         [JsonPropertyName("payment_methods")]
         public List<PaymentMethodDto> PaymentMethods { get; set; }

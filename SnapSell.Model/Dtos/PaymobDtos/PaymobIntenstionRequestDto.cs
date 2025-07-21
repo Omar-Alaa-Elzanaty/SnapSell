@@ -13,9 +13,9 @@ namespace SnapSell.Domain.Dtos.PaymobDtos
         [JsonPropertyName("billing_data")]
         public PaymobBillingDto BillingData { get; set; }
         [JsonPropertyName("redirection_url")]
-        public string RedirectUrl { get; set; }
+        public string? RedirectUrl { get; set; }
         [JsonPropertyName("notification_url")]
-        public string NotificationUrl { get; set; }
+        public string? NotificationUrl { get; set; }
     }
 
     public class PaymobBillingDto

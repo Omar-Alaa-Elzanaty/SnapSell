@@ -1,10 +1,11 @@
-﻿namespace SnapSell.Domain.Enums;
-
-public enum PaymentMethod
+﻿namespace SnapSell.Domain.Enums
 {
-    PurchaseCard = 1, // كروت مشتريات
-    CashOnDelivery = 2, // الدفع عند الاستلام
-    Fawry = 3, // فاليـو
-    Forsa = 4, // فرصة
-    PayTabsAman = 5 // PayTabs Aman
+    public enum PaymentMethods
+    {
+        Cash,
+        PayPal,
+        Wallet,
+        Card,
+        Valu
+    }
 }
