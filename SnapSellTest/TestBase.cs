@@ -16,6 +16,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Moq;
 using SnapSell.Application.Abstractions.Interfaces;
+using SnapSell.Application.Abstractions.Interfaces.Repos;
 using SnapSell.Application.Extensions.Services;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Constants;

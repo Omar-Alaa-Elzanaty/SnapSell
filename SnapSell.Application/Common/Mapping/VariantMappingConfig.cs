@@ -17,8 +17,7 @@ public class VariantMappingConfig : IRegister
         config.NewConfig<Variant, VariantsInAddVariantsToProductResponse>()
             .Map(dest => dest.VariantId, src => src.Id);
 
-        config.NewConfig<Variant, VariantResponseInGetAllProductsToSeller>()
-            .Map(dest => dest.VariantId, src => src.Id);
+        config.NewConfig<Variant, VariantResponseInGetAllProductsToSeller>();
 
         config.NewConfig<Variant, CreateProductVariantResponse>();
 

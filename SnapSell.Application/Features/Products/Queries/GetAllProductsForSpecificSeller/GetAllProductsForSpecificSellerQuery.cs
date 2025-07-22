@@ -10,30 +10,72 @@ public sealed record GetAllProductsForSpecificSellerQuery(
     PaginatedRequest Pagination)
     : IRequest<PaginatedResult<GetAllProductsForSpecificSellerResponse>>;
 
-public sealed record GetAllProductsForSpecificSellerResponse(
-    Guid ProductId,
-    string EnglishName,
-    string ArabicName,
-    string? EnglishDescription,
-    string? ArabicDescription,
-    bool IsFeatured,
-    bool IsHidden,
-    ProductTypes? ProductStatus,
-    int MinDeliveryDays,
-    int MaxDeliveryDays,
-    string? MainImageUrl,
-    string? MainVideoUrl,
-    ShippingType? ShippingType,
-    string BrandName,
-    IReadOnlyList<VariantResponseInGetAllProductsToSeller> Variants);
+// public sealed record GetAllProductsForSpecificSellerResponse(
+//     Guid ProductId,
+//     string EnglishName,
+//     string ArabicName,
+//     string? EnglishDescription,
+//     string? ArabicDescription,
+//     bool IsFeatured,
+//     bool IsHidden,
+//     ProductTypes? ProductStatus,
+//     int MinDeliveryDays,
+//     int MaxDeliveryDays,
+//     string? MainImageUrl,
+//     string? MainVideoUrl,
+//     ShippingType? ShippingType,
+//     string BrandName,
+//     IReadOnlyList<VariantResponseInGetAllProductsToSeller> Variants);
+
+// public sealed record VariantResponseInGetAllProductsToSeller(
+//     Guid VariantId,
+//     Guid? SizeId,
+//     Guid? ColorId,
+//     int Quantity,
+//     decimal Price,
+//     decimal RegularPrice,
+//     decimal? SalePrice,
+//     string? SKU,
+//     string? Barcode);
+    
+public sealed class GetAllProductsForSpecificSellerResponse
+{
+    public int ProductId { get; set; }
+    public Guid StoreId { get; set; }
+    public string EnglishName { get; set; }
+    public string ArabicName { get; set; }
+    public bool IsFeatured { get; set; }
+    public bool IsHidden { get; set; }
+    public ShippingType ShippingType { get; set; }
+    public ProductTypes ProductStatus { get; set; }
+    public List<PaymentMethod> PaymentMethods { get; set; } = [];
+    public List<GetProductImageResponse> Images { get; set; } = [];
+    public string EnglishDescription { get; set; }
+    public string ArabicDescription { get; set; }
+    public int MinDeliveryDays { get; set; }
+    public int MaxDeliveryDays { get; set; }
+    public decimal? Price { get; set; }
+    public decimal? SalePrice { get; set; }
+    public decimal? CostPrice { get; set; }
+    public int? Quantity { get; set; }
+    public string? Sku { get; set; }
+    public List<VariantResponseInGetAllProductsToSeller>? Variants { get; set; }
+}
+
+public sealed class GetProductImageResponse
+{
+    public string? ImageUrl { get; set; }
+    public bool IsMainImage { get; set; }
+}
+
 
 public sealed record VariantResponseInGetAllProductsToSeller(
-    Guid VariantId,
-    Guid? SizeId,
-    Guid? ColorId,
-    int Quantity,
-    decimal Price,
-    decimal RegularPrice,
+    Guid Id,
+    Guid SizeId,
+    string? Color,
+    int? Quantity,
+    decimal? Price,
     decimal? SalePrice,
-    string? SKU,
-    string? Barcode);
+    decimal? CostPrice,
+    string? Sku,
+    bool IsDefault);

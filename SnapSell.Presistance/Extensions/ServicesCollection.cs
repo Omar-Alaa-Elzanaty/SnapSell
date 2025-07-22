@@ -3,14 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using SnapSell.Application.Abstractions.Interfaces;
-using SnapSell.Application.Interfaces;
+using SnapSell.Application.Abstractions.Interfaces.Repos;
 using SnapSell.Application.Interfaces.Repos;
-using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Context;
 using SnapSell.Presistance.Repos;
@@ -59,7 +55,7 @@ namespace SnapSell.Presistance.Extensions
         private static IServiceCollection AddMongoDbContext(this IServiceCollection services, 
             IConfiguration configuration)
         {
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            // BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
             services.Configure<MongoDbSettings>(configuration.GetSection(MongoDbSettings.SectionName));
 
@@ -70,7 +66,7 @@ namespace SnapSell.Presistance.Extensions
                 new MongoClient(sp.GetRequiredService<IMongoDbSettings>().ConnectionString));
 
             services.AddScoped<MongoDbContext>();
-            services.AddMongoCollection<Product>();
+            // services.AddMongoCollection<Product>();
 
             return services;
         }

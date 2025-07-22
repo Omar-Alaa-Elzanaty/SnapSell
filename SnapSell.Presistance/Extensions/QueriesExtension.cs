@@ -31,7 +31,7 @@ public static class QueriesExtension
         EntityState state, 
         IHttpContextAccessor httpContextAccessor) where TEntity : IAuditable
     {
-        var userId = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userId = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var now = DateTime.UtcNow;
 
         if (state is EntityState.Added)

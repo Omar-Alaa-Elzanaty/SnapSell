@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Mapster;
 using MediatR;
+using SnapSell.Application.Abstractions.Interfaces.Repos;
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.SqlEntities;

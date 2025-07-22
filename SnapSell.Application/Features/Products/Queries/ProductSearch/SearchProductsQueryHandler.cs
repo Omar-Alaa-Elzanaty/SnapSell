@@ -2,7 +2,7 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SnapSell.Application.Abstractions.Interfaces;
-using SnapSell.Application.Interfaces.Repos;
+using SnapSell.Application.Abstractions.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models.SqlEntities;
@@ -11,6 +11,8 @@ namespace SnapSell.Application.Features.Products.Queries.ProductSearch;
 
 internal sealed class SearchProductsQueryHandler(
     ISQLBaseRepo<Product> productRepository,
+    ISQLBaseRepo<Brand> brandRepository,
+    ISQLBaseRepo<Category> categoryRepository,
     IMediaService mediaService)
     : IRequestHandler<SearchProductsQuery, PaginatedResult<SearchResponse>>
 {
@@ -20,61 +22,63 @@ internal sealed class SearchProductsQueryHandler(
     {
         var searchText = request.SearchText.Trim();
 
-        var query = productRepository.Entities
-            .Include(p => p.Brand)
-            .Include(p => p.ProductCategories)
-            .ThenInclude(pc => pc.Category)
-            .Include(p => p.Images)
-            .AsNoTracking()
-            .AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(searchText))
-        {
-            query = query.Where(p =>
+        var productMatches = await productRepository.Entities
+            .Where(p =>
                 EF.Functions.Like(p.EnglishName, $"%{searchText}%") ||
-                EF.Functions.Like(p.ArabicName, $"%{searchText}%") ||
-                EF.Functions.Like(p.Brand.Name, $"%{searchText}%") ||
-                p.ProductCategories.Any(pc =>
-                    pc.Category != null &&
-                    EF.Functions.Like(pc.Category.Name, $"%{searchText}%")));
-        }
-        
-        var totalCount = await query.CountAsync(cancellationToken);
-
-        var products = await query
-            .OrderByDescending(p => p.IsFeatured)
-            .Skip((request.PageNumber - 1) * request.PageSize)
-            .Take(request.PageSize)
+                EF.Functions.Like(p.ArabicName, $"%{searchText}%"))
+            .AsNoTracking()
+            .Select(p => new SearchResponse
+            {
+                Product = p.Adapt<ProductSearchDto>()
+            })
             .ToListAsync(cancellationToken);
         
-        var responseItems = products.Select(product =>
+        var brandMatches = await brandRepository.Entities
+            .Where(b => EF.Functions.Like(b.Name, $"%{searchText}%"))
+            .AsNoTracking()
+            .Select(b => new SearchResponse
+            {
+                Brand = b.Adapt<BrandDto>()
+            })
+            .ToListAsync(cancellationToken);
+
+        var categoryMatches = await categoryRepository.Entities
+            .Where(c => EF.Functions.Like(c.Name, $"%{searchText}%"))
+            .AsNoTracking()
+            .Select(c => new SearchResponse
+            {
+                Categories = c.Adapt<CategoriesDto>()
+            })
+            .ToListAsync(cancellationToken);
+
+        var allResults = productMatches
+            .Concat(brandMatches)
+            .Concat(categoryMatches)
+            .ToList();
+
+        var totalCount = allResults.Count;
+        
+        var pagedResults = allResults
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToList();
+        
+        foreach (var item in pagedResults)
         {
-            var response = new SearchResponse
+            if (item.Product?.Images != null)
             {
-                Product = product.Adapt<ProductSearchDto>(),
-                Brand = product.Brand.Adapt<BrandDto>(),
-                Categories = product.ProductCategories
-                    .Where(pc => pc.Category != null)
-                    .Select(pc => pc.Category.Adapt<CategoriesDto>())
-                    .FirstOrDefault()
-            };
-            
-            if (response.Product?.Images != null)
-            {
-                foreach (var img in response.Product.Images)
+                foreach (var img in item.Product.Images)
                 {
-                    if (!string.IsNullOrWhiteSpace(img.ImageUrl))
+                    if (!string.IsNullOrEmpty(img.ImageUrl))
                     {
                         img.ImageUrl = mediaService.GetUrl(img.ImageUrl, MediaTypes.Image);
                     }
                 }
             }
-            
-            return response;
-        }).ToList();
-
+        }
+        
         return await PaginatedResult<SearchResponse>.SuccessAsync(
-            responseItems,
+            pagedResults,
             totalCount,
             request.PageNumber,
             request.PageSize,

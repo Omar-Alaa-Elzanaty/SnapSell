@@ -13,6 +13,8 @@ public sealed class ProductImageConfiguration : AuditableEntityConfiguration<Pro
         builder.ToTable("ProductImages");
 
         builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
         builder.Property(x => x.ImageUrl)
             .IsRequired()

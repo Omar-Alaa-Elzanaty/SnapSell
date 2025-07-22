@@ -4,6 +4,7 @@ using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Net;
 using Mapster;
+using SnapSell.Application.Abstractions.Interfaces.Repos;
 using SnapSell.Domain.Models.SqlEntities;
 
 
@@ -16,6 +17,7 @@ internal sealed class GetAllPrandsQueryHandler(ISQLBaseRepo<Brand> brandaReposit
         CancellationToken cancellationToken)
     {
         var brands = await brandaRepository.GetAllAsync();
+        
         return Result<List<GetAllBrandsResponse>>.Success(
             data: brands.Adapt<List<GetAllBrandsResponse>>(),
             message: "Brands returned Successfully.",

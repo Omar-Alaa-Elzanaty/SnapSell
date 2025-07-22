@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace SnapSell.Application.Interfaces.Repos;
+namespace SnapSell.Application.Abstractions.Interfaces.Repos;
 
 public interface ISQLBaseRepo<T>
 {

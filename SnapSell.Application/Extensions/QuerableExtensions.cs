@@ -3,7 +3,6 @@ using MongoDB.Driver;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System.Linq.Expressions;
 using System.Reflection;
-using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Extensions;
 

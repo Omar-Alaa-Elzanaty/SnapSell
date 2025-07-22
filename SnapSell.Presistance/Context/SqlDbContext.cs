@@ -48,11 +48,10 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
 
         modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
     }
-
+    
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var userId = contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
+        var userId = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         foreach (var entry in ChangeTracker.Entries<IAuditable>())
         {
             if (entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)

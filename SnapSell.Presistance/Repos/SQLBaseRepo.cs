@@ -2,6 +2,7 @@
 using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Presistance.Context;
 using System.Linq.Expressions;
+using SnapSell.Application.Abstractions.Interfaces.Repos;
 
 namespace SnapSell.Presistance.Repos;
 
@@ -18,8 +19,6 @@ public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : cl
 
     public async Task AddRange(IEnumerable<T> entities)
     {
-        ArgumentNullException.ThrowIfNull(nameof(entities));
-
         await _context.AddRangeAsync(entities);
     }
 

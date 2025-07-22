@@ -220,7 +220,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CacheCodes");
+                    b.ToTable("CacheCodes", (string)null);
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Category", b =>
@@ -526,7 +526,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("OrderAddresses");
+                    b.ToTable("OrderAddresses", (string)null);
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.OrderItem", b =>
@@ -769,7 +769,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("ProductVideos");
+                    b.ToTable("ProductVideos", (string)null);
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Review", b =>
@@ -852,7 +852,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShoppingBags");
+                    b.ToTable("ShoppingBags", (string)null);
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Size", b =>
@@ -892,7 +892,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasIndex("ParentSizeId");
 
-                    b.ToTable("Sizes");
+                    b.ToTable("Sizes", (string)null);
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Store", b =>
@@ -948,7 +948,7 @@ namespace SnapSell.Presistance.Migrations
                     b.HasIndex("SellerId")
                         .IsUnique();
 
-                    b.ToTable("Stores");
+                    b.ToTable("Stores", (string)null);
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Variant", b =>
@@ -1027,7 +1027,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Videos");
+                    b.ToTable("Videos", (string)null);
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", b =>

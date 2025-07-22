@@ -1,6 +1,5 @@
 ﻿using SnapSell.Application.Abstractions.Interfaces;
-using SnapSell.Application.Interfaces;
-using SnapSell.Application.Interfaces.Repos;
+using SnapSell.Application.Abstractions.Interfaces.Repos;
 using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Context;
@@ -11,6 +10,7 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly SqlDbContext _context;
     public ISQLBaseRepo<Product> ProductsRepo { get; private set; }
+    public ISQLBaseRepo<ProductImage> ProductImagesRepo { get; }
     public ISQLBaseRepo<ProductCategory> ProductCategoriesRepo { get; }
     public ISQLBaseRepo<Category> CategoryRepo { get; private set; }
     public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
@@ -30,7 +30,8 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Brand> brands,
         ISQLBaseRepo<Category> categoryRepo,
         ISQLBaseRepo<Size> sizesRepo,
-        ISQLBaseRepo<ProductCategory> productCategoryRepo)
+        ISQLBaseRepo<ProductCategory> productCategoryRepo,
+        ISQLBaseRepo<ProductImage> productImagesRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -42,6 +43,7 @@ public class UnitOfWork : IUnitOfWork
         CategoryRepo = categoryRepo;
         SizesRepo = sizesRepo;
         ProductCategoriesRepo = productCategoryRepo;
+        ProductImagesRepo = productImagesRepo;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)
