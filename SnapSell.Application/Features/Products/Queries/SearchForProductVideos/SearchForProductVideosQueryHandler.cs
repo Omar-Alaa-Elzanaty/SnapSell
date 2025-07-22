@@ -35,7 +35,7 @@ namespace SnapSell.Application.Features.Products.Queries.SearchForProductVideos
 
             if (!query.CategoriesIds.IsEmptyOrNull())
             {
-                entities = entities.Where(x => x.ProductCategories.Any(c => query.CategoriesIds.Contains(c.CategoryId)));
+                entities = entities.Where(x => x.Categories.Any(c => query.CategoriesIds.Contains(c.CategoryId)));
             }
 
             if (!query.BrandsIds.IsEmptyOrNull())

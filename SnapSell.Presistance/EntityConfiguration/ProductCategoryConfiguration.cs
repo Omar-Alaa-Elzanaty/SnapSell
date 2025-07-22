@@ -13,7 +13,7 @@ public sealed class ProductCategoryConfiguration : IEntityTypeConfiguration<Prod
         builder.HasKey(x => new { x.ProductId, x.CategoryId });
         
         builder.HasOne(x => x.Product)
-            .WithMany(x => x.ProductCategories)
+            .WithMany(x => x.Categories)
             .HasForeignKey(x => x.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
         
