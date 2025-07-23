@@ -1,4 +1,5 @@
-﻿using SnapSell.Domain.Models.SqlEntities.Identitiy;
+﻿using SnapSell.Domain.Enums;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Domain.Models.SqlEntities;
 
@@ -12,18 +13,19 @@ public class Order : Auditable
     public required Guid ShippingAddressId { get; set; }
     public virtual OrderAddress? BillingAddress { get; set; }
     public Guid? BillingAddressId { get; set; }
-    public string PaymentMethod { get; set; }
+    public string? VoucherCode { get; set; }
+    public PaymentMethods PaymentMethod { get; set; }
     public string Email { get; set; }
     public decimal OrderTotal { get; set; }
-    public string OrderStatus { get; set; } = "Pending";
+    public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 }
 
 public class OrderItem : BaseEntity
 {
     public int ProductId { get; set; }
     public Guid? VariantId { get; set; }
-
-    public required int OrderId { get; set; }
+    public virtual Variant? Variant { get; set; }
+    public  int OrderId { get; set; }
     public virtual Order Order { get; set; }
     public int Quantity { get; set; }
     public decimal ProductVariantUnitPrice { get; set; }
@@ -32,7 +34,6 @@ public class OrderItem : BaseEntity
 
 public class OrderAddress : BaseEntity
 {
-
     public string FullName { get; set; }
     public string PhoneNumber { get; set; }
     public required string StreetName { get; set; }
@@ -42,5 +43,7 @@ public class OrderAddress : BaseEntity
     public required string City { get; set; }
     public required string District { get; set; }
     public string? Landmark { get; set; }
+    public string ClientId { get; set; }
+    public virtual Client Client { get; set; }
     public bool IsDefault { get; set; }
 }

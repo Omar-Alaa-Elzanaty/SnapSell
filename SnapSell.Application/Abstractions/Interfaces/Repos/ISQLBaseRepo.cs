@@ -15,4 +15,6 @@ public interface ISQLBaseRepo<T>
     Task<IEnumerable<T>> GetAllAsync();
     Task<IEnumerable<T>> FindAsync(Func<T, bool> predicate);
     Task<T?> FindOnCriteriaAsync(Expression<Func<T, bool>> predicate);
+    Task ExecuteSqlAsync(string sql, CancellationToken cancellationToken = default);
+
 }

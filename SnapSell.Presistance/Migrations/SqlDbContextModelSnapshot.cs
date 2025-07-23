@@ -220,7 +220,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CacheCodes", (string)null);
+                    b.ToTable("CacheCodes");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Category", b =>
@@ -310,6 +310,9 @@ namespace SnapSell.Presistance.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -442,12 +445,14 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<decimal>("OrderTotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("ShippingAddressId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("VoucherCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -475,6 +480,7 @@ namespace SnapSell.Presistance.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Country")
@@ -526,7 +532,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("OrderAddresses", (string)null);
+                    b.ToTable("OrderAddresses");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.OrderItem", b =>
@@ -572,6 +578,8 @@ namespace SnapSell.Presistance.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("VariantId");
 
                     b.ToTable("OrderItems", (string)null);
                 });
@@ -678,6 +686,8 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasIndex("BrandId");
 
+                    b.HasIndex("StoreId");
+
                     b.ToTable("Products", (string)null);
                 });
 
@@ -690,7 +700,8 @@ namespace SnapSell.Presistance.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ParentCategoryId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ParentCategoryId");
 
                     b.HasKey("ProductId", "CategoryId");
 
@@ -769,7 +780,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("ProductVideos", (string)null);
+                    b.ToTable("ProductVideos");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Review", b =>
@@ -852,7 +863,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShoppingBags", (string)null);
+                    b.ToTable("ShoppingBags");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Size", b =>
@@ -892,7 +903,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasIndex("ParentSizeId");
 
-                    b.ToTable("Sizes", (string)null);
+                    b.ToTable("Sizes");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Store", b =>
@@ -948,7 +959,7 @@ namespace SnapSell.Presistance.Migrations
                     b.HasIndex("SellerId")
                         .IsUnique();
 
-                    b.ToTable("Stores", (string)null);
+                    b.ToTable("Stores");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Variant", b =>
@@ -1027,7 +1038,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Videos", (string)null);
+                    b.ToTable("Videos");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", b =>
@@ -1181,9 +1192,13 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.OrderAddress", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", null)
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Client", "Client")
                         .WithMany("Addresses")
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.OrderItem", b =>
@@ -1194,7 +1209,13 @@ namespace SnapSell.Presistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Variant", "Variant")
+                        .WithMany()
+                        .HasForeignKey("VariantId");
+
                     b.Navigation("Order");
+
+                    b.Navigation("Variant");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Product", b =>
@@ -1205,7 +1226,15 @@ namespace SnapSell.Presistance.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Store", "Store")
+                        .WithMany("Products")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Brand");
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.ProductCategory", b =>
@@ -1217,7 +1246,7 @@ namespace SnapSell.Presistance.Migrations
                         .IsRequired();
 
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.Product", "Product")
-                        .WithMany("ProductCategories")
+                        .WithMany("Categories")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1329,13 +1358,18 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Product", b =>
                 {
-                    b.Navigation("Images");
+                    b.Navigation("Categories");
 
-                    b.Navigation("ProductCategories");
+                    b.Navigation("Images");
 
                     b.Navigation("Variants");
 
                     b.Navigation("Videos");
+                });
+
+            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Store", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Video", b =>

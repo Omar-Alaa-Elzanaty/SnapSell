@@ -9,7 +9,7 @@ namespace SnapSell.Presistance.Seeding;
 
 public class DataSeed
 {
-    public static async Task SeedDate(IServiceProvider services)
+    public static async Task Invoke(IServiceProvider services)
     {
         var context = services.GetRequiredService<SqlDbContext>();
 

@@ -14,5 +14,7 @@ public class Store : BaseEntity
     public StoreStatusTypes Status { get; set; } = StoreStatusTypes.Pending;
     public DeliverPeriodTypes DeliverPeriodTypes { get; set; }
     public string? LogoUrl { get; set; }
+    
+    public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
 
   }

@@ -32,10 +32,10 @@ public sealed class CustomerLogInQueryHandler(
 
         var token = await authenticationService.GenerateTokenAsync(user, true);
         var customer = new LogInCustomerResponse(user.Id, user.FullName, user.UserName!);
-        var lgInResult = new CustomerLogInResult(customer, token);
+        var logInResult = new CustomerLogInResult(customer, token);
 
         return Result<CustomerLogInResult>.Success(
-            data: lgInResult,
+            data: logInResult,
             message: "UserCreated Successfully.",
             HttpStatusCode.OK);
     }

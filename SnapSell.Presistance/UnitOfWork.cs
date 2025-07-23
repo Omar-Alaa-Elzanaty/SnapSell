@@ -10,15 +10,18 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly SqlDbContext _context;
     public ISQLBaseRepo<Product> ProductsRepo { get; private set; }
+    public ISQLBaseRepo<Account> AccountsRepo { get; }
     public ISQLBaseRepo<ProductImage> ProductImagesRepo { get; }
     public ISQLBaseRepo<ProductCategory> ProductCategoriesRepo { get; }
     public ISQLBaseRepo<Category> CategoryRepo { get; private set; }
     public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
-    public ISQLBaseRepo<Variant> VariantsRepo { get; set; }
-    public ISQLBaseRepo<Store> StoresRepo { get; set; }
-    public ISQLBaseRepo<Client> ClientsRepo { get; set; }
-    public ISQLBaseRepo<Brand> BrandsRepo { get; set; }
-    public ISQLBaseRepo<Size> SizesRepo { get; set; }
+    public ISQLBaseRepo<Variant> VariantsRepo { get;private set; }
+    public ISQLBaseRepo<Store> StoresRepo { get; private set; }
+    public ISQLBaseRepo<Client> ClientsRepo { get; private set; }
+    public ISQLBaseRepo<Brand> BrandsRepo { get; private set; }
+    public ISQLBaseRepo<Size> SizesRepo { get; private set; }
+    public ISQLBaseRepo<Order> OrdersRepo { get; private set; }
+    public ISQLBaseRepo<OrderAddress> OrderAddressesRepo { get; private set; }
 
     public UnitOfWork(
         SqlDbContext context,
@@ -31,7 +34,9 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Category> categoryRepo,
         ISQLBaseRepo<Size> sizesRepo,
         ISQLBaseRepo<ProductCategory> productCategoryRepo,
-        ISQLBaseRepo<ProductImage> productImagesRepo)
+        ISQLBaseRepo<OrderAddress> orderAddressRepo,
+        ISQLBaseRepo<Order>orderRepo, ISQLBaseRepo<ProductImage> productImagesRepo, 
+        ISQLBaseRepo<Account> accountsRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -43,7 +48,10 @@ public class UnitOfWork : IUnitOfWork
         CategoryRepo = categoryRepo;
         SizesRepo = sizesRepo;
         ProductCategoriesRepo = productCategoryRepo;
+        OrderAddressesRepo = orderAddressRepo;
+        OrdersRepo = orderRepo;
         ProductImagesRepo = productImagesRepo;
+        AccountsRepo = accountsRepo;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

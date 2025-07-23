@@ -17,7 +17,6 @@ internal sealed class RegisterCommandHandler(
         {
             FullName = request.FullName,
             UserName = request.UserName,
-            CreatedAt = DateTime.UtcNow,
         };
 
         if (await userManager.FindByNameAsync(request.UserName) is not null)

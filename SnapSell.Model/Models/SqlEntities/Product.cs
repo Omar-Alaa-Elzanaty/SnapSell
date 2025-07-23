@@ -10,6 +10,7 @@ public class Product : Auditable
     public string ArabicName { get; set; }
 
     public Guid StoreId { get; set; }
+    public virtual Store Store { get; set; }
     public string? EnglishDescription { get; set; }
     public string? ArabicDescription { get; set; }
     public virtual List<Variant> Variants { get; set; } = new();
@@ -23,7 +24,7 @@ public class Product : Auditable
     public Guid BrandId { get; set; }
     public virtual Brand Brand { get; set; }
     
-    public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new HashSet<ProductCategory>();
+    public virtual ICollection<ProductCategory> Categories { get; set; } = new HashSet<ProductCategory>();
     public ProductStatus ProductStatus { get; set; }
     public ProductTypes ProductType { get; set; }
     public int MinDeliveryDays { get; set; }

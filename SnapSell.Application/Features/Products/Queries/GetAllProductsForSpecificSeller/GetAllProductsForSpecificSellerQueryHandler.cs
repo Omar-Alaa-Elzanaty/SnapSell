@@ -28,6 +28,7 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
                 message:"The Current user is unauthorized for that action.",
                 statusCode:HttpStatusCode.Unauthorized);
         }
+        
         var query = unitOfWork.ProductsRepo.Entities
             .Where(p => p.CreatedBy == userId);
 

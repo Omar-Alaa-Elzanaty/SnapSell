@@ -43,7 +43,7 @@ public sealed class CreateProductResponse
     public bool IsHidden { get; set; }
     public ShippingType ShippingType { get; set; }
     public ProductTypes ProductStatus { get; set; }
-    public List<PaymentMethod> PaymentMethods { get; set; } = [];
+    public List<PaymentMethods> PaymentMethods { get; set; } = [];
     public List<ProductImageResponse> Images { get; set; } = [];
     public string EnglishDescription { get; set; }
     public string ArabicDescription { get; set; }

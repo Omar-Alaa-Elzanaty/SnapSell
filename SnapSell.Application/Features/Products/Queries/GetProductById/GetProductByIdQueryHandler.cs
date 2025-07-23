@@ -37,7 +37,7 @@ namespace SnapSell.Application.Features.Products.Queries.GetProductById
             var product = await _unitOfWork.ProductsRepo.Entities
                 .Where(x => x.Id == query.Id)
                 .ProjectToType<GetProductByIdQueryDto>(mapConfig)
-                .FirstOrDefaultAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken); 
 
             if (product == null)
             {

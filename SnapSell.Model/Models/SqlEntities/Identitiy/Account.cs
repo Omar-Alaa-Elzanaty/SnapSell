@@ -10,4 +10,5 @@ public class Account: IdentityUser
     public string? CreatedBy { get; set; }
     public string? LastUpdatedBy { get; set; }
     public bool IsDeleted { get; set; }
+    public string Country { get; set; }
 }

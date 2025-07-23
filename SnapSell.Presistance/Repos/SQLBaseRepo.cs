@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SnapSell.Application.Interfaces.Repos;
 using SnapSell.Presistance.Context;
 using System.Linq.Expressions;
 using SnapSell.Application.Abstractions.Interfaces.Repos;
@@ -16,7 +15,11 @@ public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : cl
 
         await _context.AddAsync(entity);
     }
-
+    public async Task ExecuteSqlAsync(string sql, CancellationToken cancellationToken = default)
+    {
+        await _context.Database.ExecuteSqlRawAsync(sql, cancellationToken);
+    }
+    
     public async Task AddRange(IEnumerable<T> entities)
     {
         await _context.AddRangeAsync(entities);

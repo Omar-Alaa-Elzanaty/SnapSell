@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnapSell.Application.Features.Payments.Command.CreatePayment
+namespace SnapSell.Application.Abstractions.Interfaces
 {
-    public class CreatePaymentCommandValidator
+    public interface ILanguageHelper
     {
+        string GetLang();
     }
 }

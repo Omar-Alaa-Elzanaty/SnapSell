@@ -18,7 +18,7 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpPost("CreateStore")]
@@ -26,7 +26,7 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpPut("AddCustomerInformation")]
@@ -35,7 +35,7 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpPost("LogInSeller")]
@@ -43,7 +43,7 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(query, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpPost("LogInCustomer")]
@@ -51,7 +51,7 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(query, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpPost("SendEmailConfirmationOtp")]
@@ -59,7 +59,7 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 
     [HttpPost("ConfirmEmail")]
@@ -67,6 +67,6 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResult(result);
+        return await HandleMediatorResultAsync(result);
     }
 }

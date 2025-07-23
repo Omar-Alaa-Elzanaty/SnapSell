@@ -8,14 +8,17 @@ namespace SnapSell.Application.Abstractions.Interfaces;
 public interface IUnitOfWork : IDisposable
 {
     ISQLBaseRepo<Product> ProductsRepo { get; }
+    ISQLBaseRepo<Account> AccountsRepo { get; }
     ISQLBaseRepo<ProductImage> ProductImagesRepo { get; }
     ISQLBaseRepo<ProductCategory> ProductCategoriesRepo { get; }
     ISQLBaseRepo<Category> CategoryRepo { get; }
-    ISQLBaseRepo<CacheCode> CacheCodesRepo { get; } 
-    ISQLBaseRepo<Variant> VariantsRepo { get; set; }
-    ISQLBaseRepo<Store> StoresRepo { get; set; }
-    ISQLBaseRepo<Client> ClientsRepo { get; set; }
-    ISQLBaseRepo<Brand> BrandsRepo { get; set; }
-    ISQLBaseRepo<Size> SizesRepo { get; set; }
+    ISQLBaseRepo<CacheCode> CacheCodesRepo { get; }
+    ISQLBaseRepo<Variant> VariantsRepo { get; }
+    ISQLBaseRepo<Store> StoresRepo { get; }
+    ISQLBaseRepo<Client> ClientsRepo { get; }
+    ISQLBaseRepo<Brand> BrandsRepo { get; }
+    ISQLBaseRepo<Size> SizesRepo { get; }
+    ISQLBaseRepo<Order> OrdersRepo { get; }
+    ISQLBaseRepo<OrderAddress> OrderAddressesRepo { get; }
     Task<int> SaveAsync(CancellationToken cancellationToken = default);
 }

@@ -25,6 +25,9 @@ public class AccountConfiguration:IEntityTypeConfiguration<Account>
         builder.Property(x => x.IsDeleted)
             .HasDefaultValue(false);
         
+        builder.Property(x => x.Country)
+            .IsRequired(false);
+        
         builder.HasDiscriminator<string>("Discriminator")
             .HasValue<Seller>("Seller")
             .HasValue<Client>("Client");

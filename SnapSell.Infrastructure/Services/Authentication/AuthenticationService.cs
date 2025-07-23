@@ -103,15 +103,18 @@ public sealed class AuthenticationService(
         var user = await userManager.FindByIdAsync(userId);
         if (user == null)
             return false;
+        
+        if (await userManager.IsInRoleAsync(user, role))
+            return true;
 
         if (!await roleManager.RoleExistsAsync(role))
         {
-            var roleResult = await roleManager.CreateAsync(new IdentityRole(role));
-            if (!roleResult.Succeeded)
+            var createResult = await roleManager.CreateAsync(new IdentityRole(role));
+            if (!createResult.Succeeded)
                 return false;
         }
-
-        var addRoleResult = await userManager.AddToRoleAsync(user, role);
-        return addRoleResult.Succeeded;
+        
+        var addResult = await userManager.AddToRoleAsync(user, role);
+        return addResult.Succeeded;
     }
 }

@@ -2,10 +2,10 @@
 
 public enum Currencies
 {
-    EgyptianPound = 1, // EGP
-    SaudiRiyal = 2, // SAR
-    KuwaitiDinar = 3, // KWD
-    BahrainiDinar = 4, // BHD
-    QatariRiyal = 5, // QAR
-    OmaniRiyal = 6, // OMR
+    EGP = 1, // EGP
+    SAR = 2, // SAR
+    KWD = 3, // KWD
+    BHD = 4, // BHD
+    QAR = 5, // QAR
+    OMR = 6, // OMR
 }

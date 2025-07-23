@@ -49,15 +49,12 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
 
         public async Task<PaymobIntentsionResponseDto> CreatePayment(PaymobIntenstionRequestDto model)
         {
-            var paymentMethods = _config["Paymob:PaymentMethods"]!;
-
-            model.PaymentMethods = paymentMethods.Split(',').ToList();
             model.RedirectUrl = _config["Paymob:FrontEndRedirectUrl"]!;
             model.NotificationUrl = _config["paymob:BackendCallbackMethod"]!;
 
-            var serilizeObject = JsonSerializer.Serialize(model);
+            var serializeObject = JsonSerializer.Serialize(model);
 
-            var content = new StringContent(serilizeObject, new MediaTypeHeaderValue("application/json"));
+            var content = new StringContent(serializeObject, new MediaTypeHeaderValue("application/json"));
 
             var response = await _apiService.SendAsync<PaymobIntentsionResponseDto>(_config["Paymob:IntentionUrl"]!, content);
 

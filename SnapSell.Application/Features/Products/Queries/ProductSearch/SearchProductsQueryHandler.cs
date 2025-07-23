@@ -11,8 +11,6 @@ namespace SnapSell.Application.Features.Products.Queries.ProductSearch;
 
 internal sealed class SearchProductsQueryHandler(
     ISQLBaseRepo<Product> productRepository,
-    ISQLBaseRepo<Brand> brandRepository,
-    ISQLBaseRepo<Category> categoryRepository,
     IMediaService mediaService)
     : IRequestHandler<SearchProductsQuery, PaginatedResult<SearchResponse>>
 {
@@ -22,63 +20,61 @@ internal sealed class SearchProductsQueryHandler(
     {
         var searchText = request.SearchText.Trim();
 
-        var productMatches = await productRepository.Entities
-            .Where(p =>
+        var query = productRepository.Entities
+            .Include(p => p.Brand)
+            .Include(p => p.Categories)
+            .ThenInclude(pc => pc.Category)
+            .Include(p => p.Images)
+            .AsNoTracking()
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            query = query.Where(p =>
                 EF.Functions.Like(p.EnglishName, $"%{searchText}%") ||
-                EF.Functions.Like(p.ArabicName, $"%{searchText}%"))
-            .AsNoTracking()
-            .Select(p => new SearchResponse
-            {
-                Product = p.Adapt<ProductSearchDto>()
-            })
-            .ToListAsync(cancellationToken);
+                EF.Functions.Like(p.ArabicName, $"%{searchText}%") ||
+                EF.Functions.Like(p.Brand.Name, $"%{searchText}%") ||
+                p.Categories.Any(pc =>
+                    pc.Category != null &&
+                    EF.Functions.Like(pc.Category.Name, $"%{searchText}%")));
+        }
         
-        var brandMatches = await brandRepository.Entities
-            .Where(b => EF.Functions.Like(b.Name, $"%{searchText}%"))
-            .AsNoTracking()
-            .Select(b => new SearchResponse
-            {
-                Brand = b.Adapt<BrandDto>()
-            })
-            .ToListAsync(cancellationToken);
+        var totalCount = await query.CountAsync(cancellationToken);
 
-        var categoryMatches = await categoryRepository.Entities
-            .Where(c => EF.Functions.Like(c.Name, $"%{searchText}%"))
-            .AsNoTracking()
-            .Select(c => new SearchResponse
-            {
-                Categories = c.Adapt<CategoriesDto>()
-            })
-            .ToListAsync(cancellationToken);
-
-        var allResults = productMatches
-            .Concat(brandMatches)
-            .Concat(categoryMatches)
-            .ToList();
-
-        var totalCount = allResults.Count;
-        
-        var pagedResults = allResults
+        var products = await query
+            .OrderByDescending(p => p.IsFeatured)
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
-            .ToList();
+            .ToListAsync(cancellationToken);
         
-        foreach (var item in pagedResults)
+        var responseItems = products.Select(product =>
         {
-            if (item.Product?.Images != null)
+            var response = new SearchResponse
             {
-                foreach (var img in item.Product.Images)
+                Product = product.Adapt<ProductSearchDto>(),
+                Brand = product.Brand.Adapt<BrandDto>(),
+                Categories = product.Categories
+                    .Where(pc => pc.Category != null)
+                    .Select(pc => pc.Category.Adapt<CategoriesDto>())
+                    .FirstOrDefault()
+            };
+            
+            if (response.Product?.Images != null)
+            {
+                foreach (var img in response.Product.Images)
                 {
-                    if (!string.IsNullOrEmpty(img.ImageUrl))
+                    if (!string.IsNullOrWhiteSpace(img.ImageUrl))
                     {
                         img.ImageUrl = mediaService.GetUrl(img.ImageUrl, MediaTypes.Image);
                     }
                 }
             }
-        }
-        
+            
+            return response;
+        }).ToList();
+
         return await PaginatedResult<SearchResponse>.SuccessAsync(
-            pagedResults,
+            responseItems,
             totalCount,
             request.PageNumber,
             request.PageSize,
