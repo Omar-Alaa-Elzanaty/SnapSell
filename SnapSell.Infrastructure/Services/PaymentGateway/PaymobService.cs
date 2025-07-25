@@ -1,7 +1,7 @@
 ﻿using Mapster;
 using Microsoft.Extensions.Configuration;
 using SnapSell.Application.Features.Payments.Command.Callback;
-using SnapSell.Application.Features.Payments.Command.Token;
+using SnapSell.Application.Features.Payments.Command.TokenCallback;
 using SnapSell.Application.Interfaces;
 using SnapSell.Domain.Dtos.PaymobDtos;
 using System.Net.Http.Headers;
@@ -66,7 +66,7 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
             return response.Data!;
         }
 
-        public async Task<PaymobSaveWithCardTokenResponseDto> PayWithSavedCardToken(string cardToken,string paymentKey)
+        public async Task<PaymobSaveWithCardTokenResponseDto> CreatePaymentWithSavedCardToken(string cardToken,string paymentKey)
         {
             var body = new
             {
@@ -131,11 +131,11 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
 
             byte[] hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(plainText));
 
-            var hashedtext = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            var hashedText = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
 
             var hmcaKey = _config["HMAC"]!;
 
-            return hashedtext == hmcaKey;
+            return hashedText == hmcaKey;
         }
     }
 }

@@ -2,7 +2,7 @@
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 
-namespace SnapSell.Application.Features.Orders.Commands
+namespace SnapSell.Application.Features.Orders.Commands.Create
 {
     public class CreateOrderCommand : IRequest<Result<string>>
     {

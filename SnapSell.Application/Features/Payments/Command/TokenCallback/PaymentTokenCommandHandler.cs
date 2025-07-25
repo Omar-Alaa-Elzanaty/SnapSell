@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnapSell.Application.Features.Payments.Command.Token
+namespace SnapSell.Application.Features.Payments.Command.TokenCallback
 {
     internal class PaymentTokenCommandHandler : IRequestHandler<PaymentTokenCommand, Result<int>>
     {

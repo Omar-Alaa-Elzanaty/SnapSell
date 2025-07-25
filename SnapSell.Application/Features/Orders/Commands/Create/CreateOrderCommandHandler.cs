@@ -12,7 +12,7 @@ using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using System.Security.Claims;
 
-namespace SnapSell.Application.Features.Orders.Commands
+namespace SnapSell.Application.Features.Orders.Commands.Create
 {
     internal class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Result<string>>
     {
