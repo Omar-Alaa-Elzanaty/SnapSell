@@ -73,8 +73,8 @@ namespace SnapSell.Application.Features.Products.Queries.SearchForProduct
             }
 
             var mapConfig = new TypeAdapterConfig();
-            //mapConfig.NewConfig<Product, SearchForProductQueryDto>()
-            //    .Map(dest => dest.ImageUrl, src => src.Images.Where(i => i.IsMainImage).Select(i => i.ImageUrl).FirstOrDefault()!);
+            mapConfig.NewConfig<Product, SearchForProductQueryDto>()
+                .Map(dest => dest.ImageUrl, src => src.Images.Where(i => i.IsMainImage).Select(i => i.ImageUrl).FirstOrDefault()!);
 
             var products = await entities
                 .ProjectToType<SearchForProductQueryDto>(mapConfig)
