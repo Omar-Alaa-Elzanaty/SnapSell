@@ -14,7 +14,7 @@ namespace SnapSell.Presentation.EndPoints;
 public sealed class AccountController(ISender sender) : ApiControllerBase
 {
     [HttpPost("Register")]
-    public async Task<ActionResult<Result<RegisterResult>>> Register([FromForm] RegisterCommand command,
+    public async Task<ActionResult<Result<RegisterResult>>> Register([FromBody] RegisterCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);

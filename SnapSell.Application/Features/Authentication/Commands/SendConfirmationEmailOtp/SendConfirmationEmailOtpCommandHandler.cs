@@ -26,10 +26,6 @@ namespace SnapSell.Application.Features.Authentication.Commands.SendConfirmation
 
             var otp = new Random().Next(10000, 99999).ToString();
 
-            if (_webHost.IsDevelopment())
-            {
-                return Result<string>.Success(otp, _localizer["EmailOtpSent"]);
-            }
 
             if (!await _emailService.SendEmailConfirmationOtp(command.Email, otp))
             {
@@ -38,7 +34,14 @@ namespace SnapSell.Application.Features.Authentication.Commands.SendConfirmation
 
             _memoryCache.Set("ConfirmEmail" + command.Email, otp, TimeSpan.FromMinutes(5));
 
-            return Result<string>.Success(_localizer["EmailOtpSent"]);
+            if (_webHost.IsDevelopment())
+            {
+                return Result<string>.Success(otp, _localizer["EmailOtpSent"]);
+            }
+            else
+            {
+                return Result<string>.Success(_localizer["EmailOtpSent"]);
+            }
         }
     }
 }

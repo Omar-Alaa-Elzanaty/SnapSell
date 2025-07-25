@@ -31,7 +31,7 @@ public sealed class CustomerLogInQueryHandler(
         }
 
         var token = await authenticationService.GenerateTokenAsync(user, true);
-        var customer = new LogInCustomerResponse(user.Id, user.FullName, user.UserName!);
+        var customer = new LogInCustomerResponse(user.Id, user.FirstName, user.UserName!);
         var logInResult = new CustomerLogInResult(customer, token);
 
         return Result<CustomerLogInResult>.Success(

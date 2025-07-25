@@ -143,7 +143,8 @@ namespace SnapSell.Test
 
                 var admin = new Account()
                 {
-                    FullName = "admin",
+                    FirstName = "admin",
+                    LastName = "admin",
                     Email = "admin@gmail.com",
                     UserName = "admin"
                 };

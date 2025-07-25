@@ -9,5 +9,9 @@
   "StoreApproved": "Store has been approved successfully.",
   "StoreRejected": "Store has been rejected.",
   "ShouldEnterAddress": "Address most provide",
-  "ProductNotFound": "Product not found."
+  "ProductNotFound": "Product not found.",
+  "UserAlreadyExists": "User already exists.",
+  "UserNotFound": "User not found.",
+  "UserNameUsedBefore": "Username has been used before.",
+  "UserCreatedSuccessfully": "User created."
 }

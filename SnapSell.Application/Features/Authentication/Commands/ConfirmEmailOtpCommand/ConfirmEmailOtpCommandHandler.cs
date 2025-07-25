@@ -48,8 +48,29 @@ namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpC
 
             if (user is null)
             {
-                return Result<ConfirmEmailOtpCommandResponse>.Success(new ConfirmEmailOtpCommandResponse());
+
+                if (await _userManager.Users.AnyAsync(x => x.UserName == request.Email,cancellationToken))
+                {
+                    return Result<ConfirmEmailOtpCommandResponse>.Failure(_localizer["UserAlreadyExists"]);
+                }
+
+                user = new Account()
+                {
+                    UserName = request.Email,
+                    Email = request.Email,
+                    FirstName="User",
+                    LastName="User",
+                    EmailConfirmed = true
+                };
+
+                var identity = await _userManager.CreateAsync(user);
+
+                return Result<ConfirmEmailOtpCommandResponse>.Success(new ConfirmEmailOtpCommandResponse()
+                {
+                    Token = await _authServices.GenerateTokenAsync(user)
+                });
             }
+
 
             var roles = await _userManager.GetRolesAsync(user);
 

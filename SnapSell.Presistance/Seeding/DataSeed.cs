@@ -30,7 +30,8 @@ public class DataSeed
 
                 var admin = new Account()
                 {
-                    FullName = "admin",
+                    FirstName = "admin",
+                    LastName="admin",
                     Email = "admin@gmail.com",
                     UserName = "admin"
                 };

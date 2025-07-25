@@ -1,5 +1,5 @@
 ﻿using FluentValidation.Results;
-using SnapSell.Domain.Extnesions;
+using SnapSell.Domain.Extensions;
 using System.Net;
 using System.Text.Json.Serialization;
 
