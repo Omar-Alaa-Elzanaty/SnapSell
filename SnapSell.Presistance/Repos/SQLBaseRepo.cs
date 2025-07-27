@@ -2,10 +2,11 @@
 using SnapSell.Presistance.Context;
 using System.Linq.Expressions;
 using SnapSell.Application.Abstractions.Interfaces.Repos;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Presistance.Repos;
 
-public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : class
+public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : Auditable
 {
     private readonly SqlDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
@@ -25,11 +26,21 @@ public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : cl
         await _context.AddRangeAsync(entities);
     }
 
-    public void Delete(T entity)
+    public void Remove(T entity)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-        _context.Remove(entity);
+        entity.IsDeleted = true;
+        _context.Update(entity);
     }
+
+    public void RemoveRange(IEnumerable<T> entities)
+    {
+        foreach (var entity in entities)
+        {
+            entity.IsDeleted = true;
+        }
+        _context.UpdateRange(entities);
+    }
+
 
     public void Update(T entity)
     {

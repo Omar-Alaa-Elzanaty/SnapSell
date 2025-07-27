@@ -12,4 +12,4 @@ public sealed record RegisterResult(
     string UserId,
     string FullName,
     string UserName,
-    string AccessToken);
+    string Token);

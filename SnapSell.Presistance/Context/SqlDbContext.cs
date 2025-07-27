@@ -20,8 +20,6 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<OrderAddress> OrderAddresses { get; set; }
     public DbSet<ShoppingBag> ShoppingBags { get; set; }
     public DbSet<Review> Reviews { get; set; }
-    public DbSet<Seller> Sellers { get; set; }
-    public DbSet<Client> Clients { get; set; }
     public DbSet<Size> Sizes { get; set; }
     public DbSet<Store> Stores { get; set; }
     public DbSet<ClientCategoryFavorite> ClientCategoryFavorites { get; set; }

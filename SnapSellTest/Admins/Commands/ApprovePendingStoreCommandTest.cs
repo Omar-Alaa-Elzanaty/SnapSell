@@ -24,7 +24,11 @@ namespace SnapSell.Test.Admins.Commands
             var unitOfWork = GetUnitOfWork();
             var userManager = _serviceProvider.GetRequiredService<UserManager<Account>>();
 
-            var seller = new Seller() { FullName = "Test Seller", Email = "Test@gmail.com", UserName = "TestSeller" };
+            var seller = new Account()
+            {
+                FullName = "Test Seller", 
+                Email = "Test@gmail.com", UserName = "TestSeller"
+            };
             await userManager.CreateAsync(seller, "123@Abc");
 
             var store = new Store

@@ -9,5 +9,7 @@
   "StoreApproved": "تمت الموافقة على المتجر بنجاح.",
   "StoreRejected": "تم رفض المتجر.",
   "ShouldEnterAddress": "يجب إضافة عنوان",
-  "ProductNotFound": "لم يتم العثور على المنتج."
+  "ProductNotFound": "لم يتم العثور على المنتج.",
+  "CustomerDetailsAddedSuccessfully": "تمت إضافة تفاصيل العميل بنجاح.",
+  "UserNotFound":"المستخدم غير موجود"
 }

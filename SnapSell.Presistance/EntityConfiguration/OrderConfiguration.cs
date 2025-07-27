@@ -14,7 +14,7 @@ public class OrderConfiguration : AuditableEntityConfiguration<Order>
 
         builder.HasKey(x => x.Id);
 
-        builder.HasOne(x => x.Client)
+        builder.HasOne(x => x.Account)
             .WithMany(x => x.Orders)
             .HasForeignKey(x => x.ClientId)
             .OnDelete(DeleteBehavior.Restrict);

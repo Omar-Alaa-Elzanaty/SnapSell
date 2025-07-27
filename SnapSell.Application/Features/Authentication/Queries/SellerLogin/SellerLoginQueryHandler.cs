@@ -9,7 +9,6 @@ namespace SnapSell.Application.Features.Authentication.Queries.SellerLogin;
 
 internal sealed class SellerLoginQueryHandler(
     IAuthenticationService authenticationService,
-    SignInManager<Account> signInManager,
     UserManager<Account> userManager) : IRequestHandler<SellerLoginQuery, Result<SellerLogInResult>>
 {
     public async Task<Result<SellerLogInResult>> Handle(SellerLoginQuery request, CancellationToken cancellationToken)

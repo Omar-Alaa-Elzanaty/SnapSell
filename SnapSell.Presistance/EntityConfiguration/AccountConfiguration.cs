@@ -28,8 +28,17 @@ public class AccountConfiguration:IEntityTypeConfiguration<Account>
         builder.Property(x => x.Country)
             .IsRequired(false);
         
-        builder.HasDiscriminator<string>("Discriminator")
-            .HasValue<Seller>("Seller")
-            .HasValue<Client>("Client");
+        builder.Property(x => x.FullName)
+            .IsRequired(false);
+        
+        builder.Property(x => x.About)
+            .IsRequired(false);
+
+        builder.Property(x => x.Gender)
+            .IsRequired(false);
+
+        builder.Property(x => x.BirthDate)
+            .IsRequired(false);
+
     }
 }

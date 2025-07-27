@@ -9,7 +9,7 @@ public class StoreConfiguration : AuditableEntityConfiguration<Store>
 {
     public override void Configure(EntityTypeBuilder<Store> builder)
     {
-        builder.HasOne(s => s.Seller)
+        builder.HasOne(s => s.Account)
             .WithOne(seller => seller.Store)
             .HasForeignKey<Store>(s => s.SellerId)
             .IsRequired()

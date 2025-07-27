@@ -9,5 +9,7 @@
   "StoreApproved": "Store has been approved successfully.",
   "StoreRejected": "Store has been rejected.",
   "ShouldEnterAddress": "Address most provide",
-  "ProductNotFound": "Product not found."
+  "ProductNotFound": "Product not found.",
+  "CustomerDetailsAddedSuccessfully": "Customer Details Added successfuly.",
+  "UserNotFound": "User Not Found."
 }

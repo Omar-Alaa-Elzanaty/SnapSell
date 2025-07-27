@@ -16,7 +16,7 @@ public class Product : Auditable
     public virtual List<Variant> Variants { get; set; } = new();
 
     public List<int> PaymentMethods { get; set; } = new();
-
+    
     public bool IsFeatured { get; set; }
 
     public bool IsHidden { get; set; }

@@ -5,7 +5,7 @@ namespace SnapSell.Domain.Models.SqlEntities;
 public class ClientBrandFavorite
 {
     public string ClientId { get; set; }
-    public virtual Client Client { get; set; }
+    public virtual Account Account { get; set; }
     
     public Guid BrandId { get; set; }
     public virtual Brand Brand { get; set; }

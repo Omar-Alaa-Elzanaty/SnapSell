@@ -17,7 +17,6 @@ public class UnitOfWork : IUnitOfWork
     public ISQLBaseRepo<CacheCode> CacheCodesRepo { get; private set; }
     public ISQLBaseRepo<Variant> VariantsRepo { get;private set; }
     public ISQLBaseRepo<Store> StoresRepo { get; private set; }
-    public ISQLBaseRepo<Client> ClientsRepo { get; private set; }
     public ISQLBaseRepo<Brand> BrandsRepo { get; private set; }
     public ISQLBaseRepo<Size> SizesRepo { get; private set; }
     public ISQLBaseRepo<Order> OrdersRepo { get; private set; }
@@ -29,7 +28,6 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Product> productsRepo,
         ISQLBaseRepo<Variant> variants,
         ISQLBaseRepo<Store> stores,
-        ISQLBaseRepo<Client> clients,
         ISQLBaseRepo<Brand> brands,
         ISQLBaseRepo<Category> categoryRepo,
         ISQLBaseRepo<Size> sizesRepo,
@@ -43,7 +41,6 @@ public class UnitOfWork : IUnitOfWork
         ProductsRepo = productsRepo;
         VariantsRepo = variants;
         StoresRepo = stores;
-        ClientsRepo = clients;
         BrandsRepo = brands;
         CategoryRepo = categoryRepo;
         SizesRepo = sizesRepo;

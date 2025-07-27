@@ -1,15 +1,14 @@
+using System.Net;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using SnapSell.Application.Abstractions.Interfaces;
-using SnapSell.Application.Features.Address.Commands.AddAddress;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.SqlEntities;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
-using System.Net;
 
-namespace SnapSell.Application.Features.store.Commands.CreateStore;
+namespace SnapSell.Application.Features.Address.Commands.AddAddress;
 
 internal sealed class AddAddressCommandHandler(
     IUnitOfWork unitOfWork,
@@ -20,7 +19,7 @@ internal sealed class AddAddressCommandHandler(
     public async Task<Result<AddAddressResponse>> Handle(AddAddressCommand request,
         CancellationToken cancellationToken)
     {
-       var client = await unitOfWork.ClientsRepo.FindOnCriteriaAsync(i=>i.Id==request.ClinetId);    
+       var client = await unitOfWork.AccountsRepo.FindOnCriteriaAsync(i=>i.Id==request.ClinetId);    
 
         if(client == null)
         {
@@ -29,8 +28,7 @@ internal sealed class AddAddressCommandHandler(
         var newAddress = request.Adapt<OrderAddress>();
         client.Addresses.Add(newAddress);
 
-        await unitOfWork.SaveAsync();
-
+        await unitOfWork.SaveAsync(cancellationToken);
         return new Result<AddAddressResponse>() {Message = "Address Added Successfully." };   
 
     }

@@ -7,7 +7,7 @@ public class Order : Auditable
 {
     public int Id { get; set; }
     public string ClientId { get; set; }  // customerId
-    public virtual Client Client { get; set; }
+    public virtual Account Account { get; set; }
     public virtual List<OrderItem> Items { get; set; } = [];
     public virtual OrderAddress ShippingAddress { get; set; }
     public required Guid ShippingAddressId { get; set; }
@@ -44,6 +44,6 @@ public class OrderAddress : BaseEntity
     public required string District { get; set; }
     public string? Landmark { get; set; }
     public string ClientId { get; set; }
-    public virtual Client Client { get; set; }
+    public virtual Account Account { get; set; }
     public bool IsDefault { get; set; }
 }

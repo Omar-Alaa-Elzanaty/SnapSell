@@ -12,7 +12,7 @@ public sealed class ClientCategoryFavoriteConfiguration : IEntityTypeConfigurati
         
         builder.HasKey(x => new { x.ClientId, x.CategoryId });
         
-        builder.HasOne(x => x.Client)
+        builder.HasOne(x => x.Account)
             .WithMany(x => x.FavoriteCategories)
             .HasForeignKey(x => x.ClientId)
             .OnDelete(DeleteBehavior.Cascade);

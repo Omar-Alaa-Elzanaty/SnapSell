@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.Features.products.Commands.AddAdditionalInformationToProduct;
 using SnapSell.Application.Features.products.Commands.CreateProduct;
+using SnapSell.Application.Features.Products.Commands.UpdateProduct;
 using SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Application.Features.store.Commands.CreateStore;
 using SnapSell.Domain.Dtos;
@@ -33,17 +33,18 @@ public sealed class SellerController(ISender sender) : ApiControllerBase
 
     [HttpPost("CreateProduct")]
     [RequestSizeLimit(500 * 1024 * 1024)]
-    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct([FromBody] CreateProductCommand command,
+    public async Task<ActionResult<Result<CreateProductResponse>>> CreateProduct(
+        [FromBody] CreateProductCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
         return await HandleMediatorResultAsync(result);
     }
 
-    [HttpPost("CreateProductAdditionalInformation")]
-    public async Task<ActionResult<Result<CreateProductAdditionalInformationResponse>>>
-        CreateProductAdditionalInformation([FromBody] AddAdditionalInformationToProductCommand command,
-            CancellationToken cancellationToken)
+    [HttpPost("UpdateProduct")]
+    public async Task<ActionResult<Result<UpdateProductResponse>>> UpdateProduct(
+        [FromBody] UpdateProductCommand command,
+        CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
         return await HandleMediatorResultAsync(result);
