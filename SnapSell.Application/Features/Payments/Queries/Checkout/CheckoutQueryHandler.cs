@@ -31,7 +31,7 @@ namespace SnapSell.Application.Features.Payments.Queries.Checkout
             var clientId = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value!;
 
             var addresses = await _unitOfWork.OrderAddressesRepo.Entities
-                .Where(x => x.ClientId == clientId)
+                .Where(x => x.AccountId == clientId)
                 .OrderByDescending(x => x.IsDefault)
                 .ProjectToType<CheckoutQueryDto>()
                 .ToListAsync();

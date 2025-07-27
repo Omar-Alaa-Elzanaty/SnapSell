@@ -39,9 +39,6 @@ internal sealed class CreateStoreCommandHandler(
                 statusCode: HttpStatusCode.NotFound);
         }
 
-        await unitOfWork.AccountsRepo.ExecuteSqlAsync(
-            $"UPDATE [Accounts] SET [Discriminator] = 'Seller' WHERE [Id] = '{sellerId}'", cancellationToken);
-
         var existingStore = await unitOfWork.StoresRepo
             .FindAsync(s => s.SellerId == sellerId);
 

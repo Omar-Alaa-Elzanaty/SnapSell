@@ -1,8 +1,7 @@
 ﻿namespace SnapSell.Domain.Models.SqlEntities;
 
-public class Variant
+public class Variant : BaseEntity
 {
-    public Guid Id { get; set; }
     public int ProductId { get; set; }
     public virtual Product Product { get; set; }
     public Guid SizeId { get; set; }

@@ -1,6 +1,8 @@
-﻿namespace SnapSell.Domain.Models.SqlEntities;
+﻿using SnapSell.Domain.Models.Interfaces;
 
-public class CacheCode
+namespace SnapSell.Domain.Models.SqlEntities;
+
+public class CacheCode : Auditable
 {
     public int Id { get; set; }
     public int Version { get; set; }

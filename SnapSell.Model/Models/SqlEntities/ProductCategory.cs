@@ -1,6 +1,6 @@
 namespace SnapSell.Domain.Models.SqlEntities;
 
-public class ProductCategory
+public class ProductCategory:Auditable
 {
     public virtual Product Product { get; set; }
     public int ProductId { get; set; }

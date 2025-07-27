@@ -43,7 +43,7 @@ public class OrderAddress : BaseEntity
     public required string City { get; set; }
     public required string District { get; set; }
     public string? Landmark { get; set; }
-    public string ClientId { get; set; }
+    public string AccountId { get; set; }
     public virtual Account Account { get; set; }
     public bool IsDefault { get; set; }
 }

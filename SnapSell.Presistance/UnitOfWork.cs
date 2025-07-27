@@ -10,7 +10,6 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly SqlDbContext _context;
     public ISQLBaseRepo<Product> ProductsRepo { get; private set; }
-    public ISQLBaseRepo<Account> AccountsRepo { get; }
     public ISQLBaseRepo<ProductImage> ProductImagesRepo { get; }
     public ISQLBaseRepo<ProductCategory> ProductCategoriesRepo { get; }
     public ISQLBaseRepo<Category> CategoryRepo { get; private set; }
@@ -21,7 +20,6 @@ public class UnitOfWork : IUnitOfWork
     public ISQLBaseRepo<Size> SizesRepo { get; private set; }
     public ISQLBaseRepo<Order> OrdersRepo { get; private set; }
     public ISQLBaseRepo<OrderAddress> OrderAddressesRepo { get; private set; }
-    public ISQLBaseRepo<Seller> SellersRepo { get; private set; }
 
     public UnitOfWork(
         SqlDbContext context,
@@ -34,9 +32,7 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Size> sizesRepo,
         ISQLBaseRepo<ProductCategory> productCategoryRepo,
         ISQLBaseRepo<OrderAddress> orderAddressRepo,
-        ISQLBaseRepo<Order> orderRepo, ISQLBaseRepo<ProductImage> productImagesRepo,
-        ISQLBaseRepo<Account> accountsRepo,
-        ISQLBaseRepo<Seller> seller)
+        ISQLBaseRepo<Order> orderRepo, ISQLBaseRepo<ProductImage> productImagesRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -50,8 +46,6 @@ public class UnitOfWork : IUnitOfWork
         OrderAddressesRepo = orderAddressRepo;
         OrdersRepo = orderRepo;
         ProductImagesRepo = productImagesRepo;
-        AccountsRepo = accountsRepo;
-        SellersRepo = seller;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

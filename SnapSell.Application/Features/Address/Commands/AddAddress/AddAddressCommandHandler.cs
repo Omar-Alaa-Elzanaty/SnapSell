@@ -19,7 +19,7 @@ internal sealed class AddAddressCommandHandler(
     public async Task<Result<AddAddressResponse>> Handle(AddAddressCommand request,
         CancellationToken cancellationToken)
     {
-       var client = await unitOfWork.AccountsRepo.FindOnCriteriaAsync(i=>i.Id==request.ClinetId);    
+       var client = await userManager.FindByIdAsync(request.ClinetId);    
 
         if(client == null)
         {
