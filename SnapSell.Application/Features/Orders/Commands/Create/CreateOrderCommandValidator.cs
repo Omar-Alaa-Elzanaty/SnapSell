@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnapSell.Application.Features.Orders.Commands
+namespace SnapSell.Application.Features.Orders.Commands.Create
 {
     public class CreateOrderCommandValidator:AbstractValidator<CreateOrderCommand>
     {

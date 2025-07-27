@@ -45,7 +45,6 @@ namespace SnapSell.Presistance.Extensions
             services.AddIdentity<Account, IdentityRole>()
                     .AddRoles<IdentityRole>()
                     .AddSignInManager<SignInManager<Account>>()
-                    .AddUserManager<UserManager<Account>>()
                     .AddEntityFrameworkStores<SqlDbContext>()
                     .AddDefaultTokenProviders();
 

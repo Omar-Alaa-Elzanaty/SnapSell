@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Abstractions.Interfaces.Authentication;
+using SnapSell.Domain.Constants;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 using SnapSell.Domain.Models.SqlEntities;
@@ -23,7 +24,6 @@ internal sealed class CreateStoreCommandHandler(
     IStringLocalizer<CreateStoreCommandHandler> localizer)
     : IRequestHandler<CreateStoreCommand, Result<CreateStoreResponse>>
 {
-    private readonly string _defaultSellerRole = "Seller";
 
     public async Task<Result<CreateStoreResponse>> Handle(CreateStoreCommand request,
         CancellationToken cancellationToken)
@@ -38,7 +38,9 @@ internal sealed class CreateStoreCommandHandler(
                 message: localizer["SellerNotFound"],
                 statusCode: HttpStatusCode.NotFound);
         }
-        
+
+        await unitOfWork.AccountsRepo.ExecuteSqlAsync(
+            $"UPDATE [Accounts] SET [Discriminator] = 'Seller' WHERE [Id] = '{sellerId}'", cancellationToken);
 
         var existingStore = await unitOfWork.StoresRepo
             .FindAsync(s => s.SellerId == sellerId);
@@ -54,11 +56,11 @@ internal sealed class CreateStoreCommandHandler(
         store.SellerId = sellerId;
         store.LogoUrl = image;
 
-        var result = await authenticationService.AddRoleToUser(sellerId, _defaultSellerRole);
+        var result = await authenticationService.AddRoleToUser(sellerId, Roles.Seller);
         if (result is not true)
         {
             return Result<CreateStoreResponse>.Failure(
-                message: "canot add seller role to user.",
+                message: "cannot add seller role to user.",
                 statusCode: HttpStatusCode.BadRequest);
         }
 

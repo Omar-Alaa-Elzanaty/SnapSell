@@ -15,6 +15,8 @@ public interface IUnitOfWork : IDisposable
     ISQLBaseRepo<CacheCode> CacheCodesRepo { get; }
     ISQLBaseRepo<Variant> VariantsRepo { get; }
     ISQLBaseRepo<Store> StoresRepo { get; }
+    ISQLBaseRepo<Client> ClientsRepo { get; }
+    ISQLBaseRepo<Seller> SellersRepo { get; }
     ISQLBaseRepo<Brand> BrandsRepo { get; }
     ISQLBaseRepo<Size> SizesRepo { get; }
     ISQLBaseRepo<Order> OrdersRepo { get; }

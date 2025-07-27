@@ -2,23 +2,21 @@
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Dtos.PaymobDtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.SqlEntities;
-using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using System.Security.Claims;
 
-namespace SnapSell.Application.Features.Orders.Commands
+namespace SnapSell.Application.Features.Orders.Commands.Create
 {
     internal class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Result<string>>
     {
         private readonly IPaymobService _paymobService;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<Account> _userManager;
+        //private readonly UserManager<Client> _userManager;
         private readonly IValidator<CreateOrderCommand> _validator;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
@@ -27,33 +25,31 @@ namespace SnapSell.Application.Features.Orders.Commands
             IPaymobService paymobService,
             IUnitOfWork unitOfWork,
             IValidator<CreateOrderCommand> validator,
-            UserManager<Account> userManager,
             IHttpContextAccessor httpContextAccessor,
             IConfiguration configuration)
         {
             _paymobService = paymobService;
             _unitOfWork = unitOfWork;
             _validator = validator;
-            _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
         }
 
         public async Task<Result<string>> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
         {
-            var validationResult = await _validator.ValidateAsync(command);
+            var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
-            if(!validationResult.IsValid)
+            if (!validationResult.IsValid)
             {
                 return Result<string>.ValidationFailure(validationResult.Errors);
             }
 
             var clientId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-            var client = await _userManager.FindByIdAsync(clientId);
+            var client = await _unitOfWork.ClientsRepo.Entities.FirstAsync(x => x.Id == clientId);
 
             var amount = (double)await _unitOfWork.VariantsRepo.Entities
-                .Where(v => command.Varients.Select(x=>x.VariantId).Contains(v.Id))
+                .Where(v => command.Varients.Select(x => x.VariantId).Contains(v.Id))
                 .SumAsync(p => p.SalePrice, cancellationToken);
 
             var result = await _paymobService.CreatePayment(new PaymobIntenstionRequestDto()
@@ -63,8 +59,8 @@ namespace SnapSell.Application.Features.Orders.Commands
                 {
                     Country = client.Country,
                     Email = client.Email,
-                    FirstName = client.FullName.Split(' ')[0],
-                    LastName = client.FullName.Split(' ').Skip(1).Take(1).FirstOrDefault() ?? "",
+                    FirstName = client.FirstName.Split(' ')[0],
+                    LastName = client.LastName.Split(' ').Skip(1).Take(1).FirstOrDefault() ?? "",
                     PhoneNumber = client.PhoneNumber!
                 },
                 Currency = command.Currency.ToString(),

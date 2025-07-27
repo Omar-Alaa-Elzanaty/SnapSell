@@ -30,7 +30,7 @@ internal sealed class SellerLoginQueryHandler(
         }
 
         var token = await authenticationService.GenerateTokenAsync(user, true);
-        var seller = new LogInSellerResponse(user.Id, user.FullName, user.UserName!);
+        var seller = new LogInSellerResponse(user.Id, user.FirstName, user.UserName!);
         var lgInResult = new SellerLogInResult(seller, token);
 
         return Result<SellerLogInResult>.Success(

@@ -3,7 +3,7 @@ using Mapster;
 using Microsoft.AspNetCore.Http;
 using SnapSell.Application.Common.Exceptions;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Extnesions;
+using SnapSell.Domain.Extensions;
 using System.Net;
 using System.Text.Json;
 

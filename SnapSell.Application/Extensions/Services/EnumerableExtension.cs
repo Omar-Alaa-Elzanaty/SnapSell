@@ -8,6 +8,6 @@ namespace SnapSell.Application.Extensions.Services
 {
     public static class EnumerableExtension
     {
-        public static bool IsEmptyOrNull<T>(this IEnumerable<T>? source) => source != null && source.Any();
+        public static bool IsEmptyOrNull<T>(this IEnumerable<T>? source) => source == null || !source.Any();
     }
 }

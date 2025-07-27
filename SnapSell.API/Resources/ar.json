@@ -10,6 +10,8 @@
   "StoreRejected": "تم رفض المتجر.",
   "ShouldEnterAddress": "يجب إضافة عنوان",
   "ProductNotFound": "لم يتم العثور على المنتج.",
-  "CustomerDetailsAddedSuccessfully": "تمت إضافة تفاصيل العميل بنجاح.",
-  "UserNotFound":"المستخدم غير موجود"
+  "UserAlreadyExists": "المستخدم موجود بالفعل.",
+  "UserNotFound": "المستخدم غير موجود.",
+  "UserNameUsedBefore": "اسم المستخدم مستخدم من قبل.",
+  "UserCreatedSuccessfully": "تم إنشاء المستخدم بنجاح."
 }

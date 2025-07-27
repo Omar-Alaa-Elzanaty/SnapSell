@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SnapSell.Application.Features.Orders.Commands;
+using SnapSell.Application.Features.Orders.Commands.Create;
 using SnapSell.Application.Features.Payments.Queries.Checkout;
 using SnapSell.Domain.Dtos.ResultDtos;
 

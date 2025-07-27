@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
-using SnapSell.Domain.Extnesions;
+using Microsoft.AspNetCore.Identity;
+using SnapSell.Domain.Extensions;
 using System.Net;
 using System.Text.Json.Serialization;
 
@@ -69,20 +70,39 @@ public class Result<T> : IResult<T>
         };
     }
 
-    public static Result<T> ValidationFailure(List<ValidationFailure> errors)
+    public static Result<T> ValidationFailure(IEnumerable<ValidationFailure> errors)
     {
         return new()
         {
-            Errors = errors.GetErrorsDictionary(),
+            Errors = errors.ToList().GetErrorsDictionary(),
             StatusCode = HttpStatusCode.UnprocessableEntity
         };
     }
 
-    public static Result<T> ValidationFailure(List<ValidationFailure> errors, string message)
+    public static Result<T> ValidationFailure(IEnumerable<ValidationFailure> errors, string message)
     {
         return new()
         {
-            Errors = errors.GetErrorsDictionary(),
+            Errors = errors.ToList().GetErrorsDictionary(),
+            StatusCode = HttpStatusCode.UnprocessableEntity,
+            Message = message
+        };
+    }
+
+    public static Result<T> ValidationFailure(IEnumerable<IdentityError> errors)
+    {
+        return new()
+        {
+            Errors = errors.ToList().GetErrorsDictionary(),
+            StatusCode = HttpStatusCode.UnprocessableEntity
+        };
+    }
+
+    public static Result<T> ValidationFailure(IEnumerable<IdentityError> errors, string message)
+    {
+        return new()
+        {
+            Errors = errors.ToList().GetErrorsDictionary(),
             StatusCode = HttpStatusCode.UnprocessableEntity,
             Message = message
         };

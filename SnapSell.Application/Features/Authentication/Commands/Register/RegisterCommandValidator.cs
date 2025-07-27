@@ -6,7 +6,7 @@ public sealed class RegisterCommandValidator:AbstractValidator<RegisterCommand>
 {
     public RegisterCommandValidator()
     {
-        RuleFor(x => x.FullName)
+        RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("FullName name is required.");
 
         RuleFor(x => x.UserName)

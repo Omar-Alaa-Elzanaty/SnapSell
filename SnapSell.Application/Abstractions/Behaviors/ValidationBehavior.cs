@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Extnesions;
+using SnapSell.Domain.Extensions;
 
 namespace SnapSell.Application.Abstractions.Behaviors;
 

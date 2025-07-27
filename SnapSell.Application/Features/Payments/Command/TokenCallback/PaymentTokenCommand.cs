@@ -1,16 +1,10 @@
 ﻿using MediatR;
-using SnapSell.Domain.Dtos.PaymobDtos;
 using SnapSell.Domain.Dtos.ResultDtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace SnapSell.Application.Features.Payments.Command.Token
+namespace SnapSell.Application.Features.Payments.Command.TokenCallback
 {
-    public class PaymentTokenCommand:IRequest<Result<int>>
+    public class PaymentTokenCommand : IRequest<Result<int>>
     {
         public string Type { get; set; }
         public ObjDto Obj { get; set; }
@@ -18,6 +12,7 @@ namespace SnapSell.Application.Features.Payments.Command.Token
 
     public class ObjDto
     {
+        [JsonPropertyName("id")]
         public int Id { get; set; }
         public string Token { get; set; }
         [JsonPropertyName("masked_pan")]
