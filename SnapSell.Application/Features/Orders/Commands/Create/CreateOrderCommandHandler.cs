@@ -9,6 +9,8 @@ using SnapSell.Domain.Dtos.PaymobDtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.SqlEntities;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Application.Features.Orders.Commands.Create
 {
@@ -16,7 +18,7 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
     {
         private readonly IPaymobService _paymobService;
         private readonly IUnitOfWork _unitOfWork;
-        //private readonly UserManager<Client> _userManager;
+        private readonly UserManager<Account> _userManager;
         private readonly IValidator<CreateOrderCommand> _validator;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
@@ -46,7 +48,7 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
 
             var clientId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-            var client = await _unitOfWork.ClientsRepo.Entities.FirstAsync(x => x.Id == clientId);
+            var client = await _userManager.FindByIdAsync(clientId);
 
             var amount = (double)await _unitOfWork.VariantsRepo.Entities
                 .Where(v => command.Varients.Select(x => x.VariantId).Contains(v.Id))

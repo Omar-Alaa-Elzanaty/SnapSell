@@ -28,9 +28,6 @@ public class AccountConfiguration:IEntityTypeConfiguration<Account>
         builder.Property(x => x.Country)
             .IsRequired(false);
         
-        builder.Property(x => x.FullName)
-            .IsRequired(false);
-        
         builder.Property(x => x.About)
             .IsRequired(false);
 
