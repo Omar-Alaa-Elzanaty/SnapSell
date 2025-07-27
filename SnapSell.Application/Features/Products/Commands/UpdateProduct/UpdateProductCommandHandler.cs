@@ -39,7 +39,7 @@ internal sealed class UpdateProductCommandHandler(
         }
 
         var store = await unitOfWork.StoresRepo.Entities
-            .FirstOrDefaultAsync(x => x.SellerId == userId, cancellationToken);
+            .SingleOrDefaultAsync(x => x.AccountId == userId, cancellationToken);
 
         if (store == null || product.StoreId != store.Id)
         {

@@ -6,7 +6,7 @@ namespace SnapSell.Domain.Models.SqlEntities;
 public class Order : Auditable
 {
     public int Id { get; set; }
-    public string ClientId { get; set; }  // customerId
+    public string AccountId { get; set; }  // customerId
     public virtual Account Account { get; set; }
     public virtual List<OrderItem> Items { get; set; } = [];
     public virtual OrderAddress ShippingAddress { get; set; }

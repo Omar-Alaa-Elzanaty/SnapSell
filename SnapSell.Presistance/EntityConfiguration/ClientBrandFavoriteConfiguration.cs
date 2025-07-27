@@ -10,11 +10,11 @@ public sealed class ClientBrandFavoriteConfiguration : IEntityTypeConfiguration<
     {
         builder.ToTable("ClientBrandFavorites");
         
-        builder.HasKey(x => new { x.ClientId, x.BrandId });
+        builder.HasKey(x => new { x.AccountId, x.BrandId });
         
         builder.HasOne(x => x.Account)
             .WithMany(x => x.FavoriteBrands)
-            .HasForeignKey(x => x.ClientId)
+            .HasForeignKey(x => x.AccountId)
             .OnDelete(DeleteBehavior.Cascade);
             
         builder.HasOne(x => x.Brand)

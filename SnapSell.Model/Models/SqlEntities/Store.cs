@@ -5,7 +5,7 @@ namespace SnapSell.Domain.Models.SqlEntities;
 
 public class Store : BaseEntity
 {
-    public string? SellerId { get; set; }
+    public string? AccountId { get; set; }
     public virtual Account Account { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }

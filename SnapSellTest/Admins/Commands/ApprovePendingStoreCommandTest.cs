@@ -31,7 +31,7 @@ namespace SnapSell.Test.Admins.Commands
             {
                 Name = "Test Store",
                 Status = StoreStatusTypes.Pending,
-                SellerId = seller.Id,
+                AccountId = seller.Id,
                 DeliverPeriodTypes= DeliverPeriodTypes.Days,
                 Description = "Test Store Description",
                 LogoUrl="https://example.com/logo.png",

@@ -12,8 +12,8 @@ using SnapSell.Presistance.Context;
 namespace SnapSell.Presistance.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20250725235305_RemoveRequriedFileds")]
-    partial class RemoveRequriedFileds
+    [Migration("20250727160048_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,8 +211,23 @@ namespace SnapSell.Presistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastUpdated")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -268,7 +283,7 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.ClientBrandFavorite", b =>
                 {
-                    b.Property<string>("ClientId")
+                    b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("BrandId")
@@ -277,7 +292,7 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ClientId", "BrandId");
+                    b.HasKey("AccountId", "BrandId");
 
                     b.HasIndex("BrandId");
 
@@ -286,7 +301,7 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.ClientCategoryFavorite", b =>
                 {
-                    b.Property<string>("ClientId")
+                    b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("CategoryId")
@@ -295,7 +310,7 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ClientId", "CategoryId");
+                    b.HasKey("AccountId", "CategoryId");
 
                     b.HasIndex("CategoryId");
 
@@ -309,13 +324,12 @@ namespace SnapSell.Presistance.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("About")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("BirthDate")
+                    b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -339,16 +353,21 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
+                    b.Property<int?>("Gender")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -411,12 +430,12 @@ namespace SnapSell.Presistance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid?>("BillingAddressId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ClientId")
+                    b.Property<string>("AccountId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("BillingAddressId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -459,9 +478,9 @@ namespace SnapSell.Presistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BillingAddressId");
+                    b.HasIndex("AccountId");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("BillingAddressId");
 
                     b.HasIndex("ShippingAddressId");
 
@@ -475,6 +494,7 @@ namespace SnapSell.Presistance.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AccountId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("BuildingDetails")
@@ -482,10 +502,6 @@ namespace SnapSell.Presistance.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -705,6 +721,21 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("ParentCategoryId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("ParentCategoryId");
@@ -795,6 +826,10 @@ namespace SnapSell.Presistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Content")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
@@ -824,13 +859,9 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<decimal>("Score")
                         .HasColumnType("decimal(2,1)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Reviews", (string)null);
                 });
@@ -913,6 +944,10 @@ namespace SnapSell.Presistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -948,16 +983,12 @@ namespace SnapSell.Presistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SellerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SellerId")
+                    b.HasIndex("AccountId")
                         .IsUnique();
 
                     b.ToTable("Stores");
@@ -977,8 +1008,23 @@ namespace SnapSell.Presistance.Migrations
                     b.Property<decimal?>("CostPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -1105,15 +1151,15 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.ClientBrandFavorite", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Brand", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId")
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "Account")
+                        .WithMany("FavoriteBrands")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "Account")
-                        .WithMany("FavoriteBrands")
-                        .HasForeignKey("ClientId")
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1124,15 +1170,15 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.ClientCategoryFavorite", b =>
                 {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "Account")
+                        .WithMany("FavoriteCategories")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "Account")
-                        .WithMany("FavoriteCategories")
-                        .HasForeignKey("ClientId")
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1143,16 +1189,16 @@ namespace SnapSell.Presistance.Migrations
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Order", b =>
                 {
+                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "Account")
+                        .WithMany("Orders")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.OrderAddress", "BillingAddress")
                         .WithMany()
                         .HasForeignKey("BillingAddressId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "Account")
-                        .WithMany("Orders")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
 
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.OrderAddress", "ShippingAddress")
                         .WithMany()
@@ -1171,7 +1217,9 @@ namespace SnapSell.Presistance.Migrations
                 {
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "Account")
                         .WithMany("Addresses")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
                 });
@@ -1265,7 +1313,7 @@ namespace SnapSell.Presistance.Migrations
                 {
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "User")
                         .WithMany("Reviews")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1286,7 +1334,7 @@ namespace SnapSell.Presistance.Migrations
                 {
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "Account")
                         .WithOne("Store")
-                        .HasForeignKey("SnapSell.Domain.Models.SqlEntities.Store", "SellerId")
+                        .HasForeignKey("SnapSell.Domain.Models.SqlEntities.Store", "AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1334,8 +1382,7 @@ namespace SnapSell.Presistance.Migrations
 
                     b.Navigation("Reviews");
 
-                    b.Navigation("Store")
-                        .IsRequired();
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Order", b =>

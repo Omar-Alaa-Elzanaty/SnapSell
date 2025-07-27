@@ -40,7 +40,7 @@ internal sealed class CreateStoreCommandHandler(
         }
 
         var existingStore = await unitOfWork.StoresRepo
-            .FindAsync(s => s.SellerId == sellerId);
+            .FindAsync(s => s.AccountId == sellerId);
 
         if (existingStore.Any())
         {
@@ -50,7 +50,7 @@ internal sealed class CreateStoreCommandHandler(
         }
 
         var store = request.Adapt<Store>();
-        store.SellerId = sellerId;
+        store.AccountId = sellerId;
         store.LogoUrl = image;
 
         var result = await authenticationService.AddRoleToUser(sellerId, Roles.Seller);

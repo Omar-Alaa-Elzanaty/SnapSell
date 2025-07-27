@@ -44,7 +44,7 @@ internal sealed class CreateProductCommandHandler(
                 statusCode: HttpStatusCode.BadRequest);
         }
 
-        var store = await unitOfWork.StoresRepo.Entities.Where(x => x.SellerId == userId)
+        var store = await unitOfWork.StoresRepo.Entities.Where(x => x.AccountId == userId)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (store is null)

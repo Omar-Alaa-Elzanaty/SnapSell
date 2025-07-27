@@ -11,7 +11,7 @@ public class StoreConfiguration : AuditableEntityConfiguration<Store>
     {
         builder.HasOne(s => s.Account)
             .WithOne(seller => seller.Store)
-            .HasForeignKey<Store>(s => s.SellerId)
+            .HasForeignKey<Store>(s => s.AccountId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 

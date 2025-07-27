@@ -75,7 +75,7 @@ namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpC
             var roles = await _userManager.GetRolesAsync(user);
 
             var store = await _unitOfWork.StoresRepo.Entities
-                .Where(x => x.SellerId.ToString() == user.Id)
+                .Where(x => x.AccountId.ToString() == user.Id)
                 .ProjectToType<ConfirmOtpStoreInfoDto>()
                 .FirstOrDefaultAsync(cancellationToken);
 

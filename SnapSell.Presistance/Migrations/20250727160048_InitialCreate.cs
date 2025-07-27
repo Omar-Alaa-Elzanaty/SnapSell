@@ -16,14 +16,14 @@ namespace SnapSell.Presistance.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     LastUpdatedBy = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     About = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<int>(type: "int", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -73,7 +73,12 @@ namespace SnapSell.Presistance.Migrations
                     Version = table.Column<int>(type: "int", nullable: false),
                     LastUpdated = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CacheKey = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,7 +197,7 @@ namespace SnapSell.Presistance.Migrations
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     District = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Landmark = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsDefault = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -204,8 +209,8 @@ namespace SnapSell.Presistance.Migrations
                 {
                     table.PrimaryKey("PK_OrderAddresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderAddresses_Accounts_ClientId",
-                        column: x => x.ClientId,
+                        name: "FK_OrderAddresses_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -216,11 +221,10 @@ namespace SnapSell.Presistance.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Score = table.Column<decimal>(type: "decimal(2,1)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -231,13 +235,8 @@ namespace SnapSell.Presistance.Migrations
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Accounts_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reviews_Accounts_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Reviews_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -248,7 +247,7 @@ namespace SnapSell.Presistance.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SellerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MinimumDeliverPeriod = table.Column<int>(type: "int", nullable: false),
@@ -266,8 +265,8 @@ namespace SnapSell.Presistance.Migrations
                 {
                     table.PrimaryKey("PK_Stores", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Stores_Accounts_SellerId",
-                        column: x => x.SellerId,
+                        name: "FK_Stores_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -338,16 +337,16 @@ namespace SnapSell.Presistance.Migrations
                 name: "ClientBrandFavorites",
                 columns: table => new
                 {
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BrandId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientBrandFavorites", x => new { x.ClientId, x.BrandId });
+                    table.PrimaryKey("PK_ClientBrandFavorites", x => new { x.AccountId, x.BrandId });
                     table.ForeignKey(
-                        name: "FK_ClientBrandFavorites_Accounts_ClientId",
-                        column: x => x.ClientId,
+                        name: "FK_ClientBrandFavorites_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -363,16 +362,16 @@ namespace SnapSell.Presistance.Migrations
                 name: "ClientCategoryFavorites",
                 columns: table => new
                 {
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientCategoryFavorites", x => new { x.ClientId, x.CategoryId });
+                    table.PrimaryKey("PK_ClientCategoryFavorites", x => new { x.AccountId, x.CategoryId });
                     table.ForeignKey(
-                        name: "FK_ClientCategoryFavorites_Accounts_ClientId",
-                        column: x => x.ClientId,
+                        name: "FK_ClientCategoryFavorites_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -435,7 +434,7 @@ namespace SnapSell.Presistance.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ShippingAddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BillingAddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     VoucherCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -453,8 +452,8 @@ namespace SnapSell.Presistance.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Accounts_ClientId",
-                        column: x => x.ClientId,
+                        name: "FK_Orders_Accounts_AccountId",
+                        column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -528,7 +527,12 @@ namespace SnapSell.Presistance.Migrations
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ParentCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ParentCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -614,7 +618,12 @@ namespace SnapSell.Presistance.Migrations
                     SalePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     CostPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     Sku = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    IsDefault = table.Column<bool>(type: "bit", nullable: false)
+                    IsDefault = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -699,9 +708,9 @@ namespace SnapSell.Presistance.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderAddresses_ClientId",
+                name: "IX_OrderAddresses_AccountId",
                 table: "OrderAddresses",
-                column: "ClientId");
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
@@ -714,14 +723,14 @@ namespace SnapSell.Presistance.Migrations
                 column: "VariantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_AccountId",
+                table: "Orders",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_BillingAddressId",
                 table: "Orders",
                 column: "BillingAddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_ClientId",
-                table: "Orders",
-                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_ShippingAddressId",
@@ -754,14 +763,9 @@ namespace SnapSell.Presistance.Migrations
                 column: "VideoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ClientId",
+                name: "IX_Reviews_AccountId",
                 table: "Reviews",
-                column: "ClientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reviews_UserId",
-                table: "Reviews",
-                column: "UserId");
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -781,9 +785,9 @@ namespace SnapSell.Presistance.Migrations
                 column: "ParentSizeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stores_SellerId",
+                name: "IX_Stores_AccountId",
                 table: "Stores",
-                column: "SellerId",
+                column: "AccountId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

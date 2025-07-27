@@ -71,7 +71,7 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
 
             var order = command.Adapt<Order>();
 
-            order.ClientId = clientId;
+            order.AccountId = clientId;
             order.Email = client.Email;
             order.OrderTotal = (decimal)amount;
             order.Items = command.Varients.Adapt<List<OrderItem>>();
