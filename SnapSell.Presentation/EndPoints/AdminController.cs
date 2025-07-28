@@ -9,14 +9,10 @@ using SnapSell.Domain.Dtos.ResultDtos;
 namespace SnapSell.Presentation.EndPoints;
 
 [Authorize(Roles = "Admin")]
-public sealed class AdminController : ApiControllerBase
+public sealed class AdminController(IMediator mediator) : ApiControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IMediator _mediator = mediator;
 
-    public AdminController(IMediator mediator) 
-    {
-        _mediator = mediator;
-    }
     [HttpPut("ApprovePendingStore/{storeId}")]
     public async Task<ActionResult<Result<string>>> ApprovePendingStore(Guid storeId, CancellationToken cancellationToken)
     {
@@ -30,8 +26,9 @@ public sealed class AdminController : ApiControllerBase
     }
 
     [HttpGet("GetPendingStores")]
-    public async Task<ActionResult<PaginatedResult<GetPendingStoresQueryDto>>> GetPendingStores([FromBody] GetPendingStoresQuery query, CancellationToken cancellationToken)
+    public async Task<ActionResult<PaginatedResult<GetPendingStoresQueryDto>>> GetPendingStores([FromQuery] GetPendingStoresQuery query, CancellationToken cancellationToken)
     {
-        return await HandleMediatorResultAsync(await _mediator.Send(query, cancellationToken));
+        var result = await _mediator.Send(query, cancellationToken);
+        return await HandleMediatorResultAsync(result);
     }
 }

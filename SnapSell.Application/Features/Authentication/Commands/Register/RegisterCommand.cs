@@ -13,7 +13,7 @@ public record RegisterCommand(
 public class RegisterResult
 {
     public RegisterUserInfo UserInfo { get; set; }
-    public string AccessToken { get; set; }
+    public string Token { get; set; }
 }
 
 public class RegisterUserInfo

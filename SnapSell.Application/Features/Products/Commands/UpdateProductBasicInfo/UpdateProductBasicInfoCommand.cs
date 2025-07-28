@@ -3,9 +3,9 @@ using SnapSell.Application.Features.products.Commands.CreateProduct;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Enums;
 
-namespace SnapSell.Application.Features.Products.Commands.UpdateProduct;
+namespace SnapSell.Application.Features.Products.Commands.UpdateProductBasicInfo;
 
-public sealed record UpdateProductCommand(
+public sealed record UpdateProductBasicInfoCommand(
     int ProductId,
     Guid BrandId,
     List<Guid> CategoryIds,
@@ -27,10 +27,10 @@ public sealed record UpdateProductCommand(
     decimal? SalePrice,
     decimal? CostPrice,
     int? Quantity,
-    string? Sku,
-    List<UpdateProductVariantDto>? Variants) : IRequest<Result<UpdateProductResponse>>;
+    string? Sku ) : IRequest<Result<UpdateProductBasicInfoResponse>>;
 
-public sealed class UpdateProductResponse
+
+public sealed class UpdateProductBasicInfoResponse
 {
     public int ProductId { get; set; }
     public Guid StoreId { get; set; }
@@ -41,7 +41,7 @@ public sealed class UpdateProductResponse
     public ShippingType ShippingType { get; set; }
     public ProductTypes ProductStatus { get; set; }
     public List<PaymentMethods> PaymentMethods { get; set; } = [];
-    public List<ProductImageResponse> Images { get; set; } = [];
+    public List<UpdateProductImageResponse> Images { get; set; } = [];
     public string EnglishDescription { get; set; }
     public string ArabicDescription { get; set; }
     public int MinDeliveryDays { get; set; }
@@ -51,27 +51,10 @@ public sealed class UpdateProductResponse
     public decimal? CostPrice { get; set; }
     public int? Quantity { get; set; }
     public string? Sku { get; set; }
-    public List<UpdateProductVariantResponse>? Variants { get; set; }
 }
 
-public sealed record UpdateProductVariantDto(
-    Guid Id,
-    Guid SizeId,
-    string Color,
-    int? Quantity,
-    decimal? Price,
-    decimal? SalePrice,
-    decimal? CostPrice,
-    string? Sku,
-    bool IsDefault);
-
-public sealed record UpdateProductVariantResponse(
-    Guid Id,
-    Guid SizeId,
-    string? Color,
-    int? Quantity,
-    decimal? Price,
-    decimal? SalePrice,
-    decimal? CostPrice,
-    string? Sku,
-    bool IsDefault);
+public sealed class UpdateProductImageResponse
+{
+    public string? ImageUrl { get; set; }
+    public bool IsMainImage { get; set; }
+}

@@ -2,9 +2,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.products.Commands.CreateProduct;
-using SnapSell.Application.Features.Products.Commands.UpdateProduct;
+using SnapSell.Application.Features.Products.Commands.UpdateProductBasicInfo;
+using SnapSell.Application.Features.Products.Commands.UpdateProductVariants;
 using SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
-using SnapSell.Application.Features.store.Commands.CreateStore;
 using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 
@@ -13,14 +13,6 @@ namespace SnapSell.Presentation.EndPoints;
 [Authorize(Roles = "Seller")]
 public sealed class SellerController(ISender sender) : ApiControllerBase
 {
-    [HttpPost("CreateStore")]
-    public async Task<ActionResult<Result<CreateStoreResponse>>> CreateStore([FromBody] CreateStoreCommand command,
-        CancellationToken cancellationToken)
-    {
-        var result = await sender.Send(command, cancellationToken);
-        return await HandleMediatorResultAsync(result);
-    }
-
     [HttpGet("GetAllProductsForSpecificSeller/{sellerId}")]
     public async Task<ActionResult<PaginatedResult<GetAllProductsForSpecificSellerResponse>>>
         GetAllProductsForSpecificSeller(string sellerId, [FromQuery] PaginatedRequest request,
@@ -41,10 +33,18 @@ public sealed class SellerController(ISender sender) : ApiControllerBase
         return await HandleMediatorResultAsync(result);
     }
 
-    [HttpPost("UpdateProduct")]
-    public async Task<ActionResult<Result<UpdateProductResponse>>> UpdateProduct(
-        [FromBody] UpdateProductCommand command,
+    [HttpPut("UpdateProductBasicInfo")]
+    public async Task<ActionResult<Result<UpdateProductBasicInfoResponse>>> UpdateBasicInfo(
+        UpdateProductBasicInfoCommand command,
         CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(command, cancellationToken);
+        return await HandleMediatorResultAsync(result);
+    }
+
+    [HttpPut("UpdateProductVariants")]
+    public async Task<ActionResult<Result<UpdateProductVariantsResponse>>> UpdateVariants(
+        UpdateProductVariantsCommand command, CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);
         return await HandleMediatorResultAsync(result);

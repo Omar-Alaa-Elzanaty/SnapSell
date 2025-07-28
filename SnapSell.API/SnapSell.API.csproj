@@ -24,9 +24,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Resources\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\videos\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\site26054-WebDeploy.pubxml" />
+    <None Remove="Properties\PublishProfiles\site26054-WebDeploy1.pubxml" />
   </ItemGroup>
 
 </Project>

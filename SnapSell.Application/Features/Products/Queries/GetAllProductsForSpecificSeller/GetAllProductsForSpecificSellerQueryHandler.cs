@@ -16,6 +16,7 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
     : IRequestHandler<GetAllProductsForSpecificSellerQuery, PaginatedResult<GetAllProductsForSpecificSellerResponse>>
 {
     private const string DefaultSortField = "EnglishName";
+
     public async Task<PaginatedResult<GetAllProductsForSpecificSellerResponse>> Handle(
         GetAllProductsForSpecificSellerQuery request,
         CancellationToken cancellationToken)
@@ -25,10 +26,10 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
         if (userId != request.SellerId)
         {
             return await PaginatedResult<GetAllProductsForSpecificSellerResponse>.FailureAsync(
-                message:"The Current user is unauthorized for that action.",
-                statusCode:HttpStatusCode.Unauthorized);
+                message: "The Current user is unauthorized for that action.",
+                statusCode: HttpStatusCode.Unauthorized);
         }
-        
+
         var query = unitOfWork.ProductsRepo.Entities
             .Where(p => p.CreatedBy == userId);
 
@@ -39,9 +40,9 @@ internal sealed class GetAllProductsForSpecificSellerQueryHandler(
         return await query
             .ProjectToType<GetAllProductsForSpecificSellerResponse>()
             .ToPaginatedListAsync(
-                request.Pagination.PageNumber,
-                request.Pagination.PageSize,
-                cancellationToken,
-                "Products retrieved successfully");
+                pageNumber: request.Pagination.PageNumber,
+                pageSize: request.Pagination.PageSize,
+                cancellationToken: cancellationToken,
+                message: "Products retrieved successfully");
     }
 }

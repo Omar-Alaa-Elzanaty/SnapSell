@@ -6,38 +6,41 @@ using SnapSell.Application.Features.Products.Queries.SearchForProduct;
 using SnapSell.Application.Features.Products.Queries.SearchForProductVideos;
 using SnapSell.Domain.Dtos.ResultDtos;
 
-namespace SnapSell.Presentation.EndPoints
+namespace SnapSell.Presentation.EndPoints;
+
+public class PublicController(ISender sender) : ApiControllerBase
 {
-    public class PublicController(ISender sender) : ApiControllerBase
+    [HttpPost("Search")]
+    public async Task<ActionResult<PaginatedResult<SearchForProductQueryDto>>> SearchForProducts(
+        [FromBody] SearchForProductQuery query, CancellationToken cancellationToken)
     {
-        [HttpPost("Search")]
-        public async Task<ActionResult<PaginatedResult<SearchForProductQueryDto>>> SearchForProducts([FromBody] SearchForProductQuery query, CancellationToken cancellationToken)
-        {
-            var result = await sender.Send(query, cancellationToken);
-            return await HandleMediatorResultAsync(result);
-        }
+        var result = await sender.Send(query, cancellationToken);
+        return await HandleMediatorResultAsync(result);
+    }
 
-        [HttpPost("Search/videos")]
-        public async Task<ActionResult<PaginatedResult<SearchForProductVideosQueryDto>>> SearchForProductVideos([FromBody] SearchForProductVideosQuery query, CancellationToken cancellationToken)
-        {
-            var result = await sender.Send(query, cancellationToken);
-            return await HandleMediatorResultAsync(result);
-        }
+    [HttpPost("Search/videos")]
+    public async Task<ActionResult<PaginatedResult<SearchForProductVideosQueryDto>>> SearchForProductVideos(
+        [FromBody] SearchForProductVideosQuery query, CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(query, cancellationToken);
+        return await HandleMediatorResultAsync(result);
+    }
 
-        [HttpGet("Products/{id}")]
-        public async Task<ActionResult<Result<GetProductByIdQueryDto>>> GetProductById(int id, CancellationToken cancellationToken)
-        {
-            var query = new GetProductByIdQuery(id);
-            var result = await sender.Send(query, cancellationToken);
-            return await HandleMediatorResultAsync(result);
-        }
+    [HttpGet("Products/{id}")]
+    public async Task<ActionResult<Result<GetProductByIdQueryDto>>> GetProductById(int id,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetProductByIdQuery(id);
+        var result = await sender.Send(query, cancellationToken);
+        return await HandleMediatorResultAsync(result);
+    }
 
-        [HttpGet("Products/Related")]
-        public async Task<ActionResult<PaginatedResult<GetRelatedProductsQueryWithPaginationDto>>> GetRelatedProductsWithPagination
-            ([FromQuery] GetRelatedProductsQueryWithPagination query, CancellationToken cancellationToken)
-        {
-            var result = await sender.Send(query, cancellationToken);
-            return await HandleMediatorResultAsync(result);
-        }
+    [HttpGet("Products/Related")]
+    public async Task<ActionResult<PaginatedResult<GetRelatedProductsQueryWithPaginationDto>>>
+        GetRelatedProductsWithPagination
+        ([FromQuery] GetRelatedProductsQueryWithPagination query, CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(query, cancellationToken);
+        return await HandleMediatorResultAsync(result);
     }
 }

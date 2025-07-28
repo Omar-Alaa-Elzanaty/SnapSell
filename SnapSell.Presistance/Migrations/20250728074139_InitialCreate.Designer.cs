@@ -12,7 +12,7 @@ using SnapSell.Presistance.Context;
 namespace SnapSell.Presistance.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20250727160048_InitialCreate")]
+    [Migration("20250728074139_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

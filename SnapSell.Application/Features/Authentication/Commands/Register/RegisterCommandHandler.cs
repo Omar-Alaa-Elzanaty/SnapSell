@@ -62,7 +62,7 @@ internal sealed class RegisterCommandHandler(
 
         var response = new RegisterResult()
         {
-            AccessToken = await authenticationService.GenerateTokenAsync(user, isMobile: true),
+            Token = await authenticationService.GenerateTokenAsync(user, isMobile: true),
             UserInfo = mapper.Map<RegisterUserInfo>(user)
         };
 

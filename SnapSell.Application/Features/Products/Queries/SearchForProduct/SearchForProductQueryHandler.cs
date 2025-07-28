@@ -1,89 +1,71 @@
-﻿using FluentValidation;
-using Mapster;
-using MediatR;
-using MongoDB.Driver;
+﻿using MediatR;
 using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Extensions;
 using SnapSell.Application.Extensions.Services;
 using SnapSell.Domain.Dtos.ResultDtos;
-using SnapSell.Domain.Models.SqlEntities;
+using SnapSell.Domain.Enums;
 
-namespace SnapSell.Application.Features.Products.Queries.SearchForProduct
+namespace SnapSell.Application.Features.Products.Queries.SearchForProduct;
+
+internal sealed class SearchForProductQueryHandler(IUnitOfWork unitOfWork, IMediaService mediaService)
+    : IRequestHandler<SearchForProductQuery, PaginatedResult<SearchForProductQueryDto>>
 {
-    internal class SearchForProductQueryHandler : IRequestHandler<SearchForProductQuery, PaginatedResult<SearchForProductQueryDto>>
+    public async Task<PaginatedResult<SearchForProductQueryDto>> Handle(SearchForProductQuery command,
+        CancellationToken cancellationToken)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IValidator<SearchForProductQuery> _validator;
+        var entities = unitOfWork.ProductsRepo.Entities;
 
-        public SearchForProductQueryHandler(
-            IUnitOfWork unitOfWork,
-            IValidator<SearchForProductQuery> validator)
+        if (!command.CategoriesIds.IsEmptyOrNull())
         {
-            _unitOfWork = unitOfWork;
-            _validator = validator;
+            entities = entities.Where(x =>
+                x.Categories.Select(productCategory => productCategory.CategoryId)
+                    .Any(c => command.CategoriesIds!.Contains(c)));
         }
 
-        public async Task<PaginatedResult<SearchForProductQueryDto>> Handle(SearchForProductQuery command, CancellationToken cancellationToken)
+        if (!command.BrandsIds.IsEmptyOrNull())
         {
-            var validation = await _validator.ValidateAsync(command, cancellationToken);
-
-            if (!validation.IsValid)
-            {
-                return PaginatedResult<SearchForProductQueryDto>.ValidationFailure(validation.Errors);
-            }
-
-            var entities = _unitOfWork.ProductsRepo.Entities;
-
-
-            if (!command.CategoriesIds.IsEmptyOrNull())
-            {
-                entities = entities.Where(x => x.Categories.Select(x=>x.CategoryId).Any(c => command.CategoriesIds.Contains(c)));
-            }
-
-            if (!command.BrandsIds.IsEmptyOrNull())
-            {
-                entities = entities.Where(x => command.BrandsIds.Contains(x.BrandId));
-            }
-
-            if (!command.Colors.IsEmptyOrNull())
-            {
-                entities = entities.Where(x => x.Variants.Any(v => command.Colors.Contains(v.Color)));
-            }
-
-            if (!command.SizesIds.IsEmptyOrNull())
-            {
-                entities = entities.Where(x => x.Variants.Any(v => command.SizesIds.Contains(v.SizeId)));
-            }
-
-            entities = entities.Where(x => x.SalePrice >= command.MinPrice);
-            entities = entities.Where(x => x.SalePrice <= command.MaxPrice);
-            switch (command.Filter)
-            {
-                case SearchForProductSorts.Relevance:
-                    break;
-                case SearchForProductSorts.Newest:
-                    entities = entities.OrderByDescending(x => x.CreatedAt);
-                    break;
-                case SearchForProductSorts.LowToHighPrice:
-                    entities = entities.OrderBy(x => x.SalePrice);
-                    break;
-                case SearchForProductSorts.HighToLowPrice:
-                    entities = entities.OrderByDescending(x => x.SalePrice);
-                    break;
-            }
-
-            var mapConfig = new TypeAdapterConfig();
-            mapConfig.NewConfig<Product, SearchForProductQueryDto>()
-                .Map(dest => dest.ImageUrl, src => src.Images.Where(i => i.IsMainImage).Select(i => i.ImageUrl).FirstOrDefault()!);
-
-            var products = await entities
-                .ProjectToType<SearchForProductQueryDto>(mapConfig)
-                .ToPaginatedListAsync(
-                    pageNumber: command.PageNumber,
-                    pageSize: command.PageSize,
-                    cancellationToken: cancellationToken);
-
-            return products;
+            entities = entities.Where(x => command.BrandsIds!.Contains(x.BrandId));
         }
+
+        if (!command.Colors.IsEmptyOrNull())
+        {
+            entities = entities.Where(x => x.Variants.Any(v => command.Colors!.Contains(v.Color)));
+        }
+
+        if (!command.SizesIds.IsEmptyOrNull())
+        {
+            entities = entities.Where(x => x.Variants.Any(v => command.SizesIds!.Contains(v.SizeId)));
+        }
+
+        entities = entities.Where(x => x.SalePrice >= command.MinPrice);
+        entities = entities.Where(x => x.SalePrice <= command.MaxPrice);
+        switch (command.Filter)
+        {
+            case SearchForProductSorts.Relevance:
+                break;
+            case SearchForProductSorts.Newest:
+                entities = entities.OrderByDescending(x => x.CreatedAt);
+                break;
+            case SearchForProductSorts.LowToHighPrice:
+                entities = entities.OrderBy(x => x.SalePrice);
+                break;
+            case SearchForProductSorts.HighToLowPrice:
+                entities = entities.OrderByDescending(x => x.SalePrice);
+                break;
+        }
+
+        var projectedQuery = entities.Select(p => new SearchForProductQueryDto
+        {
+            Id = p.Id,
+            ImageUrl = mediaService.GetUrl(p.Images.FirstOrDefault(i => i.IsMainImage)!.ImageUrl, MediaTypes.Image)!,
+            Price = p.Price,
+            SalePrice = p.SalePrice
+        });
+
+        return await projectedQuery
+            .ToPaginatedListAsync(
+                pageNumber: command.PageNumber,
+                pageSize: command.PageSize,
+                cancellationToken: cancellationToken);
     }
 }

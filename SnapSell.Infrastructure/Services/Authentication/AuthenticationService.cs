@@ -115,6 +115,12 @@ public sealed class AuthenticationService(
         }
         
         var addResult = await userManager.AddToRoleAsync(user, role);
+        
+        if (!addResult.Succeeded)
+        {
+            return false;
+        }
+        
         return addResult.Succeeded;
     }
 }
