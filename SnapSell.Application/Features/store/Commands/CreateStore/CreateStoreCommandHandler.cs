@@ -22,10 +22,10 @@ internal sealed class CreateStoreCommandHandler(
     IMediaService mediaService,
     UserManager<Account> userManager,
     IStringLocalizer<CreateStoreCommandHandler> localizer)
-    : IRequestHandler<CreateStoreCommand, Result<CreateStoreResponse>>
+    : IRequestHandler<CreateStoreCommand, Result<CreateStoreResult>>
 {
 
-    public async Task<Result<CreateStoreResponse>> Handle(CreateStoreCommand request,
+    public async Task<Result<CreateStoreResult>> Handle(CreateStoreCommand request,
         CancellationToken cancellationToken)
     {
         var sellerId = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -34,7 +34,7 @@ internal sealed class CreateStoreCommandHandler(
         var seller = await userManager.FindByIdAsync(sellerId);
         if (seller is null)
         {
-            return Result<CreateStoreResponse>.Failure(
+            return Result<CreateStoreResult>.Failure(
                 message: localizer["SellerNotFound"],
                 statusCode: HttpStatusCode.NotFound);
         }
@@ -44,7 +44,7 @@ internal sealed class CreateStoreCommandHandler(
 
         if (existingStore.Any())
         {
-            return Result<CreateStoreResponse>.Failure(
+            return Result<CreateStoreResult>.Failure(
                 message: "Seller already has a store.",
                 statusCode: HttpStatusCode.Conflict);
         }
@@ -56,7 +56,7 @@ internal sealed class CreateStoreCommandHandler(
         var result = await authenticationService.AddRoleToUser(sellerId, Roles.Seller);
         if (result is not true)
         {
-            return Result<CreateStoreResponse>.Failure(
+            return Result<CreateStoreResult>.Failure(
                 message: "cannot add seller role to user.",
                 statusCode: HttpStatusCode.BadRequest);
         }
@@ -64,11 +64,12 @@ internal sealed class CreateStoreCommandHandler(
         await unitOfWork.StoresRepo.AddAsync(store);
         await unitOfWork.SaveAsync(cancellationToken);
 
-        var response = store.Adapt<CreateStoreResponse>();
-        response.LogoUrl = mediaService.GetUrl(store.LogoUrl, MediaTypes.Image);
-
-        return Result<CreateStoreResponse>.Success(
-            data: response,
+        var storeData = store.Adapt<CreateStoreResponse>();
+        storeData.LogoUrl = mediaService.GetUrl(store.LogoUrl, MediaTypes.Image);
+        var token = await authenticationService.GenerateTokenAsync(seller);
+        
+        return Result<CreateStoreResult>.Success(
+            data: new CreateStoreResult(storeData, token),
             message: "Store Created Successfully.",
             statusCode: HttpStatusCode.Created);
     }

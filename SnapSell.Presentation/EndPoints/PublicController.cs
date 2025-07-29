@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.Products.Queries.GetProductById;
+using SnapSell.Application.Features.Products.Queries.ProductSearch;
 using SnapSell.Application.Features.Products.Queries.RelatedProductsWithPagination;
 using SnapSell.Application.Features.Products.Queries.SearchForProduct;
 using SnapSell.Application.Features.Products.Queries.SearchForProductVideos;
@@ -11,6 +12,14 @@ namespace SnapSell.Presentation.EndPoints;
 public class PublicController(ISender sender) : ApiControllerBase
 {
     [HttpPost("Search")]
+    public async Task<ActionResult<PaginatedResult<SearchResponse>>> TextSearch(
+        [FromBody] SearchProductsQuery query, CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(query, cancellationToken);
+        return await HandleMediatorResultAsync(result);
+    }
+
+    [HttpPost("SearchForProducts")]
     public async Task<ActionResult<PaginatedResult<SearchForProductQueryDto>>> SearchForProducts(
         [FromBody] SearchForProductQuery query, CancellationToken cancellationToken)
     {

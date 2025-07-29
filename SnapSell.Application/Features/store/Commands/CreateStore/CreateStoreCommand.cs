@@ -11,7 +11,7 @@ public sealed record CreateStoreCommand(
     int MinimumDeliverPeriod,
     int MaximumDeliverPeriod,
     int DeliverPeriodTypes,
-    MediaFileDto LogoUrl) : IRequest<Result<CreateStoreResponse>>;
+    MediaFileDto LogoUrl) : IRequest<Result<CreateStoreResult>>;
 
 public sealed record CreateStoreResponse
 {
@@ -25,3 +25,5 @@ public sealed record CreateStoreResponse
     public DeliverPeriodTypes DeliverPeriodTypes { get; init; }
     public string? LogoUrl { get; set; }
 }
+
+public record CreateStoreResult(CreateStoreResponse store , string Token);

@@ -8,7 +8,9 @@ public class StoreMappingConfig:IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<Store, CreateStoreResponse>();
+
+        config.NewConfig<Store, CreateStoreResponse>()
+            .Map(dest => dest.SellerId, src => src.Id);
         
         config.NewConfig<CreateStoreCommand, Store>();
     }
