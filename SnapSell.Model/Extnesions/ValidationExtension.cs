@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 
-namespace SnapSell.Domain.Extensions;
+namespace SnapSell.Domain.Extnesions;
 
 public static class ValidationExtension
 {

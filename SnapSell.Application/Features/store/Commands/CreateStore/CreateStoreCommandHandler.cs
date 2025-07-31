@@ -24,7 +24,6 @@ internal sealed class CreateStoreCommandHandler(
     IStringLocalizer<CreateStoreCommandHandler> localizer)
     : IRequestHandler<CreateStoreCommand, Result<CreateStoreResult>>
 {
-
     public async Task<Result<CreateStoreResult>> Handle(CreateStoreCommand request,
         CancellationToken cancellationToken)
     {
