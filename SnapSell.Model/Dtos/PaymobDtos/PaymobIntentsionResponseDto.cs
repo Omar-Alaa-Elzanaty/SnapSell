@@ -53,6 +53,8 @@ namespace SnapSell.Domain.Dtos.PaymobDtos
 
         [JsonPropertyName("iframe_id")]
         public string IframeId { get; set; }
+        [JsonPropertyName("order_id")]
+        public int OrderId { get; set; }
     }
     public class IntentionDetailDto
     {

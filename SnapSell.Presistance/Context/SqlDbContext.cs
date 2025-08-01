@@ -29,7 +29,8 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<CacheCode> CacheCodes { get; set; }
     public DbSet<Video> Videos { get; set; }
     public DbSet<ProductVideo> ProductVideos { get; set; }
-
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<UserPaymentCard> UserPaymentCards { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -47,7 +48,7 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
 
         modelBuilder.ApplyGlobalFilters<IAuditable>(x => !x.IsDeleted);
     }
-    
+
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var userId = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

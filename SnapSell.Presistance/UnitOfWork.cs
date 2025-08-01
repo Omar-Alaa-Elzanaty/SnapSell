@@ -1,7 +1,6 @@
 ﻿using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Abstractions.Interfaces.Repos;
 using SnapSell.Domain.Models.SqlEntities;
-using SnapSell.Domain.Models.SqlEntities.Identitiy;
 using SnapSell.Presistance.Context;
 
 namespace SnapSell.Presistance;
@@ -20,6 +19,9 @@ public class UnitOfWork : IUnitOfWork
     public ISQLBaseRepo<Size> SizesRepo { get; private set; }
     public ISQLBaseRepo<Order> OrdersRepo { get; private set; }
     public ISQLBaseRepo<OrderAddress> OrderAddressesRepo { get; private set; }
+    public ISQLBaseRepo<Payment> PaymentsRepo { get; private set; }
+
+    public ISQLBaseRepo<UserPaymentCard> UserPaymentCardsRepo { get; private set; }
 
     public UnitOfWork(
         SqlDbContext context,
@@ -32,7 +34,9 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<Size> sizesRepo,
         ISQLBaseRepo<ProductCategory> productCategoryRepo,
         ISQLBaseRepo<OrderAddress> orderAddressRepo,
-        ISQLBaseRepo<Order> orderRepo, ISQLBaseRepo<ProductImage> productImagesRepo)
+        ISQLBaseRepo<Order> orderRepo, ISQLBaseRepo<ProductImage> productImagesRepo,
+        ISQLBaseRepo<Payment> paymentsRepo,
+        ISQLBaseRepo<UserPaymentCard> userPaymentCardsRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -46,6 +50,8 @@ public class UnitOfWork : IUnitOfWork
         OrderAddressesRepo = orderAddressRepo;
         OrdersRepo = orderRepo;
         ProductImagesRepo = productImagesRepo;
+        PaymentsRepo = paymentsRepo;
+        UserPaymentCardsRepo = userPaymentCardsRepo;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

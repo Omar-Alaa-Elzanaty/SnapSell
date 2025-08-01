@@ -1,18 +1,49 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using MongoDB.Driver.Linq;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Dtos.ResultDtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Features.Payments.Command.TokenCallback
 {
     internal class PaymentTokenCommandHandler : IRequestHandler<PaymentTokenCommand, Result<int>>
     {
-        public Task<Result<int>> Handle(PaymentTokenCommand request, CancellationToken cancellationToken)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<PaymentTokenCommandHandler> _logger;
+
+        public PaymentTokenCommandHandler(
+            IUnitOfWork unitOfWork,
+            ILogger<PaymentTokenCommandHandler> logger)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
+            _logger = logger;
+        }
+
+        public async Task<Result<int>> Handle(PaymentTokenCommand command, CancellationToken cancellationToken)
+        {
+            var user = await _unitOfWork.OrdersRepo.Entities
+                .Where(o => o.PaymobOrderId == command.Obj.OrderId)
+                .Select(x => x.Account)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (user is null)
+            {
+                //TODO: log the error
+                return Result<int>.Failure("User not found for the provided order ID.");
+            }
+
+            await _unitOfWork.UserPaymentCardsRepo.AddAsync(new UserPaymentCard()
+            {
+                Token = command.Obj.Token,
+                UserId = user.Id,
+                MaskedPan = command.Obj.MaskedPan,
+                CardSubType = command.Obj.CardSubType
+            });
+
+            await _unitOfWork.SaveAsync(cancellationToken);
+
+            return Result<int>.Success();
         }
     }
 }

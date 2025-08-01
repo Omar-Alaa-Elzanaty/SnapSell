@@ -2,15 +2,15 @@
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Dtos.PaymobDtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.SqlEntities;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
+using System.Security.Claims;
 
 namespace SnapSell.Application.Features.Orders.Commands.Create
 {
@@ -28,13 +28,15 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
             IUnitOfWork unitOfWork,
             IValidator<CreateOrderCommand> validator,
             IHttpContextAccessor httpContextAccessor,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            UserManager<Account> userManager)
         {
             _paymobService = paymobService;
             _unitOfWork = unitOfWork;
             _validator = validator;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
+            _userManager = userManager;
         }
 
         public async Task<Result<string>> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
@@ -79,13 +81,26 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
             order.AccountId = clientId;
             order.Email = client.Email;
             order.OrderTotal = (decimal)amount;
+            order.PaymobOrderId = result.PaymentKeys.First().OrderId;
             order.Items = command.Varients.Adapt<List<OrderItem>>();
-
 
             await _unitOfWork.OrdersRepo.AddAsync(order);
             await _unitOfWork.SaveAsync(cancellationToken);
 
-            var redirectUrl = _configuration["Paymob:RedirectUrl"]!.Replace("ClientSecretValue", result.ClientSecret);
+
+            var payment = new Payment
+            {
+                OrderId = order.Id,
+                IntegrationId = result.PaymentKeys.First().Integration,
+                PaymentMethod = command.PaymentMethod
+            };
+
+            await _unitOfWork.PaymentsRepo.AddAsync(payment);
+            await _unitOfWork.SaveAsync(cancellationToken);
+
+            var redirectUrl = _configuration["Paymob:RedirectUrl"]
+                + _configuration["Paymob:PublicKey"]
+                + "&clientSecret=" + result.ClientSecret;
 
             return Result<string>.Success(data: redirectUrl);
         }

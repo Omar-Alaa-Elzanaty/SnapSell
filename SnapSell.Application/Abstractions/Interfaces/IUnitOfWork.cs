@@ -18,5 +18,7 @@ public interface IUnitOfWork : IDisposable
     ISQLBaseRepo<Size> SizesRepo { get; }
     ISQLBaseRepo<Order> OrdersRepo { get; }
     ISQLBaseRepo<OrderAddress> OrderAddressesRepo { get; }
+    ISQLBaseRepo<Payment> PaymentsRepo { get; }
+    ISQLBaseRepo<UserPaymentCard> UserPaymentCardsRepo { get; }
     Task<int> SaveAsync(CancellationToken cancellationToken = default);
 }

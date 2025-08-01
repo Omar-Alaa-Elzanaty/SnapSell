@@ -14,10 +14,11 @@ public class Order : Auditable
     public virtual OrderAddress? BillingAddress { get; set; }
     public Guid? BillingAddressId { get; set; }
     public string? VoucherCode { get; set; }
-    public PaymentMethods PaymentMethod { get; set; }
     public string Email { get; set; }
     public decimal OrderTotal { get; set; }
-    public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+    public long PaymobOrderId { get; set; }
+    public virtual List<Payment> Payments { get; set; }
+    public OrderStatus Status { get; set; } = OrderStatus.Pending;
 }
 
 public class OrderItem : BaseEntity

@@ -42,9 +42,7 @@ namespace SnapSell.Infrastructure.Services.PaymentGateway
                           + model.Obj.IsRefund.ToString()
                           + model.Obj.IsStandalonePayment.ToString();
 
-
             return IsAuthenticatedCallback(plainText, hmac);
-            
         }
 
         public async Task<PaymobIntentsionResponseDto> CreatePayment(PaymobIntenstionRequestDto model)

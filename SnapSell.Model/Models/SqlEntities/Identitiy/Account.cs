@@ -24,6 +24,7 @@ public class Account : IdentityUser
 
     public virtual List<ClientCategoryFavorite>? FavoriteCategories { get; set; } = [];
     public virtual List<ClientBrandFavorite>? FavoriteBrands { get; set; } = [];
+    public virtual List<UserPaymentCard>? UserPaymentCards { get; set; } = [];
     #endregion
 
     #region Seller
