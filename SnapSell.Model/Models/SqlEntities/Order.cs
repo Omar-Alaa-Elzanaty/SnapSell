@@ -17,10 +17,9 @@ public class Order : Auditable
     public PaymentMethods PaymentMethod { get; set; }
     public string Email { get; set; }
     public decimal OrderTotal { get; set; }
-    public int PaymobOrderId { get; set; }
-    public int PaymentId { get; set; }
-    public Payment Payment { get; set; }
-    public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+    public long PaymobOrderId { get; set; }
+    public List<Payment> Payment { get; set; }
+    public OrderStatus Status { get; set; } = OrderStatus.Pending;
 }
 
 public class OrderItem : BaseEntity

@@ -32,7 +32,7 @@ public class OrderConfiguration : AuditableEntityConfiguration<Order>
         builder.Property(x => x.OrderTotal)
             .HasColumnType("decimal(18,2)");
 
-        builder.Property(x => x.OrderStatus)
+        builder.Property(x => x.Status)
             .HasConversion<int>()
             .HasMaxLength(50);
     }

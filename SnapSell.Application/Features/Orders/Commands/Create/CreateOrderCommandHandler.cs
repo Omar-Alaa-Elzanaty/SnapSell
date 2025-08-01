@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Google.Apis.Auth.OAuth2;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -29,13 +28,15 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
             IUnitOfWork unitOfWork,
             IValidator<CreateOrderCommand> validator,
             IHttpContextAccessor httpContextAccessor,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            UserManager<Account> userManager)
         {
             _paymobService = paymobService;
             _unitOfWork = unitOfWork;
             _validator = validator;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
+            _userManager = userManager;
         }
 
         public async Task<Result<string>> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
@@ -75,14 +76,24 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
             order.AccountId = clientId;
             order.Email = client.Email;
             order.OrderTotal = (decimal)amount;
+            order.PaymobOrderId = result.PaymentKeys.First().OrderId;
             order.Items = command.Varients.Adapt<List<OrderItem>>();
-
 
             await _unitOfWork.OrdersRepo.AddAsync(order);
             await _unitOfWork.SaveAsync(cancellationToken);
 
+
+            var payment = new Payment
+            {
+                OrderId = order.Id,
+                IntegrationId = result.PaymentKeys.First().Integration
+            };
+
+            await _unitOfWork.PaymentsRepo.AddAsync(payment);
+            await _unitOfWork.SaveAsync(cancellationToken);
+
             var redirectUrl = _configuration["Paymob:RedirectUrl"]
-                + _configuration["Paymob:PublicKey"] 
+                + _configuration["Paymob:PublicKey"]
                 + "&clientSecret=" + result.ClientSecret;
 
             return Result<string>.Success(data: redirectUrl);
