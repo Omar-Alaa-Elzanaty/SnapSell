@@ -9,6 +9,7 @@ namespace SnapSell.Domain.Models.SqlEntities
         public virtual Order Order { get; set; }
         public long? PaymobTransactionId { get; set; }
         public long IntegrationId { get; set; }
+        public PaymentMethods PaymentMethod { get; set; }
         public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
     }
 }

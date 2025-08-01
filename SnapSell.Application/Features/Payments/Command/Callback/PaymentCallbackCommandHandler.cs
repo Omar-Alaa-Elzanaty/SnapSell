@@ -27,7 +27,7 @@ namespace SnapSell.Application.Features.Payments.Command.Callback
 
             if (command.Obj.Success)
             {
-                var payment = order.Payment.FirstOrDefault(x => x.IntegrationId == command.Obj.IntegrationId);
+                var payment = order.Payments.FirstOrDefault(x => x.IntegrationId == command.Obj.IntegrationId);
 
                 if(payment is null)
                 {

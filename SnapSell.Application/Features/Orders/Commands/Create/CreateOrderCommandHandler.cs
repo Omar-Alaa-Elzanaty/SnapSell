@@ -86,7 +86,8 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
             var payment = new Payment
             {
                 OrderId = order.Id,
-                IntegrationId = result.PaymentKeys.First().Integration
+                IntegrationId = result.PaymentKeys.First().Integration,
+                PaymentMethod = command.PaymentMethod
             };
 
             await _unitOfWork.PaymentsRepo.AddAsync(payment);

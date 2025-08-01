@@ -25,7 +25,7 @@ namespace SnapSell.Application.Features.Payments.Command.TokenCallback
         public DateTimeOffset CreatedAt { get; set; }
         public string Email { get; set; }
         [JsonPropertyName("order_id")]
-        public string OrderId { get; set; }
+        public long OrderId { get; set; }
         [JsonPropertyName("user_added")]
         public bool UserAdded { get; set; }
         [JsonPropertyName("next_payment_intention")]

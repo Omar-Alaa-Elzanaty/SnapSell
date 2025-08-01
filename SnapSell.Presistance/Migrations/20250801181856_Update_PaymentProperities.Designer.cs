@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SnapSell.Presistance.Context;
 
@@ -11,9 +12,11 @@ using SnapSell.Presistance.Context;
 namespace SnapSell.Presistance.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    partial class SqlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250801181856_Update_PaymentProperities")]
+    partial class Update_PaymentProperities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1036,45 +1039,6 @@ namespace SnapSell.Presistance.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.UserPaymentCard", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CardSubType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MaskedPan")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "Token");
-
-                    b.ToTable("UserPaymentCards");
-                });
-
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Variant", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1433,17 +1397,6 @@ namespace SnapSell.Presistance.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.UserPaymentCard", b =>
-                {
-                    b.HasOne("SnapSell.Domain.Models.SqlEntities.Identitiy.Account", "User")
-                        .WithMany("UserPaymentCards")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Variant", b =>
                 {
                     b.HasOne("SnapSell.Domain.Models.SqlEntities.Product", "Product")
@@ -1486,8 +1439,6 @@ namespace SnapSell.Presistance.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("Store");
-
-                    b.Navigation("UserPaymentCards");
                 });
 
             modelBuilder.Entity("SnapSell.Domain.Models.SqlEntities.Order", b =>

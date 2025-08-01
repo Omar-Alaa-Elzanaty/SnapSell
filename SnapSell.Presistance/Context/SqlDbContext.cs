@@ -30,6 +30,7 @@ public sealed class SqlDbContext(DbContextOptions<SqlDbContext> options, IHttpCo
     public DbSet<Video> Videos { get; set; }
     public DbSet<ProductVideo> ProductVideos { get; set; }
     public DbSet<Payment> Payments { get; set; }
+    public DbSet<UserPaymentCard> UserPaymentCards { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
