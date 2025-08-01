@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Mapster;
 using MediatR;
-using MongoDB.Driver;
 using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Extensions;
 using SnapSell.Application.Extensions.Services;

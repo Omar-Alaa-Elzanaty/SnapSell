@@ -38,7 +38,7 @@ internal sealed class SearchProductsQueryHandler(
                     pc.Category != null &&
                     EF.Functions.Like(pc.Category.Name, $"%{searchText}%")));
         }
-        
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var products = await query
@@ -46,7 +46,7 @@ internal sealed class SearchProductsQueryHandler(
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
             .ToListAsync(cancellationToken);
-        
+
         var responseItems = products.Select(product =>
         {
             var response = new SearchResponse
@@ -58,7 +58,7 @@ internal sealed class SearchProductsQueryHandler(
                     .Select(pc => pc.Category.Adapt<CategoriesDto>())
                     .FirstOrDefault()
             };
-            
+
             if (response.Product?.Images != null)
             {
                 foreach (var img in response.Product.Images)
@@ -69,15 +69,15 @@ internal sealed class SearchProductsQueryHandler(
                     }
                 }
             }
-            
+
             return response;
         }).ToList();
 
         return await PaginatedResult<SearchResponse>.SuccessAsync(
-            responseItems,
-            totalCount,
-            request.PageNumber,
-            request.PageSize,
+            items: responseItems,
+            totalCount: totalCount,
+            pageNumber: request.PageNumber,
+            pageSize: request.PageSize,
             message: "Search results retrieved successfully.");
     }
 }

@@ -104,9 +104,6 @@ public sealed class AuthenticationService(
         if (user == null)
             return false;
         
-        if (await userManager.IsInRoleAsync(user, role))
-            return true;
-
         if (!await roleManager.RoleExistsAsync(role))
         {
             var createResult = await roleManager.CreateAsync(new IdentityRole(role));
@@ -114,12 +111,12 @@ public sealed class AuthenticationService(
                 return false;
         }
         
-        var addResult = await userManager.AddToRoleAsync(user, role);
+        if (await userManager.IsInRoleAsync(user, role))
+            return true;
         
-        if (!addResult.Succeeded)
-        {
+        var addResult = await userManager.AddToRoleAsync(user, role);
+        if (!addResult.Succeeded) 
             return false;
-        }
         
         return addResult.Succeeded;
     }

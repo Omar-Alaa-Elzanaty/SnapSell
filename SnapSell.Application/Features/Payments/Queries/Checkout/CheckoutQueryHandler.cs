@@ -28,13 +28,13 @@ namespace SnapSell.Application.Features.Payments.Queries.Checkout
 
         public async Task<Result<List<CheckoutQueryDto>>> Handle(CheckoutQuery request, CancellationToken cancellationToken)
         {
-            var clientId = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value!;
+            var clientId = _contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var addresses = await _unitOfWork.OrderAddressesRepo.Entities
                 .Where(x => x.AccountId == clientId)
                 .OrderByDescending(x => x.IsDefault)
                 .ProjectToType<CheckoutQueryDto>()
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             if (addresses.IsEmptyOrNull())
             {

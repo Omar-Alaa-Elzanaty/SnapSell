@@ -1,14 +1,13 @@
-﻿using Mapster;
+using Mapster;
 using SnapSell.Application.Features.Products.Queries.ProductSearch;
 using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Common.Mapping;
 
-public class BrandMappingConfig : IRegister
+public class ProductImageConfig:IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<Brand, BrandDto>()
-            .Map(dest => dest.BrandId, src => src.Id);
+        config.NewConfig<ProductImage, ProductImageResponse>();
     }
 }

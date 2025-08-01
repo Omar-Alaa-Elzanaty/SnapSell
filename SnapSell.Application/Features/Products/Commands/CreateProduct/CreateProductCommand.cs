@@ -44,7 +44,7 @@ public sealed class CreateProductResponse
     public ShippingType ShippingType { get; set; }
     public ProductTypes ProductStatus { get; set; }
     public List<PaymentMethods> PaymentMethods { get; set; } = [];
-    public List<ProductImageResponse> Images { get; set; } = [];
+    public List<CreateProductImageResponse> Images { get; set; } = [];
     public string EnglishDescription { get; set; }
     public string ArabicDescription { get; set; }
     public int MinDeliveryDays { get; set; }
@@ -57,7 +57,7 @@ public sealed class CreateProductResponse
     public List<CreateProductVariantResponse>? Variants { get; set; }
 }
 
-public sealed class ProductImageResponse
+public sealed class CreateProductImageResponse
 {
     public string? ImageUrl { get; set; }
     public bool IsMainImage { get; set; }

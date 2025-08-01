@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using SnapSell.Application.Features.products.Commands.CreateProduct;
 using SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
+using SnapSell.Application.Features.Products.Queries.ProductSearch;
 using SnapSell.Domain.Models.SqlEntities;
 
 namespace SnapSell.Application.Common.Mapping;
@@ -13,6 +14,8 @@ public class VariantMappingConfig : IRegister
         config.NewConfig<Variant, VariantResponseInGetAllProductsToSeller>();
 
         config.NewConfig<Variant, CreateProductVariantResponse>();
+
+        config.NewConfig<Variant, ProductVariantSearchResponse>();
 
     }
 }

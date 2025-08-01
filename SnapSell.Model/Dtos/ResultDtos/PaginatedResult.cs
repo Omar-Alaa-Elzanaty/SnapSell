@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
-using SnapSell.Domain.Extensions;
 using System.Net;
 using System.Text.Json.Serialization;
+using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Domain.Dtos.ResultDtos;
 

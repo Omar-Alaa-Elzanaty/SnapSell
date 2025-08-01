@@ -1,8 +1,8 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
-using SnapSell.Domain.Extensions;
 using System.Net;
 using System.Text.Json.Serialization;
+using SnapSell.Domain.Extnesions;
 
 namespace SnapSell.Domain.Dtos.ResultDtos;
 
@@ -56,6 +56,15 @@ public class Result<T> : IResult<T>
         return new()
         {
             Data = data,
+            Message = message,
+            StatusCode = statusCode
+        };
+    }
+    
+    public static Result<T> Success(string message, HttpStatusCode statusCode)
+    {
+        return new()
+        {
             Message = message,
             StatusCode = statusCode
         };

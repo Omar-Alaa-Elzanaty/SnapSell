@@ -85,7 +85,7 @@ internal sealed class UpdateProductBasicInfoCommandHandler(
         product.MinDeliveryDays = request.MinDeliveryDays;
         product.MaxDeliveryDays = request.MaxDeliveryDays;
 
-        if (request.Images?.Any() == true)
+        if (request.Images.Any())
         {
             var newImages = new List<ProductImage>();
             foreach (var imageDto in request.Images)

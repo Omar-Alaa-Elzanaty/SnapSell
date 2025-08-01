@@ -1,11 +1,12 @@
+using System.Net;
 using Mapster;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using SnapSell.Application.Abstractions.Interfaces;
+using SnapSell.Application.Features.store.Commands.CreateStore;
 using SnapSell.Domain.Dtos.ResultDtos;
-using System.Net;
 
-namespace SnapSell.Application.Features.store.Commands.CreateStore;
+namespace SnapSell.Application.Features.store.Queries.GetStoreById;
 
 internal sealed class GetStoreByIdQueryHandler(
     IUnitOfWork unitOfWork,
@@ -19,7 +20,11 @@ internal sealed class GetStoreByIdQueryHandler(
 
         if (store == null)
         {
-            return new Result<GetStoreByIdResponse> { Message = "No store found",StatusCode = HttpStatusCode.NotFound };
+            return new Result<GetStoreByIdResponse>
+            {
+                Message = "No store found",
+                StatusCode = HttpStatusCode.NotFound
+            };
         }
 
 

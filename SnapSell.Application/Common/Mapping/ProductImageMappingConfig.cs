@@ -8,6 +8,6 @@ public sealed class ProductImageMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<ProductImage, ProductImageResponse>();
+        config.NewConfig<ProductImage, CreateProductImageResponse>();
     }
 }

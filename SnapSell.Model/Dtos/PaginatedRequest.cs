@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SnapSell.Domain.Dtos;
+﻿namespace SnapSell.Domain.Dtos;
 
 public record PaginatedRequest
 {
