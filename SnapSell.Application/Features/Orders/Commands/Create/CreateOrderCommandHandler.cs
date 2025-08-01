@@ -1,16 +1,17 @@
 ﻿using FluentValidation;
+using Google.Apis.Auth.OAuth2;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Domain.Dtos.PaymobDtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using SnapSell.Domain.Models.SqlEntities;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using SnapSell.Domain.Models.SqlEntities.Identitiy;
+using System.Security.Claims;
 
 namespace SnapSell.Application.Features.Orders.Commands.Create
 {
@@ -80,7 +81,9 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
             await _unitOfWork.OrdersRepo.AddAsync(order);
             await _unitOfWork.SaveAsync(cancellationToken);
 
-            var redirectUrl = _configuration["Paymob:RedirectUrl"]!.Replace("ClientSecretValue", result.ClientSecret);
+            var redirectUrl = _configuration["Paymob:RedirectUrl"]
+                + _configuration["Paymob:PublicKey"] 
+                + "&clientSecret=" + result.ClientSecret;
 
             return Result<string>.Success(data: redirectUrl);
         }
