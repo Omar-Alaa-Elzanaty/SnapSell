@@ -13,14 +13,14 @@ namespace SnapSell.Application.Features.Authentication.Commands.SendConfirmation
         IMemoryCache memoryCache,
         IStringLocalizer<SendConfirmationEmailOtpCommandHandler> localizer,
         IEmailService emailService,
-        IWebHostEnvironment webHost) : IRequestHandler<SendConfirmationEmailOtpCommand, Result<string>>
+        IWebHostEnvironment webHost) : IRequestHandler<SendConfirmationEmailOtpCommand, Result<SendConfirmEmailOtpCommandDto>>
     {
         private readonly IMemoryCache _memoryCache = memoryCache;
         private readonly IEmailService _emailService = emailService;
         private readonly IWebHostEnvironment _webHost = webHost;
         private readonly IStringLocalizer<SendConfirmationEmailOtpCommandHandler> _localizer = localizer;
 
-        public async Task<Result<string>> Handle(SendConfirmationEmailOtpCommand command, CancellationToken cancellationToken)
+        public async Task<Result<SendConfirmEmailOtpCommandDto>> Handle(SendConfirmationEmailOtpCommand command, CancellationToken cancellationToken)
         {
             _memoryCache.Remove("ConfirmEmail" + command.Email);
 
@@ -29,18 +29,18 @@ namespace SnapSell.Application.Features.Authentication.Commands.SendConfirmation
 
             if (!await _emailService.SendEmailConfirmationOtp(command.Email, otp))
             {
-                return Result<string>.Failure(_localizer["EmailOtpFailed"]);
+                return Result<SendConfirmEmailOtpCommandDto>.Failure(_localizer["EmailOtpFailed"]);
             }
 
             _memoryCache.Set("ConfirmEmail" + command.Email, otp, TimeSpan.FromMinutes(5));
 
             if (_webHost.IsDevelopment())
             {
-                return Result<string>.Success(otp, _localizer["EmailOtpSent"]);
+                return Result<SendConfirmEmailOtpCommandDto>.Success(new SendConfirmEmailOtpCommandDto(otp), _localizer["EmailOtpSent"]);
             }
             else
             {
-                return Result<string>.Success(_localizer["EmailOtpSent"]);
+                return Result<SendConfirmEmailOtpCommandDto>.Success(_localizer["EmailOtpSent"]);
             }
         }
     }

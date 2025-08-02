@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using SnapSell.Domain.Dtos.ResultDtos;
-using System.Text.Json.Serialization;
 
 namespace SnapSell.Application.Features.Payments.Command.TokenCallback
 {
@@ -12,23 +12,23 @@ namespace SnapSell.Application.Features.Payments.Command.TokenCallback
 
     public class ObjDto
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public int Id { get; set; }
         public string Token { get; set; }
-        [JsonPropertyName("masked_pan")]
+        [JsonProperty("masked_pan")]
         public string MaskedPan { get; set; }
-        [JsonPropertyName("merchant_id")]
+        [JsonProperty("merchant_id")]
         public string merchantId { get; set; }
-        [JsonPropertyName("card_subtype")]
+        [JsonProperty("card_subtype")]
         public string CardSubType { get; set; }
-        [JsonPropertyName("created_at")]
+        [JsonProperty("created_at")]
         public DateTimeOffset CreatedAt { get; set; }
         public string Email { get; set; }
-        [JsonPropertyName("order_id")]
+        [JsonProperty("order_id")]
         public long OrderId { get; set; }
-        [JsonPropertyName("user_added")]
+        [JsonProperty("user_added")]
         public bool UserAdded { get; set; }
-        [JsonPropertyName("next_payment_intention")]
+        [JsonProperty("next_payment_intention")]
         public string NextPaymentIntention { get; set; }
     }
 }

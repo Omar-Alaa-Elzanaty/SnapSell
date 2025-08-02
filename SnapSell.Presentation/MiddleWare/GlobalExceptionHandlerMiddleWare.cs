@@ -6,6 +6,7 @@ using SnapSell.Domain.Dtos.ResultDtos;
 using System.Net;
 using System.Text.Json;
 using SnapSell.Domain.Extnesions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SnapSell.Presentation.MiddleWare;
 
@@ -44,6 +45,7 @@ public sealed class GlobalExceptionHandlerMiddleWare(RequestDelegate next)
         };
         var exceptionResult = JsonSerializer.Serialize(response, jsonOptions);
         context.Response.ContentType = "application/json";
+
         await context.Response.WriteAsync(exceptionResult);
     }
     private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
@@ -54,6 +56,8 @@ public sealed class GlobalExceptionHandlerMiddleWare(RequestDelegate next)
             Message = ex.Message,
             StatusCode = HttpStatusCode.InternalServerError,
         };
+
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
         var jsonOptions = new JsonSerializerOptions()
         {
