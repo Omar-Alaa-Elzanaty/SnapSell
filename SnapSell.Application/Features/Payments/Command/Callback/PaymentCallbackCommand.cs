@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using SnapSell.Domain.Dtos.PaymobDtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 using System;
@@ -12,574 +13,574 @@ namespace SnapSell.Application.Features.Payments.Command.Callback
 {
     public class PaymentCallbackCommand:IRequest<Result<int>>
     {
-        [JsonPropertyName("type")]
+        [JsonProperty("type")]
         public string Type { get; set; }
 
-        [JsonPropertyName("obj")]
+        [JsonProperty("obj")]
         public CallbackTransactionObjDto Obj { get; set; }
 
-        [JsonPropertyName("issuer_bank")]
+        [JsonProperty("issuer_bank")]
         public object IssuerBank { get; set; }
 
-        [JsonPropertyName("transaction_processed_callback_responses")]
+        [JsonProperty("transaction_processed_callback_responses")]
         public string TransactionProcessedCallbackResponses { get; set; }
     }
 
     public class CallbackTransactionObjDto
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public long Id { get; set; }
 
-        [JsonPropertyName("pending")]
+        [JsonProperty("pending")]
         public bool Pending { get; set; }
 
-        [JsonPropertyName("amount_cents")]
+        [JsonProperty("amount_cents")]
         public int AmountCents { get; set; }
 
-        [JsonPropertyName("success")]
+        [JsonProperty("success")]
         public bool Success { get; set; }
 
-        [JsonPropertyName("is_auth")]
+        [JsonProperty("is_auth")]
         public bool IsAuth { get; set; }
 
-        [JsonPropertyName("is_capture")]
+        [JsonProperty("is_capture")]
         public bool IsCapture { get; set; }
 
-        [JsonPropertyName("is_standalone_payment")]
+        [JsonProperty("is_standalone_payment")]
         public bool IsStandalonePayment { get; set; }
 
-        [JsonPropertyName("is_voided")]
+        [JsonProperty("is_voided")]
         public bool IsVoided { get; set; }
 
-        [JsonPropertyName("is_refunded")]
+        [JsonProperty("is_refunded")]
         public bool IsRefunded { get; set; }
 
-        [JsonPropertyName("is_3d_secure")]
+        [JsonProperty("is_3d_secure")]
         public bool Is3DSecure { get; set; }
 
-        [JsonPropertyName("integration_id")]
+        [JsonProperty("integration_id")]
         public long IntegrationId { get; set; }
 
-        [JsonPropertyName("profile_id")]
+        [JsonProperty("profile_id")]
         public long ProfileId { get; set; }
 
-        [JsonPropertyName("has_parent_transaction")]
+        [JsonProperty("has_parent_transaction")]
         public bool HasParentTransaction { get; set; }
 
-        [JsonPropertyName("order")]
+        [JsonProperty("order")]
         public CallbackOrderDto Order { get; set; }
 
-        [JsonPropertyName("created_at")]
+        [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
 
-        [JsonPropertyName("transaction_processed_callback_responses")]
+        [JsonProperty("transaction_processed_callback_responses")]
         public List<object> TransactionProcessedCallbackResponses { get; set; }
 
-        [JsonPropertyName("currency")]
+        [JsonProperty("currency")]
         public string Currency { get; set; }
 
-        [JsonPropertyName("source_data")]
+        [JsonProperty("source_data")]
         public SourceData SourceData { get; set; }
 
-        [JsonPropertyName("api_source")]
+        [JsonProperty("api_source")]
         public string ApiSource { get; set; }
 
-        [JsonPropertyName("terminal_id")]
+        [JsonProperty("terminal_id")]
         public object TerminalId { get; set; }
 
-        [JsonPropertyName("merchant_commission")]
+        [JsonProperty("merchant_commission")]
         public int MerchantCommission { get; set; }
 
-        [JsonPropertyName("installment")]
+        [JsonProperty("installment")]
         public object Installment { get; set; }
 
-        [JsonPropertyName("discount_details")]
+        [JsonProperty("discount_details")]
         public List<object> DiscountDetails { get; set; }
 
-        [JsonPropertyName("is_void")]
+        [JsonProperty("is_void")]
         public bool IsVoid { get; set; }
 
-        [JsonPropertyName("is_refund")]
+        [JsonProperty("is_refund")]
         public bool IsRefund { get; set; }
 
-        [JsonPropertyName("data")]
+        [JsonProperty("data")]
         public Data Data { get; set; }
 
-        [JsonPropertyName("payment_key_claims")]
+        [JsonProperty("payment_key_claims")]
         public PaymentKeyClaims PaymentKeyClaims { get; set; }
 
-        [JsonPropertyName("error_occured")]
+        [JsonProperty("error_occured")]
         public bool ErrorOccured { get; set; }
 
-        [JsonPropertyName("is_live")]
+        [JsonProperty("is_live")]
         public bool IsLive { get; set; }
 
-        [JsonPropertyName("other_endpoint_reference")]
+        [JsonProperty("other_endpoint_reference")]
         public object OtherEndpointReference { get; set; }
 
-        [JsonPropertyName("refunded_amount_cents")]
+        [JsonProperty("refunded_amount_cents")]
         public int RefundedAmountCents { get; set; }
     }
 
     public class CallbackOrderDto
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public long Id { get; set; }
 
-        [JsonPropertyName("created_at")]
+        [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
 
-        [JsonPropertyName("delivery_needed")]
+        [JsonProperty("delivery_needed")]
         public bool DeliveryNeeded { get; set; }
 
-        [JsonPropertyName("merchant")]
+        [JsonProperty("merchant")]
         public MerchantDto Merchant { get; set; }
 
-        [JsonPropertyName("collector")]
+        [JsonProperty("collector")]
         public object Collector { get; set; }
 
-        [JsonPropertyName("amount_cents")]
+        [JsonProperty("amount_cents")]
         public int AmountCents { get; set; }
 
-        [JsonPropertyName("shipping_data")]
+        [JsonProperty("shipping_data")]
         public ShippingDataDto ShippingData { get; set; }
 
-        [JsonPropertyName("currency")]
+        [JsonProperty("currency")]
         public string Currency { get; set; }
 
-        [JsonPropertyName("is_payment_locked")]
+        [JsonProperty("is_payment_locked")]
         public bool IsPaymentLocked { get; set; }
 
-        [JsonPropertyName("is_return")]
+        [JsonProperty("is_return")]
         public bool IsReturn { get; set; }
 
-        [JsonPropertyName("is_cancel")]
+        [JsonProperty("is_cancel")]
         public bool IsCancel { get; set; }
 
-        [JsonPropertyName("is_returned")]
+        [JsonProperty("is_returned")]
         public bool IsReturned { get; set; }
 
-        [JsonPropertyName("is_canceled")]
+        [JsonProperty("is_canceled")]
         public bool IsCanceled { get; set; }
 
-        [JsonPropertyName("merchant_order_id")]
+        [JsonProperty("merchant_order_id")]
         public object MerchantOrderId { get; set; }
 
-        [JsonPropertyName("wallet_notification")]
+        [JsonProperty("wallet_notification")]
         public object WalletNotification { get; set; }
 
-        [JsonPropertyName("paid_amount_cents")]
+        [JsonProperty("paid_amount_cents")]
         public int PaidAmountCents { get; set; }
 
-        [JsonPropertyName("notify_user_with_email")]
+        [JsonProperty("notify_user_with_email")]
         public bool NotifyUserWithEmail { get; set; }
 
-        [JsonPropertyName("items")]
+        [JsonProperty("items")]
         public List<object> Items { get; set; }
 
-        [JsonPropertyName("order_url")]
+        [JsonProperty("order_url")]
         public string OrderUrl { get; set; }
 
-        [JsonPropertyName("commission_fees")]
+        [JsonProperty("commission_fees")]
         public int CommissionFees { get; set; }
 
-        [JsonPropertyName("delivery_fees_cents")]
+        [JsonProperty("delivery_fees_cents")]
         public int DeliveryFeesCents { get; set; }
 
-        [JsonPropertyName("delivery_vat_cents")]
+        [JsonProperty("delivery_vat_cents")]
         public int DeliveryVatCents { get; set; }
 
-        [JsonPropertyName("payment_method")]
+        [JsonProperty("payment_method")]
         public string PaymentMethod { get; set; }
 
-        [JsonPropertyName("merchant_staff_tag")]
+        [JsonProperty("merchant_staff_tag")]
         public object MerchantStaffTag { get; set; }
 
-        [JsonPropertyName("api_source")]
+        [JsonProperty("api_source")]
         public string ApiSource { get; set; }
 
-        [JsonPropertyName("data")]
+        [JsonProperty("data")]
         public object Data { get; set; }
     }
 
     public class MerchantDto
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public long Id { get; set; }
 
-        [JsonPropertyName("created_at")]
+        [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
 
-        [JsonPropertyName("phones")]
+        [JsonProperty("phones")]
         public List<string> Phones { get; set; }
 
-        [JsonPropertyName("company_emails")]
+        [JsonProperty("company_emails")]
         public List<string> CompanyEmails { get; set; }
 
-        [JsonPropertyName("company_name")]
+        [JsonProperty("company_name")]
         public string CompanyName { get; set; }
 
-        [JsonPropertyName("state")]
+        [JsonProperty("state")]
         public string State { get; set; }
 
-        [JsonPropertyName("country")]
+        [JsonProperty("country")]
         public string Country { get; set; }
 
-        [JsonPropertyName("city")]
+        [JsonProperty("city")]
         public string City { get; set; }
 
-        [JsonPropertyName("postal_code")]
+        [JsonProperty("postal_code")]
         public string PostalCode { get; set; }
 
-        [JsonPropertyName("street")]
+        [JsonProperty("street")]
         public string Street { get; set; }
     }
 
     public class ShippingDataDto
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public long Id { get; set; }
 
-        [JsonPropertyName("first_name")]
+        [JsonProperty("first_name")]
         public string FirstName { get; set; }
 
-        [JsonPropertyName("last_name")]
+        [JsonProperty("last_name")]
         public string LastName { get; set; }
 
-        [JsonPropertyName("street")]
+        [JsonProperty("street")]
         public string Street { get; set; }
 
-        [JsonPropertyName("building")]
+        [JsonProperty("building")]
         public string Building { get; set; }
 
-        [JsonPropertyName("floor")]
+        [JsonProperty("floor")]
         public string Floor { get; set; }
 
-        [JsonPropertyName("apartment")]
+        [JsonProperty("apartment")]
         public string Apartment { get; set; }
 
-        [JsonPropertyName("city")]
+        [JsonProperty("city")]
         public string City { get; set; }
 
-        [JsonPropertyName("state")]
+        [JsonProperty("state")]
         public string State { get; set; }
 
-        [JsonPropertyName("country")]
+        [JsonProperty("country")]
         public string Country { get; set; }
 
-        [JsonPropertyName("email")]
+        [JsonProperty("email")]
         public string Email { get; set; }
 
-        [JsonPropertyName("phone_number")]
+        [JsonProperty("phone_number")]
         public string PhoneNumber { get; set; }
 
-        [JsonPropertyName("postal_code")]
+        [JsonProperty("postal_code")]
         public string PostalCode { get; set; }
 
-        [JsonPropertyName("extra_description")]
+        [JsonProperty("extra_description")]
         public string ExtraDescription { get; set; }
 
-        [JsonPropertyName("shipping_method")]
+        [JsonProperty("shipping_method")]
         public string ShippingMethod { get; set; }
 
-        [JsonPropertyName("order_id")]
+        [JsonProperty("order_id")]
         public long OrderId { get; set; }
     }
 
     public class SourceData
     {
-        [JsonPropertyName("pan")]
+        [JsonProperty("pan")]
         public string Pan { get; set; }
 
-        [JsonPropertyName("type")]
+        [JsonProperty("type")]
         public string Type { get; set; }
 
-        [JsonPropertyName("tenure")]
+        [JsonProperty("tenure")]
         public object Tenure { get; set; }
 
-        [JsonPropertyName("sub_type")]
+        [JsonProperty("sub_type")]
         public string SubType { get; set; }
     }
 
     public class Data
     {
-        [JsonPropertyName("gateway_integration_pk")]
+        [JsonProperty("gateway_integration_pk")]
         public long GatewayIntegrationPk { get; set; }
 
-        [JsonPropertyName("klass")]
+        [JsonProperty("klass")]
         public string Klass { get; set; }
 
-        [JsonPropertyName("created_at")]
+        [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
 
-        [JsonPropertyName("amount")]
+        [JsonProperty("amount")]
         public float Amount { get; set; }
 
-        [JsonPropertyName("currency")]
+        [JsonProperty("currency")]
         public string Currency { get; set; }
 
-        [JsonPropertyName("migs_order")]
+        [JsonProperty("migs_order")]
         public MigsOrderDto MigsOrder { get; set; }
 
-        [JsonPropertyName("merchant")]
+        [JsonProperty("merchant")]
         public string Merchant { get; set; }
 
-        [JsonPropertyName("migs_result")]
+        [JsonProperty("migs_result")]
         public string MigsResult { get; set; }
 
-        [JsonPropertyName("migs_transaction")]
+        [JsonProperty("migs_transaction")]
         public MigsTransactionDto MigsTransaction { get; set; }
 
-        [JsonPropertyName("txn_response_code")]
+        [JsonProperty("txn_response_code")]
         public string TxnResponseCode { get; set; }
 
-        [JsonPropertyName("acq_response_code")]
+        [JsonProperty("acq_response_code")]
         public string AcqResponseCode { get; set; }
 
-        [JsonPropertyName("message")]
+        [JsonProperty("message")]
         public string Message { get; set; }
 
-        [JsonPropertyName("merchant_txn_ref")]
+        [JsonProperty("merchant_txn_ref")]
         public long MerchantTxnRef { get; set; }
 
-        [JsonPropertyName("order_info")]
+        [JsonProperty("order_info")]
         public long OrderInfo { get; set; }
 
-        [JsonPropertyName("receipt_no")]
+        [JsonProperty("receipt_no")]
         public string ReceiptNo { get; set; }
 
-        [JsonPropertyName("transaction_no")]
+        [JsonProperty("transaction_no")]
         public string TransactionNo { get; set; }
 
-        [JsonPropertyName("batch_no")]
+        [JsonProperty("batch_no")]
         public long BatchNo { get; set; }
 
-        [JsonPropertyName("authorize_id")]
+        [JsonProperty("authorize_id")]
         public string AuthorizeId { get; set; }
 
-        [JsonPropertyName("card_type")]
+        [JsonProperty("card_type")]
         public string CardType { get; set; }
 
-        [JsonPropertyName("card_num")]
+        [JsonProperty("card_num")]
         public string CardNum { get; set; }
 
-        [JsonPropertyName("secure_hash")]
+        [JsonProperty("secure_hash")]
         public string SecureHash { get; set; }
 
-        [JsonPropertyName("avs_result_code")]
+        [JsonProperty("avs_result_code")]
         public string AvsResultCode { get; set; }
 
-        [JsonPropertyName("avs_acq_response_code")]
+        [JsonProperty("avs_acq_response_code")]
         public string AvsAcqResponseCode { get; set; }
 
-        [JsonPropertyName("captured_amount")]
+        [JsonProperty("captured_amount")]
         public float CapturedAmount { get; set; }
 
-        [JsonPropertyName("authorised_amount")]
+        [JsonProperty("authorised_amount")]
         public float AuthorisedAmount { get; set; }
 
-        [JsonPropertyName("refunded_amount")]
+        [JsonProperty("refunded_amount")]
         public float RefundedAmount { get; set; }
 
-        [JsonPropertyName("acs_eci")]
+        [JsonProperty("acs_eci")]
         public string AcsEci { get; set; }
     }
 
     public class MigsOrderDto
     {
-        [JsonPropertyName("acceptPartialAmount")]
+        [JsonProperty("acceptPartialAmount")]
         public bool AcceptPartialAmount { get; set; }
 
-        [JsonPropertyName("amount")]
+        [JsonProperty("amount")]
         public float Amount { get; set; }
 
-        [JsonPropertyName("authenticationStatus")]
+        [JsonProperty("authenticationStatus")]
         public string AuthenticationStatus { get; set; }
 
-        [JsonPropertyName("chargeback")]
+        [JsonProperty("chargeback")]
         public ChargebackDto Chargeback { get; set; }
 
-        [JsonPropertyName("creationTime")]
+        [JsonProperty("creationTime")]
         public string CreationTime { get; set; }
 
-        [JsonPropertyName("currency")]
+        [JsonProperty("currency")]
         public string Currency { get; set; }
 
-        [JsonPropertyName("description")]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonPropertyName("lastUpdatedTime")]
+        [JsonProperty("lastUpdatedTime")]
         public string LastUpdatedTime { get; set; }
 
-        [JsonPropertyName("merchantAmount")]
+        [JsonProperty("merchantAmount")]
         public float MerchantAmount { get; set; }
 
-        [JsonPropertyName("merchantCategoryCode")]
+        [JsonProperty("merchantCategoryCode")]
         public string MerchantCategoryCode { get; set; }
 
-        [JsonPropertyName("merchantCurrency")]
+        [JsonProperty("merchantCurrency")]
         public string MerchantCurrency { get; set; }
 
-        [JsonPropertyName("status")]
+        [JsonProperty("status")]
         public string Status { get; set; }
 
-        [JsonPropertyName("totalAuthorizedAmount")]
+        [JsonProperty("totalAuthorizedAmount")]
         public float TotalAuthorizedAmount { get; set; }
 
-        [JsonPropertyName("totalCapturedAmount")]
+        [JsonProperty("totalCapturedAmount")]
         public float TotalCapturedAmount { get; set; }
 
-        [JsonPropertyName("totalRefundedAmount")]
+        [JsonProperty("totalRefundedAmount")]
         public float TotalRefundedAmount { get; set; }
     }
 
     public class ChargebackDto
     {
-        [JsonPropertyName("amount")]
+        [JsonProperty("amount")]
         public float Amount { get; set; }
 
-        [JsonPropertyName("currency")]
+        [JsonProperty("currency")]
         public string Currency { get; set; }
     }
 
     public class MigsTransactionDto
     {
-        [JsonPropertyName("acquirer")]
+        [JsonProperty("acquirer")]
         public AcquirerDto Acquirer { get; set; }
 
-        [JsonPropertyName("amount")]
+        [JsonProperty("amount")]
         public float Amount { get; set; }
 
-        [JsonPropertyName("authenticationStatus")]
+        [JsonProperty("authenticationStatus")]
         public string AuthenticationStatus { get; set; }
 
-        [JsonPropertyName("authorizationCode")]
+        [JsonProperty("authorizationCode")]
         public string AuthorizationCode { get; set; }
 
-        [JsonPropertyName("currency")]
+        [JsonProperty("currency")]
         public string Currency { get; set; }
 
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonPropertyName("receipt")]
+        [JsonProperty("receipt")]
         public string Receipt { get; set; }
 
-        [JsonPropertyName("source")]
+        [JsonProperty("source")]
         public string Source { get; set; }
 
-        [JsonPropertyName("stan")]
+        [JsonProperty("stan")]
         public string Stan { get; set; }
 
-        [JsonPropertyName("terminal")]
+        [JsonProperty("terminal")]
         public string Terminal { get; set; }
 
-        [JsonPropertyName("type")]
+        [JsonProperty("type")]
         public string Type { get; set; }
     }
 
     public class AcquirerDto
     {
-        [JsonPropertyName("batch")]
+        [JsonProperty("batch")]
         public long Batch { get; set; }
 
-        [JsonPropertyName("date")]
+        [JsonProperty("date")]
         public string Date { get; set; }
 
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonPropertyName("merchantId")]
+        [JsonProperty("merchantId")]
         public string MerchantId { get; set; }
 
-        [JsonPropertyName("settlementDate")]
+        [JsonProperty("settlementDate")]
         public string SettlementDate { get; set; }
 
-        [JsonPropertyName("timeZone")]
+        [JsonProperty("timeZone")]
         public string TimeZone { get; set; }
 
-        [JsonPropertyName("transactionId")]
+        [JsonProperty("transactionId")]
         public string TransactionId { get; set; }
     }
 
     public class PaymentKeyClaims
     {
-        [JsonPropertyName("extra")]
+        [JsonProperty("extra")]
         public object Extra { get; set; }
 
-        [JsonPropertyName("user_id")]
+        [JsonProperty("user_id")]
         public long UserId { get; set; }
 
-        [JsonPropertyName("currency")]
+        [JsonProperty("currency")]
         public string Currency { get; set; }
 
-        [JsonPropertyName("order_id")]
+        [JsonProperty("order_id")]
         public long OrderId { get; set; }
 
-        [JsonPropertyName("amount_cents")]
+        [JsonProperty("amount_cents")]
         public int AmountCents { get; set; }
 
-        [JsonPropertyName("billing_data")]
+        [JsonProperty("billing_data")]
         public BillingDataDto BillingData { get; set; }
 
-        [JsonPropertyName("redirect_url")]
+        [JsonProperty("redirect_url")]
         public string RedirectUrl { get; set; }
 
-        [JsonPropertyName("integration_id")]
+        [JsonProperty("integration_id")]
         public long IntegrationId { get; set; }
 
-        [JsonPropertyName("lock_order_when_paid")]
+        [JsonProperty("lock_order_when_paid")]
         public bool LockOrderWhenPaid { get; set; }
 
-        [JsonPropertyName("next_payment_intention")]
+        [JsonProperty("next_payment_intention")]
         public string NextPaymentIntention { get; set; }
 
-        [JsonPropertyName("single_payment_attempt")]
+        [JsonProperty("single_payment_attempt")]
         public bool SinglePaymentAttempt { get; set; }
     }
 
     public class BillingDataDto
     {
-        [JsonPropertyName("city")]
+        [JsonProperty("city")]
         public string City { get; set; }
 
-        [JsonPropertyName("email")]
+        [JsonProperty("email")]
         public string Email { get; set; }
 
-        [JsonPropertyName("floor")]
+        [JsonProperty("floor")]
         public string Floor { get; set; }
 
-        [JsonPropertyName("state")]
+        [JsonProperty("state")]
         public string State { get; set; }
 
-        [JsonPropertyName("street")]
+        [JsonProperty("street")]
         public string Street { get; set; }
 
-        [JsonPropertyName("country")]
+        [JsonProperty("country")]
         public string Country { get; set; }
 
-        [JsonPropertyName("building")]
+        [JsonProperty("building")]
         public string Building { get; set; }
 
-        [JsonPropertyName("apartment")]
+        [JsonProperty("apartment")]
         public string Apartment { get; set; }
 
-        [JsonPropertyName("last_name")]
+        [JsonProperty("last_name")]
         public string LastName { get; set; }
 
-        [JsonPropertyName("first_name")]
+        [JsonProperty("first_name")]
         public string FirstName { get; set; }
 
-        [JsonPropertyName("postal_code")]
+        [JsonProperty("postal_code")]
         public string PostalCode { get; set; }
 
-        [JsonPropertyName("phone_number")]
+        [JsonProperty("phone_number")]
         public string PhoneNumber { get; set; }
 
-        [JsonPropertyName("extra_description")]
+        [JsonProperty("extra_description")]
         public string ExtraDescription { get; set; }
     }
 

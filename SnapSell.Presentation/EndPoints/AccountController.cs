@@ -46,7 +46,7 @@ public sealed class AccountController(ISender sender) : ApiControllerBase
     }
 
     [HttpPost("SendEmailConfirmationOtp")]
-    public async Task<ActionResult<Result<string>>> SendEmailConfirmationOtp(SendConfirmationEmailOtpCommand command,
+    public async Task<ActionResult<Result<SendConfirmEmailOtpCommandDto>>> SendEmailConfirmationOtp(SendConfirmationEmailOtpCommand command,
         CancellationToken cancellationToken)
     {
         var result = await sender.Send(command, cancellationToken);

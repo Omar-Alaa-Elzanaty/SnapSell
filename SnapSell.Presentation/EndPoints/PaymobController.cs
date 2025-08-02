@@ -1,10 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SnapSell.Application.Features.Payments.Command.Callback;
 using SnapSell.Application.Features.Payments.Command.TokenCallback;
-using SnapSell.Domain.Dtos.PaymobDtos;
 using System.Text.Json;
 
 namespace SnapSell.Presentation.EndPoints
@@ -23,11 +21,11 @@ namespace SnapSell.Presentation.EndPoints
         {
             string type = command.GetProperty("type").GetString()!;
 
-            var commandString = JsonConvert.SerializeObject(command);
+            var commandString = command.GetRawText();
 
             if (type == "TRANSACTION")
             {
-                var paymentCallbackCommand = JsonConvert.DeserializeObject<PaymentCallbackCommand>(commandString);
+                var paymentCallbackCommand =  JsonConvert.DeserializeObject<PaymentCallbackCommand>(commandString);
                 return Ok(await _mediator.Send(paymentCallbackCommand!, cancellationToken));
             }
             else if (type == "TOKEN")

@@ -5,5 +5,15 @@ namespace SnapSell.Application.Features.Authentication.Commands.SendConfirmation
 {
     public sealed record SendConfirmationEmailOtpCommand(
         string Email
-        ) : IRequest<Result<string>>;
+        ) : IRequest<Result<SendConfirmEmailOtpCommandDto>>;
+
+    public class SendConfirmEmailOtpCommandDto
+    {
+        public string Otp { get; set; }
+
+        public SendConfirmEmailOtpCommandDto(string otp)
+        {
+            Otp = otp;
+        }
+    }
 }
