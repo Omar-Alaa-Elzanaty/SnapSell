@@ -50,14 +50,18 @@ internal sealed class RegisterCommandHandler(
         var result = await userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
-            return Result<RegisterResult>.ValidationFailure(result.Errors);
+            return Result<RegisterResult>.Failure(
+                message: "falied to update user data",
+                statusCode: HttpStatusCode.BadRequest);
         }
 
         result = await userManager.AddPasswordAsync(user, request.Password);
 
         if (!result.Succeeded)
         {
-            return Result<RegisterResult>.ValidationFailure(result.Errors);
+            return Result<RegisterResult>.Failure(
+                message: "Error adding password to user.",
+                statusCode: HttpStatusCode.BadRequest);
         }
 
         var response = new RegisterResult()
@@ -69,6 +73,6 @@ internal sealed class RegisterCommandHandler(
         return Result<RegisterResult>.Success(
             data: response,
             message: localizer["UserCreatedSuccessfully"],
-            statusCode: HttpStatusCode.Created);
+            statusCode: HttpStatusCode.Accepted);
     }
 }

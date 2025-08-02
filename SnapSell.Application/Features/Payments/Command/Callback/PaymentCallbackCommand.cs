@@ -1,13 +1,6 @@
 ﻿using MediatR;
 using Newtonsoft.Json;
-using SnapSell.Domain.Dtos.PaymobDtos;
 using SnapSell.Domain.Dtos.ResultDtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace SnapSell.Application.Features.Payments.Command.Callback
 {
