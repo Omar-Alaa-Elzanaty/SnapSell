@@ -46,8 +46,8 @@ public class PublicController(ISender sender) : ApiControllerBase
 
     [HttpGet("Products/Related")]
     public async Task<ActionResult<PaginatedResult<GetRelatedProductsQueryWithPaginationDto>>>
-        GetRelatedProductsWithPagination
-        ([FromQuery] GetRelatedProductsQueryWithPagination query, CancellationToken cancellationToken)
+        GetRelatedProductsWithPagination([FromQuery] GetRelatedProductsQueryWithPagination query,
+            CancellationToken cancellationToken)
     {
         var result = await sender.Send(query, cancellationToken);
         return await HandleMediatorResultAsync(result);

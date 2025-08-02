@@ -51,17 +51,16 @@ internal sealed class RegisterCommandHandler(
         if (!result.Succeeded)
         {
             return Result<RegisterResult>.Failure(
-                message: "falied to update user data",
-                statusCode: HttpStatusCode.BadRequest);
+                message: "Failed to update user",
+                statusCode:HttpStatusCode.BadRequest);
         }
 
         result = await userManager.AddPasswordAsync(user, request.Password);
-
         if (!result.Succeeded)
         {
             return Result<RegisterResult>.Failure(
-                message: "Error adding password to user.",
-                statusCode: HttpStatusCode.BadRequest);
+                message:"failed to add password to user.",
+                statusCode:HttpStatusCode.BadRequest);
         }
 
         var response = new RegisterResult()

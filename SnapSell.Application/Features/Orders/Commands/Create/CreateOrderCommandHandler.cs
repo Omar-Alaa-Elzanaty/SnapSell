@@ -48,8 +48,13 @@ namespace SnapSell.Application.Features.Orders.Commands.Create
                 return Result<string>.ValidationFailure(validationResult.Errors);
             }
 
-            var clientId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var clientId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            if (clientId is null)
+            {
+                return Result<string>.Failure("User not found");
+            }
+            
             var client = await _userManager.FindByIdAsync(clientId);
 
             var amount = (double)await _unitOfWork.VariantsRepo.Entities
