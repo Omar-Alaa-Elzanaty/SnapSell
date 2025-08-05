@@ -13,7 +13,7 @@ public class Result<T> : IResult<T>
     [JsonIgnore]
     public HttpStatusCode StatusCode { get; set; }
 
-    [JsonPropertyName("statusCode")]
+    [JsonPropertyName("StatusCode")]
     public int StatusCodeNumber => (int)StatusCode;
     public T? Data { get; set; }
     public string? Message { get; set; }

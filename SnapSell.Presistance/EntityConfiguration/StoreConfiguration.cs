@@ -13,7 +13,7 @@ public class StoreConfiguration : AuditableEntityConfiguration<Store>
             .WithOne(seller => seller.Store)
             .HasForeignKey<Store>(s => s.AccountId)
             .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasQueryFilter(x => x.Status != StoreStatusTypes.Rejected);
     }

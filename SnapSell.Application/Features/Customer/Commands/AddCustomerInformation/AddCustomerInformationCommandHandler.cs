@@ -25,6 +25,7 @@ internal sealed class AddCustomerInformationCommandHandler(
     {
         var userId = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
         var addRoleResult = await authenticationService.AddRoleToUser(userId!, _defaultCustomerRole);
+        
         if (addRoleResult is not true)
         {
             return Result<AddCustomerInfoResult>.Failure(
@@ -33,19 +34,26 @@ internal sealed class AddCustomerInformationCommandHandler(
         }
 
         var account = await userManager.FindByIdAsync(userId!);
-
         if (account is null)
         {
             return Result<AddCustomerInfoResult>.Failure(
                 message: localizer["UserNotFound"],
                 statusCode: HttpStatusCode.NotFound);
         }
-
+        
+        if (!await userManager.HasPasswordAsync(account))
+        {
+            return Result<AddCustomerInfoResult>.Failure(
+                message: "user must rigester first",
+                statusCode: HttpStatusCode.Forbidden);
+        }
+        
         account.Gender = request.Gender;
         account.BirthDate = request.BirthDate;
+        account.PhoneNumber = request.PhoneNumber;
 
         await userManager.UpdateAsync(account);
-        var customer = account.Adapt<AddCustomerInformationRespose>();
+        var customer = account.Adapt<AddCustomerInformationResponse>();
         var token = await authenticationService.GenerateTokenAsync(account);
 
         return Result<AddCustomerInfoResult>.Success(

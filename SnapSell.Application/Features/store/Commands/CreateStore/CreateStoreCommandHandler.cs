@@ -37,6 +37,13 @@ internal sealed class CreateStoreCommandHandler(
                 message: localizer["SellerNotFound"],
                 statusCode: HttpStatusCode.NotFound);
         }
+        
+        if (!await userManager.HasPasswordAsync(seller))
+        {
+            return Result<CreateStoreResult>.Failure(
+                message: "user must rigester first",
+                statusCode: HttpStatusCode.NotFound);
+        }
 
         var existingStore = await unitOfWork.StoresRepo
             .FindAsync(s => s.AccountId == sellerId);
@@ -46,6 +53,15 @@ internal sealed class CreateStoreCommandHandler(
             return Result<CreateStoreResult>.Failure(
                 message: "Seller already has a store.",
                 statusCode: HttpStatusCode.Conflict);
+        }
+        var isaValidStoreId = await unitOfWork.StoresRepo
+            .FindAsync(s => s.StoreId == request.StoreId);
+        
+        if (isaValidStoreId.Any()) 
+        {
+            return Result<CreateStoreResult>.Failure(
+                message: "This StoreId is already taken, please use another one.",
+                statusCode: HttpStatusCode.Conflict); 
         }
 
         var store = request.Adapt<Store>();

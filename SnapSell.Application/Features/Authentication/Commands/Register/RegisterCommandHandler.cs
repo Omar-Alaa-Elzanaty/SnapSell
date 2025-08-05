@@ -55,12 +55,15 @@ internal sealed class RegisterCommandHandler(
                 statusCode:HttpStatusCode.BadRequest);
         }
 
-        result = await userManager.AddPasswordAsync(user, request.Password);
-        if (!result.Succeeded)
+        if (!await userManager.HasPasswordAsync(user))
         {
-            return Result<RegisterResult>.Failure(
-                message:"failed to add password to user.",
-                statusCode:HttpStatusCode.BadRequest);
+            var passwordResult = await userManager.AddPasswordAsync(user, request.Password);
+            if (!passwordResult.Succeeded)
+            {
+                return Result<RegisterResult>.Failure(
+                    message: "Failed to add password to user.",
+                    statusCode: HttpStatusCode.BadRequest);
+            }
         }
 
         var response = new RegisterResult()

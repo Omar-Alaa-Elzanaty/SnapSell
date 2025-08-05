@@ -1,4 +1,5 @@
 using FluentValidation;
+using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.Features.store.Commands.CreateStore;
 
@@ -18,7 +19,8 @@ public class CreateStoreCommandValidator : AbstractValidator<CreateStoreCommand>
         RuleFor(x => x.MaximumDeliverPeriod).NotEmpty()
             .WithMessage("MaximumDeliverPeriod is required");
 
-        RuleFor(x => x.DeliverPeriodTypes).NotEmpty()
-            .WithMessage("1 for (Days), 2 for (WorkingDays), 3 for (Weeks), 4 for (Months).");
+        RuleFor(x => x.DeliverPeriodTypes)
+            .Must(value => value == 1 || value == 2 || value == 3 || value == 4)
+            .WithMessage("Valid values: 1 (Days), 2 (WorkingDays), 3 (Weeks), 4 (Months).");
     }
 }

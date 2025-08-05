@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using System.Net;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,8 @@ using SnapSell.Domain.Models.SqlEntities.Identitiy;
 
 namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpCommand
 {
-    internal class ConfirmEmailOtpCommandHandler : IRequestHandler<ConfirmEmailOtpCommand, Result<ConfirmEmailOtpCommandResponse>>
+    internal sealed class
+        ConfirmEmailOtpCommandHandler : IRequestHandler<ConfirmEmailOtpCommand, Result<ConfirmEmailOtpCommandResponse>>
     {
         private readonly UserManager<Account> _userManager;
         private readonly IMemoryCache _memoryCache;
@@ -33,7 +35,8 @@ namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpC
             _authServices = authServices;
         }
 
-        public async Task<Result<ConfirmEmailOtpCommandResponse>> Handle(ConfirmEmailOtpCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ConfirmEmailOtpCommandResponse>> Handle(ConfirmEmailOtpCommand request,
+            CancellationToken cancellationToken)
         {
             var otp = _memoryCache.Get<string>("ConfirmEmail" + request.Email);
 
@@ -48,8 +51,7 @@ namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpC
 
             if (user is null)
             {
-
-                if (await _userManager.Users.AnyAsync(x => x.UserName == request.Email,cancellationToken))
+                if (await _userManager.Users.AnyAsync(x => x.UserName == request.Email, cancellationToken))
                 {
                     return Result<ConfirmEmailOtpCommandResponse>.Failure(_localizer["UserAlreadyExists"]);
                 }
@@ -58,12 +60,18 @@ namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpC
                 {
                     UserName = request.Email,
                     Email = request.Email,
-                    FirstName="User",
-                    LastName="User",
+                    FirstName = "User",
+                    LastName = "User",
                     EmailConfirmed = true
                 };
 
                 var identity = await _userManager.CreateAsync(user);
+                if (!identity.Succeeded)
+                {
+                    return Result<ConfirmEmailOtpCommandResponse>.Failure(
+                        message: "failed to create user.",
+                        statusCode: HttpStatusCode.BadRequest);
+                }
 
                 return Result<ConfirmEmailOtpCommandResponse>.Success(new ConfirmEmailOtpCommandResponse()
                 {
@@ -82,6 +90,10 @@ namespace SnapSell.Application.Features.Authentication.Commands.ConfirmEmailOtpC
             var userInfo = user.Adapt<ConfirmOtpUserInfoDto>();
             userInfo.Store = store;
             userInfo.Roles = [.. roles];
+            userInfo.Id = user.Id;
+            userInfo.FirstName = user.FirstName;
+            userInfo.LastName = user.LastName;
+            userInfo.UserName = user.UserName;
 
             return Result<ConfirmEmailOtpCommandResponse>.Success(new ConfirmEmailOtpCommandResponse()
             {

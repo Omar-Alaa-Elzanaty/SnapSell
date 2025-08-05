@@ -7,11 +7,15 @@ namespace SnapSell.Application.Features.Customer.Commands.AddCustomerInformation
 public sealed record AddCustomerInformationCommand(
     string UserId,
     Gender Gender,
+    string PhoneNumber,
     DateTime BirthDate) : IRequest<Result<AddCustomerInfoResult>>;
-
-public sealed record AddCustomerInformationRespose(
+public sealed record AddCustomerInformationResponse(
     string Id,
-    Gender Gender,
-    DateTime BirthDate);
-
-public record AddCustomerInfoResult(AddCustomerInformationRespose Customer, string Token);
+    string UserName,
+    string Email,
+    string PhoneNumber,
+    string FirstName,
+    string LastName,
+    Gender? Gender,
+    DateTime? BirthDate);
+public record AddCustomerInfoResult(AddCustomerInformationResponse Customer, string Token);

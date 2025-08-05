@@ -7,6 +7,7 @@ namespace SnapSell.Application.Features.store.Commands.CreateStore;
 
 public sealed record CreateStoreCommand(
     string Name,
+    string StoreId,
     string Description,
     int MinimumDeliverPeriod,
     int MaximumDeliverPeriod,
@@ -16,6 +17,7 @@ public sealed record CreateStoreCommand(
 public sealed record CreateStoreResponse
 {
     public Guid Id { get; set; }
+    public string StoreId { get; set; }
     public string SellerId { get; init; }
     public string Name { get; init; }
     public string Description { get; init; }
