@@ -40,7 +40,7 @@ public sealed class MediaService(
         Directory.CreateDirectory(fullFolderPath);
 
         var fileExtension = GetMediaExtension(media.Base64);
-        var fileName = $"{Guid.NewGuid()}{fileExtension}";
+        var fileName = $"{Guid.NewGuid()}.{fileExtension}";
         var fullPath = Path.Combine(fullFolderPath, fileName);
 
         await File.WriteAllBytesAsync(fullPath, Convert.FromBase64String(media.Base64));

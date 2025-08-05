@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SnapSell.Application.Abstractions.Interfaces;
 using SnapSell.Application.Features.Products.Queries.GetProductById;
 using SnapSell.Application.Features.Products.Queries.ProductSearch;
 using SnapSell.Application.Features.Products.Queries.RelatedProductsWithPagination;
 using SnapSell.Application.Features.Products.Queries.SearchForProduct;
 using SnapSell.Application.Features.Products.Queries.SearchForProductVideos;
+using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
