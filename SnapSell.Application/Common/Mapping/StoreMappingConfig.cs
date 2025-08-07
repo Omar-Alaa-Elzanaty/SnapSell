@@ -10,7 +10,7 @@ public class StoreMappingConfig:IRegister
     {
 
         config.NewConfig<Store, CreateStoreResponse>()
-            .Map(dest => dest.SellerId, src => src.Id);
+            .Map(dest => dest.SellerId, src => src.AccountId);
         
         config.NewConfig<CreateStoreCommand, Store>();
     }
