@@ -91,7 +91,7 @@ internal sealed class AddCustomerInformationCommandHandler(
 
             if (newCategoryFavorites.Any())
             {
-                await unitOfWork.ClientCategoryFavoriteRepo.AddRange(newCategoryFavorites);
+                await unitOfWork.ClientCategoryFavoriteRepo.AddRangeAsync(newCategoryFavorites);
             }
         }
         
@@ -125,7 +125,7 @@ internal sealed class AddCustomerInformationCommandHandler(
 
             if (newBrandFavorites.Any())
             {
-                await unitOfWork.ClientBrandFavoriteRepo.AddRange(newBrandFavorites);
+                await unitOfWork.ClientBrandFavoriteRepo.AddRangeAsync(newBrandFavorites);
             }
         }
         

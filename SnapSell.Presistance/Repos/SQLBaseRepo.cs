@@ -21,7 +21,7 @@ public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : Au
         await _context.Database.ExecuteSqlRawAsync(sql, cancellationToken);
     }
     
-    public async Task AddRange(IEnumerable<T> entities)
+    public async Task AddRangeAsync(IEnumerable<T> entities)
     {
         await _context.AddRangeAsync(entities);
     }

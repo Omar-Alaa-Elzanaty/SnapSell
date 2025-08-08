@@ -3,10 +3,7 @@ using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Application.Features.Payments.Queries.Checkout
 {
-    public class CheckoutQuery:IRequest<Result<List<CheckoutQueryDto>>>
-    {
-
-    }
+    public class CheckoutQuery:IRequest<Result<List<CheckoutQueryDto>>>;
 
     public class CheckoutQueryDto
     {

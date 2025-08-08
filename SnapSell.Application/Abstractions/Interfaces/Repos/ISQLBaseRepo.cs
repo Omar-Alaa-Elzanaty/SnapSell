@@ -6,7 +6,7 @@ public interface ISQLBaseRepo<T>
 {
 
     Task AddAsync(T entity);
-    Task AddRange(IEnumerable<T> entities);
+    Task AddRangeAsync(IEnumerable<T> entities);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entities);
     void Update(T entity);

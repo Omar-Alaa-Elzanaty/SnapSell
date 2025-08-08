@@ -10,10 +10,11 @@ using SnapSell.Application.Features.Products.Commands.UpdateVariantById;
 using SnapSell.Application.Features.products.Queries.GetAllProductsForSpecificSeller;
 using SnapSell.Domain.Dtos;
 using SnapSell.Domain.Dtos.ResultDtos;
+using SnapSell.Domain.Constants;
 
 namespace SnapSell.Presentation.EndPoints;
 
-[Authorize(Roles = "Seller")]
+[Authorize(Roles = Roles.Seller)]
 public sealed class SellerController(ISender sender) : ApiControllerBase
 {
     [HttpGet("GetAllProductsForSpecificSeller/{sellerId}")]

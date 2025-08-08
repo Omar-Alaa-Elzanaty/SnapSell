@@ -107,7 +107,7 @@ internal sealed class UpdateProductBasicInfoCommandHandler(
             }
 
             unitOfWork.ProductImagesRepo.RemoveRange(product.Images);
-            await unitOfWork.ProductImagesRepo.AddRange(newImages);
+            await unitOfWork.ProductImagesRepo.AddRangeAsync(newImages);
             product.Images = newImages;
         }
 
@@ -137,7 +137,7 @@ internal sealed class UpdateProductBasicInfoCommandHandler(
                 ParentCategoryId = parents.TryGetValue(id, out var parent) ? parent : null
             }).ToList();
 
-            await unitOfWork.ProductCategoriesRepo.AddRange(newCategories);
+            await unitOfWork.ProductCategoriesRepo.AddRangeAsync(newCategories);
         }
 
         unitOfWork.ProductsRepo.Update(product);

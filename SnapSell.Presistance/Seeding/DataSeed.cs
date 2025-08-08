@@ -1,49 +1,49 @@
-﻿// using Microsoft.AspNetCore.Identity;
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.Extensions.DependencyInjection;
-// using SnapSell.Domain.Constants;
-// using SnapSell.Domain.Models.SqlEntities.Identitiy;
-// using SnapSell.Presistance.Context;
-//
-// namespace SnapSell.Presistance.Seeding;
-//
-// public class DataSeed
-// {
-//     public static async Task Invoke(IServiceProvider services)
-//     {
-//         var context = services.GetRequiredService<SqlDbContext>();
-//
-//         var migrationsCount = context.Database.GetMigrations().Count();
-//         var pendingMigrationsCount = (await context.Database.GetPendingMigrationsAsync()).Count();
-//
-//         if (pendingMigrationsCount > 0)
-//         {
-//             await context.Database.MigrateAsync();
-//
-//             if (migrationsCount == pendingMigrationsCount)
-//             {
-//                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-//                 var userManager = services.GetRequiredService<UserManager<Account>>();
-//
-//                 if (!await roleManager.RoleExistsAsync(Roles.Admin))
-//                     await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
-//                 
-//                 if (!await roleManager.RoleExistsAsync(Roles.Client))
-//                     await roleManager.CreateAsync(new IdentityRole(Roles.Client));
-//
-//                 if (await userManager.FindByEmailAsync("admin@gmail.com") is null)
-//                 {
-//                     var admin = new Account()
-//                     {
-//                         FirstName = "admin",
-//                         LastName = "admin",
-//                         Email = "admin@gmail.com",
-//                         UserName = "admin"
-//                     };
-//
-//                     await userManager.CreateAsync(admin, "123@Abc");
-//                 }
-//             }
-//         }
-//     }
-// }
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using SnapSell.Domain.Constants;
+using SnapSell.Domain.Models.SqlEntities.Identitiy;
+using SnapSell.Presistance.Context;
+
+namespace SnapSell.Presistance.Seeding;
+
+public class DataSeed
+{
+    public static async Task Invoke(IServiceProvider services)
+    {
+        var context = services.GetRequiredService<SqlDbContext>();
+
+        var migrationsCount = context.Database.GetMigrations().Count();
+        var pendingMigrationsCount = (await context.Database.GetPendingMigrationsAsync()).Count();
+
+        if (pendingMigrationsCount > 0)
+        {
+            await context.Database.MigrateAsync();
+
+            if (migrationsCount == pendingMigrationsCount)
+            {
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = services.GetRequiredService<UserManager<Account>>();
+
+                if (!await roleManager.RoleExistsAsync(Roles.Admin))
+                    await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+
+                if (!await roleManager.RoleExistsAsync(Roles.Client))
+                    await roleManager.CreateAsync(new IdentityRole(Roles.Client));
+
+                if (await userManager.FindByEmailAsync("admin@gmail.com") is null)
+                {
+                    var admin = new Account()
+                    {
+                        FirstName = "admin",
+                        LastName = "admin",
+                        Email = "admin@gmail.com",
+                        UserName = "admin"
+                    };
+
+                    await userManager.CreateAsync(admin, "123@Abc");
+                }
+            }
+        }
+    }
+}

@@ -80,7 +80,7 @@ internal sealed class CreateProductCommandHandler(
             });
         }
 
-        await unitOfWork.ProductImagesRepo.AddRange(product.Images);
+        await unitOfWork.ProductImagesRepo.AddRangeAsync(product.Images);
         await unitOfWork.SaveAsync(cancellationToken);
 
         if (request.HasVariants)
@@ -105,7 +105,7 @@ internal sealed class CreateProductCommandHandler(
                 variants.Add(variant);
             }
 
-            await unitOfWork.VariantsRepo.AddRange(variants);
+            await unitOfWork.VariantsRepo.AddRangeAsync(variants);
         }
         else
         {
@@ -130,7 +130,7 @@ internal sealed class CreateProductCommandHandler(
                 ? parentId : null
         }).ToList();
         
-        await unitOfWork.ProductCategoriesRepo.AddRange(productCategories);
+        await unitOfWork.ProductCategoriesRepo.AddRangeAsync(productCategories);
         await unitOfWork.SaveAsync(cancellationToken);
 
         var response = product.Adapt<CreateProductResponse>();
