@@ -13,5 +13,6 @@
   "UserAlreadyExists": "المستخدم موجود بالفعل.",
   "UserNotFound": "المستخدم غير موجود.",
   "UserNameUsedBefore": "اسم المستخدم مستخدم من قبل.",
-  "UserCreatedSuccessfully": "تم إنشاء المستخدم بنجاح."
+  "UserCreatedSuccessfully": "تم إنشاء المستخدم بنجاح.",
+  "CustomerDetailsAddedSuccessfully": "تمت إضافة تفاصيل العميل بنجاح"
 }

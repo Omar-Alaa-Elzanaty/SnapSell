@@ -8,7 +8,9 @@ public sealed record AddCustomerInformationCommand(
     string UserId,
     Gender Gender,
     string PhoneNumber,
-    DateTime BirthDate) : IRequest<Result<AddCustomerInfoResult>>;
+    DateTime BirthDate,
+    List<Guid>FivorateCategoryIds,
+    List<Guid>FivorateBrandIds) : IRequest<Result<AddCustomerInfoResult>>;
 public sealed record AddCustomerInformationResponse(
     string Id,
     string UserName,

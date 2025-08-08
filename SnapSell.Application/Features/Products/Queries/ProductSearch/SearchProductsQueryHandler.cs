@@ -11,8 +11,7 @@ namespace SnapSell.Application.Features.Products.Queries.ProductSearch;
 
 internal sealed class SearchProductsQueryHandler(
     ISQLBaseRepo<Product> productRepository,
-    IMediaService mediaService)
-    : IRequestHandler<SearchProductsQuery, PaginatedResult<SearchResponse>>
+    IMediaService mediaService) : IRequestHandler<SearchProductsQuery, PaginatedResult<SearchResponse>>
 {
     public async Task<PaginatedResult<SearchResponse>> Handle(
         SearchProductsQuery request,

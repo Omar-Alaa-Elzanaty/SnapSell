@@ -13,5 +13,6 @@
   "UserAlreadyExists": "User already exists.",
   "UserNotFound": "User not found.",
   "UserNameUsedBefore": "Username has been used before.",
-  "UserCreatedSuccessfully": "User created."
+  "UserCreatedSuccessfully": "User created.",
+  "CustomerDetailsAddedSuccessfully": "Customer Details Added Successfully."
 }

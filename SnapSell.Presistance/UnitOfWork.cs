@@ -22,6 +22,8 @@ public class UnitOfWork : IUnitOfWork
     public ISQLBaseRepo<Payment> PaymentsRepo { get; private set; }
 
     public ISQLBaseRepo<UserPaymentCard> UserPaymentCardsRepo { get; private set; }
+    public ISQLBaseRepo<ClientCategoryFavorite> ClientCategoryFavoriteRepo { get; }
+    public ISQLBaseRepo<ClientBrandFavorite> ClientBrandFavoriteRepo { get; }
 
     public UnitOfWork(
         SqlDbContext context,
@@ -36,7 +38,9 @@ public class UnitOfWork : IUnitOfWork
         ISQLBaseRepo<OrderAddress> orderAddressRepo,
         ISQLBaseRepo<Order> orderRepo, ISQLBaseRepo<ProductImage> productImagesRepo,
         ISQLBaseRepo<Payment> paymentsRepo,
-        ISQLBaseRepo<UserPaymentCard> userPaymentCardsRepo)
+        ISQLBaseRepo<UserPaymentCard> userPaymentCardsRepo,
+        ISQLBaseRepo<ClientCategoryFavorite> clientCategoryFavoriteRepo,
+        ISQLBaseRepo<ClientBrandFavorite> clientBrandFavoriteRepo)
     {
         _context = context;
         CacheCodesRepo = cacheCodesRepo;
@@ -52,6 +56,8 @@ public class UnitOfWork : IUnitOfWork
         ProductImagesRepo = productImagesRepo;
         PaymentsRepo = paymentsRepo;
         UserPaymentCardsRepo = userPaymentCardsRepo;
+        ClientCategoryFavoriteRepo = clientCategoryFavoriteRepo;
+        ClientBrandFavoriteRepo = clientBrandFavoriteRepo;
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

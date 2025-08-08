@@ -21,8 +21,5 @@ public sealed class ClientBrandFavoriteConfiguration : IEntityTypeConfiguration<
             .WithMany()
             .HasForeignKey(x => x.BrandId)
             .OnDelete(DeleteBehavior.Cascade);
-            
-        builder.Property(x => x.AddedDate)
-            .IsRequired();
     }
 }

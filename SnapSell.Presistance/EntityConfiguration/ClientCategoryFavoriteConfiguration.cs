@@ -21,8 +21,6 @@ public sealed class ClientCategoryFavoriteConfiguration : IEntityTypeConfigurati
             .WithMany()
             .HasForeignKey(x => x.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
-            
-        builder.Property(x => x.AddedDate)
-            .IsRequired();
+        
     }
 }

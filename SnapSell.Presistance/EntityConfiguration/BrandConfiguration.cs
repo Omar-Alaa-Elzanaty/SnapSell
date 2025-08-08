@@ -23,5 +23,7 @@ public sealed class BrandConfiguration : AuditableEntityConfiguration<Brand>
 
         builder.HasIndex(x => x.Name)
             .IsUnique();
+        
+        builder.Property(x => x.LogoUrl).IsRequired(false);
     }
 }

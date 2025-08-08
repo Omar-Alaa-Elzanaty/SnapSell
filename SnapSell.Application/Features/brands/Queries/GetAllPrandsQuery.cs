@@ -3,6 +3,6 @@ using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Application.Features.brands.Queries;
 
-public sealed record GetAllPrandsQuery() : IRequest<Result<List<GetAllBrandsResponse>>>;
+public sealed record GetAllPrandsQuery : IRequest<Result<List<GetAllBrandsResponse>>>;
 
-public sealed record GetAllBrandsResponse(Guid Id, string Name);
+public record GetAllBrandsResponse(Guid Id, string Name,string LogoUrl);
