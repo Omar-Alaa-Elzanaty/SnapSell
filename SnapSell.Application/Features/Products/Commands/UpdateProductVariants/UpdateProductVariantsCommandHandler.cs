@@ -84,7 +84,7 @@ internal sealed class UpdateProductVariantsCommandHandler(
                 return variant;
             }).ToList();
 
-            await unitOfWork.VariantsRepo.AddRange(newVariants);
+            await unitOfWork.VariantsRepo.AddRangeAsync(newVariants);
             product.Variants = newVariants;
         }
         else

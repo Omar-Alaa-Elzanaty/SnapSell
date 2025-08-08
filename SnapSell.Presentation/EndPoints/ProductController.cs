@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
 using SnapSell.Application.Features.products.Queries.GetSizes;
+using SnapSell.Domain.Constants;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
-[Authorize(Roles = "Seller")]
+[Authorize(Roles = Roles.Seller)]
 public sealed class ProductController(ISender sender) : ApiControllerBase
 {
     [HttpGet("GetAllBrands")]

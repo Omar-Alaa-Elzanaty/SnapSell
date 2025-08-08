@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.Admins.Commands.ApprovePendingStore;
 using SnapSell.Application.Features.Admins.Commands.RejectPendingStore;
 using SnapSell.Application.Features.Admins.Queries.GetPendingStores;
+using SnapSell.Domain.Constants;
 using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = Roles.Admin)]
 public sealed class AdminController(IMediator mediator) : ApiControllerBase
 {
     private readonly IMediator _mediator = mediator;
