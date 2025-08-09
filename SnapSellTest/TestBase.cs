@@ -152,7 +152,7 @@ namespace SnapSell.Test
                 await userManager.CreateAsync(admin, "123@Abc");
 
                 await roleManger.CreateAsync(new(Roles.Admin));
-                await roleManger.CreateAsync(new(Roles.Client));
+                await roleManger.CreateAsync(new(Roles.Customer));
                 await roleManger.CreateAsync(new(Roles.Seller));
             }
             catch

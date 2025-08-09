@@ -10,7 +10,7 @@ using SnapSell.Domain.Dtos.ResultDtos;
 
 namespace SnapSell.Presentation.EndPoints;
 
-[Authorize(Roles = Roles.Client)]
+[Authorize(Roles = Roles.Customer)]
 public sealed class ClientController : ApiControllerBase
 {
     private readonly IMediator _mediator;

@@ -28,8 +28,8 @@ public class DataSeed
                 if (!await roleManager.RoleExistsAsync(Roles.Admin))
                     await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
 
-                if (!await roleManager.RoleExistsAsync(Roles.Client))
-                    await roleManager.CreateAsync(new IdentityRole(Roles.Client));
+                if (!await roleManager.RoleExistsAsync(Roles.Customer))
+                    await roleManager.CreateAsync(new IdentityRole(Roles.Customer));
 
                 if (await userManager.FindByEmailAsync("admin@gmail.com") is null)
                 {

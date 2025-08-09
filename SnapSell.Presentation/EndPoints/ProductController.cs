@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SnapSell.Application.Features.brands.Queries;
 using SnapSell.Application.Features.categories.Queries;
