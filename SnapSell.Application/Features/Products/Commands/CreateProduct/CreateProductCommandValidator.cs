@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
-using Microsoft.Extensions.Localization;
 using SnapSell.Domain.Enums;
 
 namespace SnapSell.Application.Features.products.Commands.CreateProduct;
 
 public sealed class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
-    public CreateProductCommandValidator(IStringLocalizer<CreateProductCommandValidator> stringLocalizer)
+    public CreateProductCommandValidator()
     {
         RuleFor(c => c.BrandId)
             .NotEmpty().WithMessage("BrandId is required");

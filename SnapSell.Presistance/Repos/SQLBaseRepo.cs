@@ -51,6 +51,8 @@ public class SqlBaseRepo<T>(SqlDbContext context) : ISQLBaseRepo<T> where T : Au
     public IQueryable<T> Entities => _context.Set<T>();
     public IQueryable<T> TheDbSet() => _context.Set<T>();
     public async Task<T?> GetByIdAsync(Guid id) => await _context.Set<T>().FindAsync(id);
+    public async Task<T?> GetByIdAsync(int id) => await _context.Set<T>().FindAsync(id);
+  
 
     public async Task<IEnumerable<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
 

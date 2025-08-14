@@ -13,6 +13,7 @@ public interface ISQLBaseRepo<T>
     void UpdateRange(IEnumerable<T> entities);
     IQueryable<T> Entities { get; }
     Task<T?> GetByIdAsync(Guid id);
+    Task<T?> GetByIdAsync(int id);
     Task<IEnumerable<T>> GetAllAsync();
     Task<IEnumerable<T>> FindAsync(Func<T, bool> predicate);
     Task<T?> FindOnCriteriaAsync(Expression<Func<T, bool>> predicate);
